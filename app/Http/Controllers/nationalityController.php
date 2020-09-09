@@ -6,14 +6,15 @@ use App\Http\Requests\NationalityRequest;
 use App\Nationality;
 use Illuminate\Http\Request;
 
+
 class nationalityController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:nationalities_read'])->only('index');
-        $this->middleware(['permission:nationalities_create'])->only('create');
-        $this->middleware(['permission:nationalities_update'])->only('edit');
-        $this->middleware(['permission:nationalities_delete'])->only('destroy');
+//        $this->middleware(['permission:nationalities_read'])->only('index');
+//        $this->middleware(['permission:nationalities_create'])->only('create');
+//        $this->middleware(['permission:nationalities_update'])->only('edit');
+//        $this->middleware(['permission:nationalities_delete'])->only('destroy');
 
     }
     /**
@@ -23,8 +24,8 @@ class nationalityController extends Controller
      */
     public function index()
     {
-        $nationalities = Nationality::OrderBy('created_at', 'desc')->get();
-        return view('main_settings.nationalities.index', compact('nationalities'));
+        $nationalities = Nationality::OrderBy('created_at', 'ASC')->get();
+        return responseJson(1, "ok", $nationalities);
     }
 
     /**
@@ -43,21 +44,25 @@ class nationalityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(NationalityRequest $request)
+    public function store(Request $request)
     {
+        $validator = validator($request->all(), [
+            "name" =>  "required",
+        ]);
+
+        if($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(),""  );
+        }
         try {
             $nationality = Nationality::create($request->all());
             if($nationality){
                 notify()->success("تم حفظ البيانات بنجاح","","bottomLeft",);
 
-                return redirect()->route('nationalities.index');
+                return responseJson(1, __('ok'),$nationality  );
             }else{
-                notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق","","bottomLeft",);
-                return redirect()->route('nationalities.index');
             }
-        } catch (\Exception $th) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق","","bottomLeft",);
-            return redirect()->route('nationalities.index');
+        } catch (\Exception $ex) {
+            return responseJson(0, "",$ex->getMessage()  );
         }
     }
 
@@ -69,7 +74,11 @@ class nationalityController extends Controller
      */
     public function show($id)
     {
-        //
+        $nationality = Nationality::find($id);
+        if (!$nationality) {
+            return responseJson(0, __('data not found'),''  );
+        }
+        return responseJson(1, "ok",$nationality  );
     }
 
     /**
@@ -101,18 +110,15 @@ class nationalityController extends Controller
         try {
             $nationality = Nationality::find($id);
             if (!$nationality) {
-                notify()->warning("هذه البيانات غير موجودة !","","bottomLeft",);
+                return responseJson(0, __('data not found'),''  );
 
-                return redirect()->route('nationalities.index');
             } else {
-
                 $nationality->update($request->all());
-                notify()->success("تم تعديل البيانات بنجاح","","bottomLeft",);
-                return redirect()->route('nationalities.index');
+                return responseJson(1, __('data updated successfully'), $nationality );
+
             }
         } catch (\Exception $ex) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق","","bottomLeft",);
-            return redirect()->route('nationalities.index');
+            return responseJson(0, "",$ex->getMessage()  );
         }
     }
 
@@ -126,19 +132,13 @@ class nationalityController extends Controller
     {
         try {
             $nationality = Nationality::find($id);
-
             if (!$nationality) {
-                notify()->warning("هذه البيانات غير موجودة !","","bottomLeft",);
-
-                return redirect()->route('nationalities.index');
+                return responseJson(0, __('data not found'),''  );
             }
             $nationality->delete();
-            notify()->success("تم الحذف بنجاح","","bottomLeft",);
-
-            return redirect()->route('nationalities.index');
+            return responseJson(1, __('deleted successfully'),''  );
         } catch (\Exception $ex) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق","","bottomLeft",);
-            return redirect()->route('nationalities.index');
+            return responseJson(0, "",$ex->getMessage()  );
         }
     }
 }

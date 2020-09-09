@@ -8,8 +8,9 @@ class Nationality extends Model
 {
     protected $table = 'nationalities';
     protected $fillable = ['name', 'notes'];
-    public $timestamps = false;
+    public $hidden = ['created_at', 'updated_at'];
 
+    public $timestamps = false;
     public function applications() {
         return $this->hasMany('Modules\Adminsion\Entities\Application', 'nationality_id');
     }
