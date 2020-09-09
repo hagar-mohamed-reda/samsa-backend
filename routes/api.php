@@ -31,8 +31,9 @@ Route::group(['middleware' => 'api_auth'], function() {
     Route::post('nationalities', 'nationalityController@store');
     Route::delete('nationalities/{id}', 'nationalityController@destroy');
     Route::put('nationalities/{id}', 'nationalityController@update');
-
     //end nationalities
+    Route::get('roles', 'RoleController@index');
+
     Route::resource('roles', 'RoleController');
 
     Route::resource('cities', 'CityController');
