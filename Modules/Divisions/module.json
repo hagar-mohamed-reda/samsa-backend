@@ -1,0 +1,13 @@
+{
+    "name": "Divisions",
+    "alias": "divisions",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\Divisions\\Providers\\DivisionsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

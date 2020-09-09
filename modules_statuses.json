@@ -1,0 +1,10 @@
+{
+    "Settings": true,
+    "Student": true,
+    "Adminsion": true,
+    "Military": true,
+    "Qualifications": true,
+    "Divisions": true,
+    "Reports": true,
+    "Account": true
+}

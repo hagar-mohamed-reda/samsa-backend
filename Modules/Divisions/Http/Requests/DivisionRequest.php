@@ -1,0 +1,31 @@
+<?php
+
+namespace Modules\Divisions\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class DivisionRequest extends FormRequest
+{
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'name' => 'required',
+            'department_id'=>'required'
+        ];
+    }
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+}

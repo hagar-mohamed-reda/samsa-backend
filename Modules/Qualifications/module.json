@@ -1,0 +1,13 @@
+{
+    "name": "Qualifications",
+    "alias": "qualifications",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\Qualifications\\Providers\\QualificationsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

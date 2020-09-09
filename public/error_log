@@ -1,0 +1,31 @@
+[16-Aug-2020 06:01:16 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[16-Aug-2020 07:55:58 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 00:32:04 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 00:44:38 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:36:59 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:38:54 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:40:29 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:41:27 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:42:48 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:44:54 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:46:29 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:48:56 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:49:17 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:49:34 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:49:55 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:51:38 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:53:15 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:53:37 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:53:57 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:54:21 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:55:35 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[17-Aug-2020 04:57:58 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[18-Aug-2020 06:52:43 UTC] PHP Fatal error:  Cannot use Illuminate\Routing\Controller as Controller because the name is already in use in /home2/sphinxws/public_html/SAMSA/Modules/Adminsion/Http/Controllers/validation/ApplicationValidation.php on line 8
+[18-Aug-2020 02:29:53 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[18-Aug-2020 02:39:36 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[18-Aug-2020 03:11:38 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[18-Aug-2020 03:14:09 America/Boise] PHP Warning:  Unknown: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0
+[25-Aug-2020 13:39:49 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home2/sphinxws/public_html/SAMSA/storage/framework/views/f7e3694d106488113909b25ec77b40ad30c8d767.php on line 391
+[25-Aug-2020 13:40:02 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home2/sphinxws/public_html/SAMSA/storage/framework/views/f7e3694d106488113909b25ec77b40ad30c8d767.php on line 391
+[25-Aug-2020 13:40:11 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home2/sphinxws/public_html/SAMSA/storage/framework/views/f7e3694d106488113909b25ec77b40ad30c8d767.php on line 391
+[25-Aug-2020 13:40:57 UTC] PHP Fatal error:  Cannot use isset() on the result of an expression (you can use "null !== expression" instead) in /home2/sphinxws/public_html/SAMSA/storage/framework/views/f7e3694d106488113909b25ec77b40ad30c8d767.php on line 391

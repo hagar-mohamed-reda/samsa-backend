@@ -1,0 +1,13 @@
+{
+    "name": "Military",
+    "alias": "military",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\Military\\Providers\\MilitaryServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
