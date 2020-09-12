@@ -52,11 +52,20 @@ Route::group(['middleware' => 'api_auth'], function() {
 
     //Route::resource('countries', 'CountryController');
     //end
+
+    //governments start
+    Route::get('governments', 'GovernmentController@index');
+    Route::get('governments/{id}', 'GovernmentController@show');
+    Route::post('governments', 'GovernmentController@store');
+    Route::delete('governments/{id}', 'GovernmentController@destroy');
+    Route::put('governments/{id}', 'GovernmentController@update');
+
+    //Route::resource('governments', 'GovernmentController');
+    //end
     Route::get('roles', 'RoleController@index');
 
     Route::resource('roles', 'RoleController');
 
-    Route::resource('governments', 'GovernmentController');
     Route::get('government/{country_id}', 'GovernmentController@getGovernments');
     Route::resource('languages', 'LanguageController');
     Route::resource('profile', 'UserProfileController');

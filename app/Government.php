@@ -8,7 +8,7 @@ class Government extends Model
 {
     protected $table = 'governments';
     protected $fillable = ['name', 'notes', 'country_id'];
-
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function country(){
         return $this->belongsTo('App\Country', 'country_id');
