@@ -32,11 +32,30 @@ Route::group(['middleware' => 'api_auth'], function() {
     Route::delete('nationalities/{id}', 'nationalityController@destroy');
     Route::put('nationalities/{id}', 'nationalityController@update');
     //end nationalities
+
+    //start cities
+    Route::get('cities', 'CityController@index');
+    Route::get('cities/{id}', 'CityController@show');
+    Route::post('cities', 'CityController@store');
+    Route::delete('cities/{id}', 'CityController@destroy');
+    Route::put('cities/{id}', 'CityController@update');
+
+    //Route::resource('cities', 'CityController');
+    //end cities
+
+    //countries start
+    Route::get('countries', 'CountryController@index');
+    Route::get('countries/{id}', 'CountryController@show');
+    Route::post('countries', 'CountryController@store');
+    Route::delete('countries/{id}', 'CountryController@destroy');
+    Route::put('countries/{id}', 'CountryController@update');
+
+    //Route::resource('countries', 'CountryController');
+    //end
     Route::get('roles', 'RoleController@index');
 
     Route::resource('roles', 'RoleController');
 
-    Route::resource('cities', 'CityController');
     Route::resource('countries', 'CountryController');
     Route::resource('governments', 'GovernmentController');
     Route::get('government/{country_id}', 'GovernmentController@getGovernments');
