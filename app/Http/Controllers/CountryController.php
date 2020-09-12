@@ -11,10 +11,10 @@ class CountryController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['permission:countries_read'])->only('index');
-        $this->middleware(['permission:countries_create'])->only('create');
-        $this->middleware(['permission:countries_update'])->only('edit');
-        $this->middleware(['permission:countries_delete'])->only('destroy');
+//        $this->middleware(['permission:countries_read'])->only('index');
+//        $this->middleware(['permission:countries_create'])->only('create');
+//        $this->middleware(['permission:countries_update'])->only('edit');
+//        $this->middleware(['permission:countries_delete'])->only('destroy');
 
     }
     /**
@@ -24,8 +24,8 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $countries = Country::OrderBy('created_at', 'desc')->get();
-        return view('main_settings.countries.index', compact('countries'));
+        $countries = Country::OrderBy('created_at', 'desc')->paginate(10);
+        return responseJson(1, "ok", $countries);
     }
 
     /**
@@ -44,20 +44,24 @@ class CountryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CountryRequest $request)
+    public function store(Request $request)
     {
+        $validator = validator($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $country = Country::create($request->all());
             if($country){
-                notify()->success("تم حفظ الاعدادات بنجاح","","bottomLeft",);
-                return redirect()->route('countries.index');
+                return responseJson(1, __('data created successfully'), $country);
             }else{
-                notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق","","bottomLeft",);
-                return redirect()->route('countries.index');
             }
         } catch (\Throwable $th) {
-            notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق","","bottomLeft",);
-            return redirect()->route('countries.index');
+            return responseJson(0, "", $th->getMessage());
+
 
         }
     }
@@ -70,7 +74,11 @@ class CountryController extends Controller
      */
     public function show($id)
     {
-        //
+        $country = Country::find($id);
+        if (!$country) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $country);
     }
 
     /**
@@ -98,20 +106,25 @@ class CountryController extends Controller
      */
     public function update(CountryRequest $request, $id)
     {
+        $validator = validator($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $country = Country::find($id);
             if (!$country) {
-                notify()->warning("هذه الاعدادات غير موجودة !","","bottomLeft",);
-                return redirect()->route('countries.index')->with(['error' => 'هذه الاعدادات غير موجودة !']);
-            } else {
+                return responseJson(0, __('data not found'), '');
 
+            } else {
                 $country->update($request->all());
-                notify()->success("تم تعديل الاعدادات بنجاح","","bottomLeft",);
-                return redirect()->route('countries.index');
+                return responseJson(1, __('data updated successfully'), $country);
             }
         } catch (\Exception $ex) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق","","bottomLeft",);
-            return redirect()->route('countries.index');        }
+            return responseJson(0, "", $ex->getMessage());
+        }
     }
 
     /**
@@ -126,22 +139,18 @@ class CountryController extends Controller
         try {
             $country = Country::find($id);
             if (!$country) {
-                notify()->warning("هذه الاعدادات غير موجودة !","","bottomLeft",);
-                return redirect()->route('countries.index');
+                return responseJson(0, __('data not found'), '');
             }
             $governments = $country->governments->count();
-            if(isset($governments) && $governments > 0 ){
-                notify()->error("لا يمكن حذف هذا العنصر","","bottomLeft",);
-                return redirect()->route('countries.index')->with(['error' => 'لا يمكن حذف هذا العنصر']);
+            if(isset($governments) && $governments > 0 ||$country->applications->count() > 0 || $country->students->count()  > 0 ){
+                return responseJson(0, __('this item can not be deleted'), $country->fresh());
             }else{
                 $country->delete();
-                notify()->success("تم الحذف بنجاح","","bottomLeft",);
-                return redirect()->route('countries.index');
+                return responseJson(1, __('deleted successfully'), '');
             }
 
         } catch (\Exception $ex) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق","","bottomLeft",);
-            return redirect()->route('countries.index');
+            return responseJson(0, "", $ex->getMessage());
         }
 
     }

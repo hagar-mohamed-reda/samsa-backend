@@ -8,6 +8,7 @@ class Country extends Model
 {
     protected $table = 'countries';
     protected $fillable = ['name', 'notes'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function governments(){
         return $this->hasMany('App\Government', 'country_id');

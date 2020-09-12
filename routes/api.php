@@ -56,7 +56,6 @@ Route::group(['middleware' => 'api_auth'], function() {
 
     Route::resource('roles', 'RoleController');
 
-    Route::resource('countries', 'CountryController');
     Route::resource('governments', 'GovernmentController');
     Route::get('government/{country_id}', 'GovernmentController@getGovernments');
     Route::resource('languages', 'LanguageController');
