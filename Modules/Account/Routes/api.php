@@ -43,6 +43,9 @@ Route::group(['middleware' => 'api_auth'], function () {
         // installment routes
         Route::get('installment/get', 'InstallmentController@index');
         Route::post('installment/update', 'InstallmentController@update');
+
+        // main
+        Route::get('search_student', 'AccountController@searchStudent');
     });
 });
 

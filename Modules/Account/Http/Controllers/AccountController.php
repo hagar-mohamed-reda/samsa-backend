@@ -113,5 +113,14 @@ class AccountController extends Controller
          
         return $payment;
     }
+
+    public function searchStudent(Request $request) {
+        return Student::query()
+                ->where('name', 'like', '%'.$request->key.'%')
+                ->orWhere('code', 'like', '%'.$request->key.'%')
+                ->orWhere('national_id', 'like', '%'.$request->key.'%')
+                ->take(20)
+                ->get(["id", "name", "code"]);
+    }
  
 }
