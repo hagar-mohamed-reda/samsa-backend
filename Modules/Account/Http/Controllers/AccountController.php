@@ -23,9 +23,10 @@ class AccountController extends Controller
     public function getStudentAccounting() {
         $student = null;
         if (request()->student_id) {
-            $student = Student::find(request()->student_id);
+            $student = Student::with(['level', 'division'])->find(request()->student_id);
         }
         
+        $student->date = date("Y-m-d"); 
         return $student;
     }
     

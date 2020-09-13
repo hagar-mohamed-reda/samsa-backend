@@ -16,7 +16,8 @@ class Student extends Model
         'is_old_installed', 
         'current_balance', 
         'old_balance', 
-        'paid_value'
+        'paid_value',
+        'paids'
     ];
     
     public function getOldBalanceAttribute() {
@@ -35,6 +36,10 @@ class Student extends Model
         return StudentBalance::find($this->id);
     }
      
+    public function getPaidsAttribute() {
+        return $this->payments()->sum("value");
+    }
+
     public function getIsCurrentInstalledAttribute() {
         $installment = DB::table('account_installments')
                 ->where('student_id', $this->id)
@@ -57,4 +62,15 @@ class Student extends Model
         return $this->hasMany("Modules\Account\Entities\Installment", "student_id");
     }
 
+    public function payments() {
+        return $this->hasMany("Modules\Account\Entities\Payment", "student_id");
+    }
+
+    public function level() {
+        return $this->belongsTo("Modules\Divisions\Entities\Level", "level_id")->select(['id', 'name']);
+    }
+
+    public function division() {
+        return $this->belongsTo("Modules\Divisions\Entities\Division", "division_id")->select(['id', 'name']);
+    }
 }
