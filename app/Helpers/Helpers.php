@@ -129,6 +129,24 @@ if (!function_exists('log')) {
 }
 
 /**
+ * Translate the given message.
+ *
+ * @param string  $title title of notification
+ * @param string $body body of notification
+ * @param string $icon icon of fontawosome
+ */
+if (!function_exists('watch')) {
+
+    function watch($body, $icon = '') {
+        try {
+            return App\Notification::notify($body, $body, $icon);
+        } catch (Exception $exc) {
+            return null;
+        }
+    }
+
+}
+/**
  * rand css class color from w3.css classes
  *
  * @return String class of the color
