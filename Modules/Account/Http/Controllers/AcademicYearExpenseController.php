@@ -26,7 +26,7 @@ class AcademicYearExpenseController extends Controller
         $resources = AcademicYearExpense::with(['academic_year', 'level', 'division', 'details'])
                 ->where('academic_year_id', $academicYear->id)
                 ->get();
-        return responseJson(1, "", $resources);
+        return $resources;
     }
  
     /**
