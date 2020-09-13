@@ -8,29 +8,33 @@ use Illuminate\Routing\Controller;
 use Modules\Settings\Entities\AcademicYear;
 use Modules\Settings\Http\Requests\AcademicYearRequest;
 
-class AcademicYearController extends Controller {
+class AcademicYearController extends Controller
+{
 
-    public function __construct() {
-        $this->middleware(['permission:academic-years_read'])->only('index');
-        $this->middleware(['permission:academic-years_create'])->only('create');
-        $this->middleware(['permission:academic-years_update'])->only('edit');
-        $this->middleware(['permission:academic-years_delete'])->only('destroy');
+    public function __construct()
+    {
+//        $this->middleware(['permission:academic-years_read'])->only('index');
+//        $this->middleware(['permission:academic-years_create'])->only('create');
+//        $this->middleware(['permission:academic-years_update'])->only('edit');
+//        $this->middleware(['permission:academic-years_delete'])->only('destroy');
     }
 
     /**
      * Display a listing of the resource.
      * @return Response
      */
-    public function index() {
-        $academic_years = AcademicYear::OrderBy('created_at', 'desc')->get();
-        return view('settings::academic_years.index', compact('academic_years'));
+    public function index()
+    {
+        $academic_years = AcademicYear::OrderBy('created_at', 'desc')->paginate(10);
+        return responseJson(1, "ok", $academic_years);
     }
 
     /**
      * Show the form for creating a new resource.
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
         return view('settings::academic_years.create');
     }
 
@@ -39,7 +43,16 @@ class AcademicYearController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function store(AcademicYearRequest $request) {
+    public function store(Request $request)
+    {
+        $validator = validator($request->all(), [
+            'start_date' => 'required|unique:academic_years,start_date',
+            'end_date' => 'required|unique:academic_years,end_date',
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $data = $request->all();
             $data['name'] = date('Y', strtotime($data['start_date'])) . "-" . date('Y', strtotime($data['end_date']));
@@ -47,18 +60,17 @@ class AcademicYearController extends Controller {
             $academic_years_name = $academic_years_name->toArray();
 
             if (in_array($data['name'], $academic_years_name)) {
-                notify()->error(__('this academic year is already exists'), "", "bottomLeft");
-                return redirect()->back();
+                return responseJson(0, __('this academic year is already exists'), null);
+
             } else {
                 $academic_year = AcademicYear::create($data);
                 if ($academic_year) {
-                    notify()->success(__('data created successfully'), "", "bottomLeft");
-                    return redirect()->route('academic-years.index');
+                    log(_('Academic year was created'), $icon = 'fa fa-accusoft');
+                    return responseJson(1, __('data created successfully'), $academic_year);
                 }
             }
-        } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft");
-            return redirect()->route('academic-years.index');
+        } catch (\Exception $ex) {
+            return responseJson(0, "", $ex->getMessage());
         }
     }
 
@@ -67,8 +79,13 @@ class AcademicYearController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function show($id) {
-        return view('settings::show');
+    public function show($id)
+    {
+        $academic_year = AcademicYear::find($id);
+        if (!$academic_year) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $academic_year);
     }
 
     /**
@@ -76,7 +93,8 @@ class AcademicYearController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         try {
             $academic_year = AcademicYear::select()->find($id);
             if (!$academic_year) {
@@ -97,7 +115,16 @@ class AcademicYearController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function update(AcademicYearRequest $request, $id) {
+    public function update(Request $request, $id)
+    {
+        $validator = validator($request->all(), [
+            'start_date' => 'required|unique:academic_years,start_date',
+            'end_date' => 'required|unique:academic_years,end_date',
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $academic_year = AcademicYear::find($id);
             $data = $request->all();
@@ -106,23 +133,20 @@ class AcademicYearController extends Controller {
             $academic_years_name = $academic_years_name->toArray();
 
             if (!$academic_year) {
-                notify()->warning(__('data not found'), "", "bottomLeft");
+                return responseJson(0, __('data not found'), '');
             } else {
                 if ($data['name'] == $academic_year->name) {
                     $academic_year->update($data);
-                    notify()->success(__('data updated successfully'), "", "bottomLeft");
+                    return responseJson(1, __('data updated successfully'), $academic_year);
                 } else {
-
                     if (in_array($data['name'], $academic_years_name)) {
-                        notify()->error('this academic year is already exists', "", "bottomLeft");
-                        return redirect()->back();
+                        return responseJson(0, __('this academic year is already exists'), null);
                     }
                 }
             }
         } catch (\Exception $ex) {
-            return redirect()->back()->with(['error' => $ex->getMessage()]);
+            return responseJson(0, "", $ex->getMessage());
         }
-        return redirect()->route('academic-years.index');
     }
 
     /**
@@ -130,7 +154,9 @@ class AcademicYearController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
+
         try {
             $academic_year = AcademicYear::find($id);
             $qualificationTypes = $academic_year->qualificationTypes->count();
@@ -138,19 +164,20 @@ class AcademicYearController extends Controller {
             if (!$academic_year) {
                 notify()->warning(__('data not found'), "", "bottomLeft");
                 return redirect()->route('academic-years.index');
-            } 
-            if(isset($qualificationTypes) && $qualificationTypes > 0){
-                 notify()->error(__('this item can not be deleted'), "", "bottomLeft" );
-                return redirect()->route('academic-years.index');
-            }else {
-
+            }
+            if ((isset($qualificationTypes) && $qualificationTypes > 0) ||
+                $academic_year->applications->count() > 0 ||
+                $academic_year->students->count() > 0 ||
+                $academic_year->militaryCourseCollection->count() > 0 ||
+                $academic_year->studentCodeSeries->count() > 0
+            ) {
+                return responseJson(0, __('this item can not be deleted'), $academic_year->fresh());
+            } else {
                 $academic_year->delete();
-                notify()->success(__('data deleted successfully'), "", "bottomLeft");
-                return redirect()->route('academic-years.index');
+                return responseJson(1, __('deleted successfully'), '');
             }
         } catch (\Exception $ex) {
-            notify()->error($ex->getMessage(), "", "bottomLeft");
-            return redirect()->route('academic-years.index');
+            return responseJson(0, "", $ex->getMessage());
         }
     }
 

@@ -8,6 +8,7 @@ class AcademicYear extends Model {
 
     protected $table = 'academic_years';
     protected $fillable = ['name', 'start_date', 'end_date', 'notes', 'created_at', 'updated_at'];
+    protected $hidden =['created_at', 'updated_at'];
 
     public function qualificationTypes() {
         return $this->hasMany('Modules\Settings\Entities\QualificationTypes', 'academic_year_id');
