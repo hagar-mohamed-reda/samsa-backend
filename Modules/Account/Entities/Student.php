@@ -17,7 +17,8 @@ class Student extends Model
         'current_balance', 
         'old_balance', 
         'paid_value',
-        'paids'
+        'paids',
+        'gpa'
     ];
     
     public function getOldBalanceAttribute() {
@@ -31,15 +32,19 @@ class Student extends Model
     public function getPaidValueAttribute() {
         return $this->getStudentBalance()->getPaidValue();
     }
+
+    public function getPaidsAttribute() {
+        return $this->payments()->sum("value");
+    }
+
+    public function getGpaAttribute() {
+        return 1.5;
+    }
     
     public function getStudentBalance() {
         return StudentBalance::find($this->id);
     }
      
-    public function getPaidsAttribute() {
-        return $this->payments()->sum("value");
-    }
-
     public function getIsCurrentInstalledAttribute() {
         $installment = DB::table('account_installments')
                 ->where('student_id', $this->id)
