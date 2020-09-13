@@ -9,10 +9,10 @@ class RelativeRelationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['permission:relations_read'])->only('index');
-        $this->middleware(['permission:relations_create'])->only('create');
-        $this->middleware(['permission:relations_update'])->only('edit');
-        $this->middleware(['permission:relations_delete'])->only('destroy');
+//        $this->middleware(['permission:relations_read'])->only('index');
+//        $this->middleware(['permission:relations_create'])->only('create');
+//        $this->middleware(['permission:relations_update'])->only('edit');
+//        $this->middleware(['permission:relations_delete'])->only('destroy');
 
     }
     /**
@@ -22,8 +22,8 @@ class RelativeRelationController extends Controller
      */
     public function index()
     {
-        $relativeRelations = RelativeRelation::OrderBy('created_at', 'DESC')->get();
-        return view('main_settings.relative_relations.index', compact('relativeRelations'));
+        $relativeRelations = RelativeRelation::OrderBy('created_at', 'DESC')->paginate(10);
+        return responseJson(1, "ok", $relativeRelations);
     }
 
     /**
@@ -45,18 +45,24 @@ class RelativeRelationController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = validator($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $relativeRelations = RelativeRelation::create($request->all());
             if ($relativeRelations) {
-                notify()->success("تم حفظ الاعدادات بنجاح", "", "bottomLeft", );
-                return redirect()->route('relations.index');
+                return responseJson(1, __('data created successfully'), $relativeRelations);
+
             } else {
-                notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft", );
-                return redirect()->route('relations.index');
+
             }
-        } catch (\Exception $th) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft", );
-            return redirect()->route('relations.index');
+        } catch (\Exception $ex) {
+            return responseJson(0, "", $ex->getMessage());
+
         }
     }
 
@@ -68,7 +74,11 @@ class RelativeRelationController extends Controller
      */
     public function show($id)
     {
-        //
+        $relativeRelations = RelativeRelation::find($id);
+        if (!$relativeRelations) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $relativeRelations);
     }
 
     /**
@@ -96,19 +106,24 @@ class RelativeRelationController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = validator($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $relativeRelation = RelativeRelation::find($id);
             if (!$relativeRelation) {
-                notify()->warning("هذه الاعدادات غير موجودة ", "", "bottomLeft", );
-                return redirect()->route('relations.index');
+                return responseJson(0, __('data not found'), '');
+
             } else {
                 $relativeRelation->update($request->all());
-                notify()->success("تم تعديل الاعدادات بنجاح", "", "bottomLeft", );
-                return redirect()->route('relations.index');
+                return responseJson(1, __('data updated successfully'), $relativeRelation);
             }
         } catch (\Exception $ex) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft", );
-            return redirect()->route('relations.index');
+            return responseJson(0, "", $ex->getMessage());
         }
     }
 
@@ -123,15 +138,12 @@ class RelativeRelationController extends Controller
         try {
             $relativeRelation = RelativeRelation::find($id);
             if (!$relativeRelation) {
-                notify()->warning("هذه الاعدادات غير موجودة", "", "bottomLeft", );
-                return redirect()->route('relations.index');
+                return responseJson(0, __('data not found'), '');
             }
             $relativeRelation->delete();
-            notify()->success("تم الحذف بنجاح", "", "bottomLeft", );
-            return redirect()->route('relations.index');
+            return responseJson(1, __('deleted successfully'), '');
         } catch (\Exception $ex) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft", );
-            return redirect()->route('relations.index');
+            return responseJson(0, "", $ex->getMessage());
         }
     }
 }

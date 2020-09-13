@@ -18,12 +18,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/api_auth', function(Illuminate\Http\Request $request) { 
+Route::get('/api_auth', function (Illuminate\Http\Request $request) {
     return responseJson(0, __('login first'));
 });
 
 
-Route::group(['middleware' => 'api_auth'], function() {
+Route::group(['middleware' => 'api_auth'], function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
     //start nationalities
     Route::get('nationalities', 'nationalityController@index')->name('nationalities');
@@ -62,17 +62,31 @@ Route::group(['middleware' => 'api_auth'], function() {
 
     //Route::resource('governments', 'GovernmentController');
     //end
+    //language start
+    Route::get('languages', 'LanguageController@index');
+    Route::get('languages/{id}', 'LanguageController@show');
+    Route::post('languages', 'LanguageController@store');
+    Route::delete('languages/{id}', 'LanguageController@destroy');
+    Route::put('languages/{id}', 'LanguageController@update');
+    //Route::resource('languages', 'LanguageController');
+    //end
+
+    //relations start
+    Route::get('relations', 'RelativeRelationController@index');
+    Route::get('relations/{id}', 'RelativeRelationController@show');
+    Route::post('relations', 'RelativeRelationController@store');
+    Route::delete('relations/{id}', 'RelativeRelationController@destroy');
+    Route::put('relations/{id}', 'RelativeRelationController@update');
+    //Route::resource('relations', 'RelativeRelationController');
+
+    //end
     Route::get('roles', 'RoleController@index');
 
     Route::resource('roles', 'RoleController');
 
     Route::get('government/{country_id}', 'GovernmentController@getGovernments');
-    Route::resource('languages', 'LanguageController');
     Route::resource('profile', 'UserProfileController');
     Route::put('update-password/{user_id}', 'UserProfileController@updatePassword')->name('update-password');
-    Route::resource('relations', 'RelativeRelationController');
-
-
     Route::post('setting/update/{setting}', 'SettingController@update')->name('SettingUpdate');
 
 });
