@@ -26,7 +26,7 @@ class AccountController extends Controller
             $student = Student::find(request()->student_id);
         }
         
-        return responseJson(1, __("done"), $student);
+        return $student;
     }
     
     /**
