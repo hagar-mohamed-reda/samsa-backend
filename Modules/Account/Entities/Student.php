@@ -12,8 +12,24 @@ class Student extends Model
     protected $table = "students";
     
     protected $appends = [
-        'is_current_installed', 'is_old_installed'
+        'is_current_installed', 
+        'is_old_installed', 
+        'current_balance', 
+        'old_balance', 
+        'paid_value'
     ];
+    
+    public function getOldBalanceAttribute() {
+        return $this->getStudentBalance()->getOldBalance();
+    }
+    
+    public function getCurrentBalanceAttribute() {
+        return $this->getStudentBalance()->getCurrentBalance();
+    }
+    
+    public function getPaidValueAttribute() {
+        return $this->getStudentBalance()->getPaidValue();
+    }
     
     public function getStudentBalance() {
         return StudentBalance::find($this->id);

@@ -15,18 +15,18 @@ class AcademicYearExpense extends Model
     ];
      
     public function academic_year() {
-        return $this->belongsTo('Modules\Settings\Entities\AcademicYear', 'academic_year_id');
+        return $this->belongsTo('Modules\Settings\Entities\AcademicYear', 'academic_year_id')->select(['id', 'name']);
     }
     
     public function level() {
-        return $this->belongsTo('Modules\Settings\Entities\Level', 'level_id');
+        return $this->belongsTo('Modules\Divisions\Entities\Level', 'level_id')->select(['id', 'name']);
     }
     
     public function division() {
-        return $this->belongsTo('Modules\Settings\Entities\Division', 'division_id');
+        return $this->belongsTo('Modules\Divisions\Entities\Division', 'division_id')->select(['id', 'name']);
     } 
     
     public function details() {
-        return $this->hasMany('Modules\Account\Entities\AcademicYearExpenseDetail', 'academic_year_expense_id')->with('store', 'term_id');
+        return $this->hasMany('Modules\Account\Entities\AcademicYearExpenseDetail', 'academic_year_expense_id')->with('store', 'term');
     }
 }

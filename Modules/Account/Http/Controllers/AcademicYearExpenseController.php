@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Account\Entities\AcademicYearExpense; 
-use Modules\Account\Entities\AcademicYearExpenseDetail; 
+use Modules\Account\Entities\AcademicYearExpenseDetail;
+use Modules\Account\Entities\AccountSetting;
 
 class AcademicYearExpenseController extends Controller
 {
@@ -21,7 +22,10 @@ class AcademicYearExpenseController extends Controller
      * @return json
      */
     public function index() {
-        $resources = AcademicYearExpense::with(['academic_year', 'level', 'division', 'details'])->get();
+        $academicYear = AccountSetting::getCurrentAcademicYear();
+        $resources = AcademicYearExpense::with(['academic_year', 'level', 'division', 'details'])
+                ->where('academic_year_id', $academicYear->id)
+                ->get();
         return responseJson(1, "", $resources);
     }
  
@@ -48,13 +52,20 @@ class AcademicYearExpenseController extends Controller
                 return responseJson(0, __('fill all required data'));
             }
             $data = $request->all();
-            $resource = AcademicYearExpense::create($data); 
+            $resource = AcademicYearExpense::query()
+                    ->where('academic_year_id', $data['academic_year_id'])
+                    ->where('level_id', $data['level_id'])
+                    ->where('division_id', $data['division_id'])
+                    ->first();
+            
+            if (!$resource)
+                $resource = AcademicYearExpense::create($data); 
             
             // add details
             $data['academic_year_expense_id'] = $resource->id;
             $detail = AcademicYearExpenseDetail::create($data);
             
-            log(__('add academic year expense ') . $detail->name, "fa fa-money");
+            watch(__('add academic year expense ') . $detail->name, "fa fa-money");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
@@ -69,11 +80,10 @@ class AcademicYearExpenseController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id) {
-        try {
-            $detail = AcademicYearExpenseDetail::find($request->academic_year_expense_id);
-            $detail->update($request->all()); 
-            log(__('edit academic year expense ') . $detail->name, "fa fa-money");
+    public function update(Request $request, AcademicYearExpenseDetail $resource) {
+        try { 
+            $resource->update($request->all()); 
+            watch(__('edit academic year expense ') . $resource->name, "fa fa-money");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
@@ -86,11 +96,10 @@ class AcademicYearExpenseController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy($id) { 
-        try {
-            $detail = AcademicYearExpenseDetail::find($id); 
-            log(__('remove academic year expense ') . $detail->name, "fa fa-money"); 
-            $detail->delete();
+    public function destroy(AcademicYearExpenseDetail $resource) { 
+        try { 
+            watch(__('remove academic year expense ') . $resource->name, "fa fa-money"); 
+           // $resource->delete();
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }

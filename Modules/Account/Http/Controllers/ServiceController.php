@@ -30,28 +30,34 @@ class ServiceController extends Controller
      * @return Response
      */ 
     public function store(Request $request) {
-        try {
-            $validator = validator($request->all(), [
+        $resource = null;
+        try { 
+              
+            //return dump(toClass($data)->api_token);
+            $validator = validator($request->json()->all(), [
                 "name" =>  "required|unique:account_services",
-                "value" =>  "required",
-                "except_level_id" =>  "required",
-                "division_id" =>  "required",
-                "store_id" =>  "required",
-                "additional_value" =>  "required",
+                "value" =>  "required",  
+                "store_id" =>  "required", 
                 "type" =>  "required", 
+            ], [
+                "name.unique" => __('name already exist'),
+                "name.required" => __('fill all required data'),
+                "value.required" => __('fill all required data'),
+                "store_id.required" => __('fill all required data'),
+                "type.required" => __('fill all required data'),
             ]);
             
-            if ($validator->failed()) {
-                return responseJson(0, __('fill all required data'));
+            if ($validator->fails()) {
+                return responseJson(0, $validator->errors()->first());
             }
-            
+             
             $resource = Service::create($request->all()); 
-            log(__('add service ') . $resource->name, "fa fa-trophy");
+            watch(__('add service ') . $resource->name, "fa fa-trophy");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
         
-        return responseJson(1, __('done'));
+        return responseJson(1, __('done'), $resource);
     }
   
 
@@ -61,16 +67,15 @@ class ServiceController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id) {
-        try {
-            $resource = Service::find($id);
-            $resource->update($request->all());
-            log(__('edit service ') . $resource->name, "fa fa-trophy");
+    public function update(Request $request, Service $service) {
+        try { 
+            $service->update($request->all());
+            watch(__('edit service ') . $service->name, "fa fa-trophy");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
         
-        return responseJson(1, __('done'));
+        return responseJson(1, __('done'), $service->fresh());
     }
 
     /**
@@ -78,11 +83,10 @@ class ServiceController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy($id) { 
-        try {
-            $resource = Service::find($id);   
-            log(__('remove service ') . $resource->name, "fa fa-trophy"); 
-            $resource->delete();
+    public function destroy(Service $service) { 
+        try { 
+            watch(__('remove service ') . $service->name, "fa fa-trophy"); 
+            //$service->delete();
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }

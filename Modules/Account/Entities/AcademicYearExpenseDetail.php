@@ -21,11 +21,11 @@ class AcademicYearExpenseDetail extends Model
   
     
     public function term() {
-    return $this->belongsTo('Modules\Settings\Entities\Term', 'term_id');
+        return $this->belongsTo('Modules\Account\Entities\Term', 'term_id')->select(['id', 'name']);
     }
     
     public function store() {
-        return $this->belongsTo('Modules\Account\Entities\Store', 'store_id');
+        return $this->belongsTo('Modules\Account\Entities\Store', 'store_id')->select(['id', 'name']);
     }
      
     

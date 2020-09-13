@@ -24,11 +24,11 @@ class Service extends Model
       
     
     public function level() {
-        return $this->belongsTo('Modules\Settings\Entities\Level', 'except_level_id');
+        return $this->belongsTo('Modules\Divisions\Entities\Level', 'except_level_id')->select(['id', 'name']);
     }
     
     public function division() {
-        return $this->belongsTo('Modules\Settings\Entities\Division', 'division_id');
+        return $this->belongsTo('Modules\Divisions\Entities\Division', 'division_id')->select(['id', 'name']);
     } 
     
 }

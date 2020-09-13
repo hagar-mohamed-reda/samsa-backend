@@ -21,7 +21,14 @@ class InstallmentController extends Controller
      * @return json
      */
     public function index() {
-        $resources = Installment::get();
+        $query = Installment::query();
+        
+        if (request()->student_id) {
+            $query->where('student_id', request()->student_id);
+        }
+        
+        $resources = $query->paginate(Installment::$PAGE_LENGTH); 
+        
         return responseJson(1, "", $resources);
     }
 
@@ -35,7 +42,7 @@ class InstallmentController extends Controller
         $installmentSum = 0;
         
         foreach ($data['data'] as $item) {
-            if ($item['paid'] != 1)
+            if ($item['paid'] != 1 && !isset($item['deleted']))
                 $installmentSum += $item['value'];
         }
         
@@ -57,7 +64,7 @@ class InstallmentController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(Request $request) {
+    public function update(Request $request) {
         try {
             // retrieve all json data
             $data = $request->all();
@@ -83,7 +90,10 @@ class InstallmentController extends Controller
                 $item['type'] = $data['type'];
                 
                 $installment = null;
-                if (isset($item['id']) && $item['paid'] != 1) {
+                if (isset($item['id']) && $item['paid'] != 1 && isset($item['deleted'])) {
+                    $installment = Installment::find($item['id']);
+                    $installment? $installment->delete() : '';
+                } else if (isset($item['id']) && $item['paid'] != 1) {
                     $installment = Installment::find($item['id']);
                     $installment->update($item);
                 } else {
@@ -91,45 +101,12 @@ class InstallmentController extends Controller
                 }
             }
   
-            //log(__('install the balance of student') . $student->name, "fa fa-calendar");
+            watch(__('install the balance of student') . $student->name, "fa fa-calendar");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
 
         return responseJson(1, __('done'));
     }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function update(Request $request, $id) {
-        try {
-            $resource = Installment::find($id);
-            $resource->update($request->all());
-            log(__('edit installment number ') . $resource->id, "fa fa-calendar");
-        } catch (\Exception $th) {
-            return responseJson(0, $th->getMessage());
-        }
-
-        return responseJson(1, __('done'));
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Response
-     */
-    public function destroy($id) {
-        try {
-            $resource = Installment::find($id);
-            log(__('remove installment ') . $resource->name, "fa fa-calendar");
-            $resource->delete();
-        } catch (\Exception $th) {
-            return responseJson(0, $th->getMessage());
-        }
-        return responseJson(1, __('done'));
-    }
+ 
 }

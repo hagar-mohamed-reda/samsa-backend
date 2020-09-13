@@ -9,11 +9,26 @@ use Illuminate\Routing\Controller;
 use Modules\Account\Entities\Student;
 use Modules\Account\Entities\StudentBalance;
 use Modules\Account\Entities\AccountSetting;
-use Modules\Account\Entities\Payment;
+use Modules\Account\Entities\Payment; 
 use App\User;
 
 class AccountController extends Controller
 {
+    
+    /**
+     * return student info
+     * 
+     * @return type
+     */
+    public function getStudentAccounting() {
+        $student = null;
+        if (request()->student_id) {
+            $student = Student::find(request()->student_id);
+        }
+        
+        return responseJson(1, __("done"), $student);
+    }
+    
     /**
      * pay money in store
      * 
@@ -51,6 +66,14 @@ class AccountController extends Controller
         return responseJson(1, __('done'), $resource);
     }
     
+    /**
+     * pay the value of student
+     * 
+     * @param Student $student
+     * @param type $value
+     * @param User $user
+     * @return type
+     */
     public function performPayment(Student $student, $value, User $user) { 
         // old balance
         $oldBalance = $student->getStudentBalance()->getOldBalance();

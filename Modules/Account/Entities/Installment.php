@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Installment extends Model
 {
+    /**
+     * pagination length for response
+     * 
+     * @var Integer
+     */
+    public static $PAGE_LENGTH = 40;
+    
     protected $table = "account_installments";
   
     protected $fillable = [
