@@ -3,10 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="720a4159-6e59-42af-a842-297449442f0c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Settings/Entities/QualificationTypes.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Entities/QualificationTypes.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationTypesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationTypesController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Entities/ParentJobs.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Entities/ParentJobs.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/ParentJobsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/ParentJobsController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Modules/Settings/Routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Routes/api.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/en/validation.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/validation.php" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/vendor/appslabke/lara-izitoast/" />
     <ignored path="$PROJECT_DIR$/vendor/asm89/stack-cors/" />
@@ -143,7 +142,53 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/api.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="50" column="16" selection-start-line="50" selection-start-column="16" selection-end-line="50" selection-end-column="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/ParentJobsController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="864">
+              <caret line="145" selection-start-line="145" selection-end-line="145" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/Settings/Entities/ParentJobs.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="35" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/AcademicYearController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="173" column="35" selection-start-line="173" selection-end-line="174" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/web.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="20" column="37" selection-start-line="20" selection-end-line="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -175,10 +220,12 @@
         <option value="$PROJECT_DIR$/Modules/Settings/Entities/Qualification.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Requests/QualificationRequest.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationController.php" />
-        <option value="$PROJECT_DIR$/Modules/Settings/Routes/api.php" />
         <option value="$PROJECT_DIR$/resources/lang/en/validation.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Entities/QualificationTypes.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationTypesController.php" />
+        <option value="$PROJECT_DIR$/Modules/Settings/Routes/api.php" />
+        <option value="$PROJECT_DIR$/Modules/Settings/Entities/ParentJobs.php" />
+        <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/ParentJobsController.php" />
       </list>
     </option>
   </component>
@@ -313,6 +360,39 @@
               <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
               <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+              <item name="Modules" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+              <item name="Modules" type="462c0819:PsiDirectoryNode" />
+              <item name="Settings" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+              <item name="Modules" type="462c0819:PsiDirectoryNode" />
+              <item name="Settings" type="462c0819:PsiDirectoryNode" />
+              <item name="Http" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+              <item name="Modules" type="462c0819:PsiDirectoryNode" />
+              <item name="Settings" type="462c0819:PsiDirectoryNode" />
+              <item name="Http" type="462c0819:PsiDirectoryNode" />
+              <item name="Controllers" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+              <item name="Modules" type="462c0819:PsiDirectoryNode" />
+              <item name="Settings" type="462c0819:PsiDirectoryNode" />
+              <item name="Routes" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -368,7 +448,7 @@
       <updated>1599899559536</updated>
       <workItem from="1599899572005" duration="4840000" />
       <workItem from="1599913455896" duration="7791000" />
-      <workItem from="1599979153212" duration="16971000" />
+      <workItem from="1599979153212" duration="18763000" />
     </task>
     <task id="LOCAL-00003" summary="City api Json response">
       <created>1599915312748</created>
@@ -405,11 +485,18 @@
       <option name="project" value="LOCAL" />
       <updated>1599992142632</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="qualification types api JSON response">
+      <created>1600002632980</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1600002632980</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30723000" />
+    <option name="totallyTimeSpent" value="32515000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -449,7 +536,8 @@
     <MESSAGE value="governments api JSON response" />
     <MESSAGE value="languages api JSON response" />
     <MESSAGE value="(Academic years and qualification) api JSON response" />
-    <option name="LAST_COMMIT_MESSAGE" value="(Academic years and qualification) api JSON response" />
+    <MESSAGE value="qualification types api JSON response" />
+    <option name="LAST_COMMIT_MESSAGE" value="qualification types api JSON response" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/Nationality.php">
@@ -580,20 +668,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/web.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="18" column="30" selection-start-line="18" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/api.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="248">
-          <caret line="42" column="35" selection-start-line="42" selection-start-column="16" selection-end-line="42" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Requests/QualificationTypeRequest.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="340">
@@ -643,13 +717,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/AcademicYearController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="173" column="50" selection-start-line="173" selection-end-line="174" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.env">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -668,6 +735,41 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="16" column="36" selection-start-line="16" selection-start-column="36" selection-end-line="16" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/web.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="20" column="37" selection-start-line="20" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/api.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="50" column="16" selection-start-line="50" selection-start-column="16" selection-end-line="50" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Entities/ParentJobs.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="35" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/AcademicYearController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="173" column="35" selection-start-line="173" selection-end-line="174" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/ParentJobsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="864">
+          <caret line="145" selection-start-line="145" selection-end-line="145" />
         </state>
       </provider>
     </entry>

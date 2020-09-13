@@ -8,6 +8,7 @@ class ParentJobs extends Model
 {
     protected $table = 'parent_jobs';
     protected $fillable = ['name','notes'];
+    protected $hidden = ['created_at', 'updated_at'];
     public function applications() {
         return $this->hasMany('Modules\Adminsion\Entities\Application', 'parent_job_id');
     }
