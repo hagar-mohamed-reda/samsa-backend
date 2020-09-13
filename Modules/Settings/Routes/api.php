@@ -38,4 +38,13 @@ Route::group(['middleware' => 'api_auth'], function () {
 //    Route::resource('qualifications', 'QualilificationController');
 //qualifications end
 
+
+//qualifications start
+    Route::get('qualification-types', 'QualilificationTypesController@index');
+    Route::get('qualification-types/{id}', 'QualilificationTypesController@show');
+    Route::post('qualification-types', 'QualilificationTypesController@store');
+    Route::delete('qualification-types/{id}', 'QualilificationTypesController@destroy');
+    Route::put('qualification-types/{id}', 'QualilificationTypesController@update');
+//    Route::resource('qualification-types', 'QualilificationTypesController');
+//qualifications end
 });

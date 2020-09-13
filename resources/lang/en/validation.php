@@ -127,6 +127,8 @@ return [
         'city_id' => 'المدينة',
         'country_id' => 'الدولة',
         'government_id' => 'المحافظة',
+        'academic_year_id', 'السنة الدراسية',
+        'percentage', 'النسبة المئوية',
         'grade' => 'درجة الطالب ',
         'nieghbourhood_id' => 'الحي',
         'country' => 'الدولة',
