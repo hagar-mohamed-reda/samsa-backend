@@ -19,7 +19,8 @@ class Student extends StudentOrigin
         'old_balance', 
         'paid_value',
         'paids',
-        'gpa'  
+        'gpa',
+        'services'
     ];
     
     public function getOldBalanceAttribute() {
@@ -42,6 +43,11 @@ class Student extends StudentOrigin
         return 1.5;
     }
     
+    public function getServicesAttribute() {
+        $ids = StudentService::where('student_id', $this->id)->pluck('service_id')->toArray();
+        return Service::whereIn('id', $ids)->get(); 
+    }
+
     public function getStudentBalance() {
         return StudentBalance::find($this->id);
     }
