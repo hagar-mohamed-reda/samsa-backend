@@ -3,10 +3,11 @@
 namespace Modules\Account\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Student\Entities\Student as StudentOrigin;
 
 use DB;
 
-class Student extends Model
+class Student extends StudentOrigin
 {
 
     protected $table = "students";
@@ -18,7 +19,7 @@ class Student extends Model
         'old_balance', 
         'paid_value',
         'paids',
-        'gpa'
+        'gpa'  
     ];
     
     public function getOldBalanceAttribute() {
@@ -78,4 +79,7 @@ class Student extends Model
     public function division() {
         return $this->belongsTo("Modules\Divisions\Entities\Division", "division_id")->select(['id', 'name']);
     }
+ 
+ 
+
 }
