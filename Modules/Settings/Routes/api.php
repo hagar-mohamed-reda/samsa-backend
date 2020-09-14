@@ -38,4 +38,23 @@ Route::group(['middleware' => 'api_auth'], function () {
 //    Route::resource('qualifications', 'QualilificationController');
 //qualifications end
 
+//qualifications start
+    Route::get('qualification-types', 'QualilificationTypesController@index');
+    Route::get('qualification-types/{id}', 'QualilificationTypesController@show');
+    Route::post('qualification-types', 'QualilificationTypesController@store');
+    Route::delete('qualification-types/{id}', 'QualilificationTypesController@destroy');
+    Route::put('qualification-types/{id}', 'QualilificationTypesController@update');
+//    Route::resource('qualification-types', 'QualilificationTypesController');
+//qualifications end
+
+//parent-jobs start
+    Route::get('parent-jobs', 'ParentJobsController@index');
+    Route::get('parent-jobs/{id}', 'ParentJobsController@show');
+    Route::post('parent-jobs', 'ParentJobsController@store');
+    Route::delete('parent-jobs/{id}', 'ParentJobsController@destroy');
+    Route::put('parent-jobs/{id}', 'ParentJobsController@update');
+//    Route::resource('parent-jobs', 'ParentJobsController');
+//parent-jobs end
+
+
 });

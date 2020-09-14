@@ -9,6 +9,7 @@ class QualificationTypes extends Model
     protected $table = 'qualification_types';
     protected $fillable = ['qualification_id', 'name', 'grade', 'level_id', 'academic_year_id', 'percentage'];
 
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function qualifications()
     {
@@ -22,5 +23,11 @@ class QualificationTypes extends Model
     
     public function academicYear() {
         return $this->belongsTo('Modules\Settings\Entities\AcademicYear','academic_year_id');
+    }
+    public function applications(){
+        return $this->hasMany('Modules\Adminsion\Entities\Application', 'qualification_types_id');
+    }
+    public function students(){
+        return $this->hasMany('Modules\Student\Entities\Student', 'qualification_types_id');
     }
 }
