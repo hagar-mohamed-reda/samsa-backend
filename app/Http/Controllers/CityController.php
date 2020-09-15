@@ -26,7 +26,7 @@ class CityController extends Controller
      */
     public function index()
     {
-        $cities = City::OrderBy('created_at', 'desc')->paginate(10);
+        $cities = City::with(['government'])->OrderBy('created_at', 'desc')->paginate(10);
         return responseJson(1, "ok", $cities);
     }
 

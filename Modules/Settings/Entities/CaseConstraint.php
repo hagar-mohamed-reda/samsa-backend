@@ -8,4 +8,5 @@ class CaseConstraint extends Model
 {
     protected $table = 'case_constraints';
     protected $fillable = ['name', 'notes'];
+    protected $hidden = ['created_at', 'updated_at'];
 }

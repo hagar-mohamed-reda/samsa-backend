@@ -56,5 +56,14 @@ Route::group(['middleware' => 'api_auth'], function () {
 //    Route::resource('parent-jobs', 'ParentJobsController');
 //parent-jobs end
 
+//case-constraint start
+    Route::get('case-constraint', 'CaseConstraintController@index');
+    Route::get('case-constraint/{id}', 'CaseConstraintController@show');
+    Route::post('case-constraint', 'CaseConstraintController@store');
+    Route::delete('case-constraint/{id}', 'CaseConstraintController@destroy');
+    Route::put('case-constraint/{id}', 'CaseConstraintController@update');
+//    Route::resource('case-constraint', 'CaseConstraintController');
+//case-constraint end
+
 
 });

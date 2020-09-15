@@ -11,7 +11,7 @@ class City extends Model {
     protected $hidden = ['created_at', 'updated_at'];
 
     public function government() {
-        return $this->belongsTo('App\Government', 'government_id');
+        return $this->belongsTo('App\Government', 'government_id')->with(['country']);
     }
 
     public function applications() {

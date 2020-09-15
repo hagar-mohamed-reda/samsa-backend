@@ -7,22 +7,25 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Settings\Entities\CaseConstraint;
 
-class CaseConstraintController extends Controller {
+class CaseConstraintController extends Controller
+{
 
     /**
      * Display a listing of the resource.
      * @return Response
      */
-    public function index() {
-        $resources = CaseConstraint::orderBy('created_at', 'DESC')->get();
-        return view('settings::case_constraint.index', compact('resources'));
+    public function index()
+    {
+        $resources = CaseConstraint::orderBy('created_at', 'DESC')->paginate(10);
+        return responseJson(1, "ok", $resources);
     }
 
     /**
      * Show the form for creating a new resource.
      * @return Response
      */
-    public function create() {
+    public function create()
+    {
         return view('settings::case_constraint.create');
     }
 
@@ -31,16 +34,21 @@ class CaseConstraintController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function store(Request $request) {
-        $request->validate([
-            'name' => 'required'
+    public function store(Request $request)
+    {
+        $validator = validator($request->all(), [
+            'name' => 'required|unique:case_constraints,name'
         ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
 
         try {
             $resource = CaseConstraint::create($request->all());
             if ($resource) {
-                notfy(__('add case constraint'), __('add case constraint'), "fa fa-language");
-                notify()->success(__('data creadted successfully'), "", "bottomLeft");
+                watch(_('Case Constraint year was created'), $icon = 'fa fa-accusoft');
+                return responseJson(1, __('data created successfully'), $resource);
             }
         } catch (\Exception $th) {
             notify()->error($th->getMessage(), "", "bottomLeft");
@@ -53,8 +61,13 @@ class CaseConstraintController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function show($id) {
-        return view('settings::show');
+    public function show($id)
+    {
+        $resource = CaseConstraint::find($id);
+        if (!$resource) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $resource);
     }
 
     /**
@@ -62,7 +75,9 @@ class CaseConstraintController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
+
         try {
             $resource = CaseConstraint::find($id);
             if (!$resource) {
@@ -83,22 +98,27 @@ class CaseConstraintController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id) {
-        $request->validate([
-            'name' => 'required'
-        ]);
-        try {
-            $resource = CaseConstraint::find($id);
-            if (!$resource) {
-                notify()->warning(__('data not found'), "", "bottomLeft");
-            } else {
-                $resource->update($request->all());
-                notify()->success(__('data updated successfully'), "", "bottomLeft");
-            }
-        } catch (\Exception $ex) {
-            notify()->error($th->getMessage(), "", "bottomLeft");
+    public function update(Request $request, $id)
+    {
+        $resource = CaseConstraint::find($id);
+        if (!$resource) {
+            return responseJson(0, __('data not found'), '');
         }
-        return redirect()->route('case-constraint.index');
+        $validator = validator($request->all(), [
+            'name' => 'required|unique:case_constraints,id,'.$resource->id
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
+
+        try {
+            $resource->update($request->all());
+            return responseJson(1, __('data updated successfully'), $resource);
+
+        } catch (\Exception $ex) {
+            return responseJson(0, "", $ex->getMessage());
+        }
     }
 
     /**
@@ -106,7 +126,8 @@ class CaseConstraintController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         try {
             $resource = CaseConstraint::find($id);
             if (!$resource) {
@@ -116,7 +137,7 @@ class CaseConstraintController extends Controller {
                 notify()->success(__('data has been deleted successfully'), "", "bottomLeft");
             }
         } catch (\Exception $ex) {
-            notify()->error( $ex->getMessage(), "", "bottomLeft");
+            notify()->error($ex->getMessage(), "", "bottomLeft");
         }
         return redirect()->route('case-constraint.index');
     }
