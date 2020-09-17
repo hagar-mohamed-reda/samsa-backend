@@ -20,6 +20,8 @@ class ApiAuth
         if (isset($request->json()->all()["api_token"]) || $request->api_token) {
             $apiToken = isset($request->json()->all()["api_token"])? $request->json()->all()["api_token"] : $request->api_token;
             $user = User::where('api_token', $apiToken)->first();
+
+            $request->user = $user;
         }
         if (!$user) {
             return redirect('api/api_auth'); 

@@ -39,6 +39,8 @@ Route::group(['middleware' => 'api_auth'], function () {
         
         // account routes
         Route::get('get_student_account', 'AccountController@getStudentAccounting');
+        Route::get('get_available_services', 'AccountController@getStudentAvailableServices');
+        Route::post('pay', 'AccountController@pay');
         
         // installment routes
         Route::get('installment/get', 'InstallmentController@index');

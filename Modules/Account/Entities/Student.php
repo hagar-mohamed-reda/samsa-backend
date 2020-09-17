@@ -20,7 +20,8 @@ class Student extends StudentOrigin
         'paid_value',
         'paids',
         'gpa',
-        'services'
+        'services',
+        'image'
     ];
     
     public function getOldBalanceAttribute() {
@@ -48,6 +49,13 @@ class Student extends StudentOrigin
         return Service::whereIn('id', $ids)->get(); 
     }
 
+    public function getImageAttribute() {
+        $resource = DB::table('student_required_documents')->where('student_id', $this->id)->where('required_document_id', 4)->first();
+        $path = optional($resource)->path;
+
+        return $path? url($path) : null;
+    }
+
     public function getStudentBalance() {
         return StudentBalance::find($this->id);
     }
@@ -71,7 +79,7 @@ class Student extends StudentOrigin
     }
     
     public function installments() {
-        return $this->hasMany("Modules\Account\Entities\Installment", "student_id");
+        return $this->hasMany("Modules\Account\Entities\Installment", "student_id")->orderBy('date');
     }
 
     public function payments() {
@@ -84,6 +92,23 @@ class Student extends StudentOrigin
 
     public function division() {
         return $this->belongsTo("Modules\Divisions\Entities\Division", "division_id")->select(['id', 'name']);
+    }
+
+    public function canGetService() {
+
+    }
+
+    public function getAvailableServices() {
+        $ids = [];
+        $services = Service::all();
+
+        foreach ($services as $service) {
+            if (AccountSetting::canStudentGetService($service, $this)) {
+                $ids[] = $service->id;
+            }
+        }
+
+        return Service::whereIn('id', $ids)->get(['id', 'name', 'value', 'additional_value']);
     }
  
  

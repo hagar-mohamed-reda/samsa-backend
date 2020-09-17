@@ -36,4 +36,39 @@ class AccountSetting
         
         return Term::where('id', 1)->first();
     }
+
+
+    /**
+     * check if the student can take service
+     */
+    public static function canStudentGetService(Service $service, Student $student) {
+        $valid = true;
+
+        // check if student take this service
+        if (!$service->repeat) {
+            if (StudentService::where('student_id', $student->id)->where('service_id', $service->id)->exists()) {
+                $valid = false;
+            }
+        }
+
+        // check on student installments
+        if ($service->from_installment_id) {
+            if (Payment::where('student_id', $student->id)->whereIn('type', ['installment', 'academic_year_expense'])->count() < $service->from_installment_id)
+                $valid = false;
+        }
+
+        // check on student level
+        if ($service->except_level_id) {
+            if ($service->except_level_id == $student->level_id)
+                $valid = false;
+        }
+
+        // check on student level
+        if ($service->division) {
+            if ($service->division != $student->division)
+                $valid = false;
+        }
+
+        return $valid;
+    }
 }
