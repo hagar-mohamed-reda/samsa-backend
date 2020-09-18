@@ -21,7 +21,7 @@ class ServiceController extends Controller
      */
     public function index() {
         $resources = Service::with(['level', 'division'])->get();
-        return responseJson(1, "", $resources);
+        return $resources;
     }
  
     /**
@@ -86,7 +86,7 @@ class ServiceController extends Controller
     public function destroy(Service $service) { 
         try { 
             watch(__('remove service ') . $service->name, "fa fa-trophy"); 
-            //$service->delete();
+            $service->delete();
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
