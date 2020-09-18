@@ -50,6 +50,7 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::delete('countries/{id}', 'CountryController@destroy');
     Route::put('countries/{id}', 'CountryController@update');
 
+    
     //Route::resource('countries', 'CountryController');
     //end
 
@@ -59,6 +60,9 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::post('governments', 'GovernmentController@store');
     Route::delete('governments/{id}', 'GovernmentController@destroy');
     Route::put('governments/{id}', 'GovernmentController@update');
+    Route::get('government/{country_id}', 'GovernmentController@getGovernments');
+    Route::get('country/{government_id}', 'GovernmentController@getCountry');
+
 
     //Route::resource('governments', 'GovernmentController');
     //end

@@ -24,7 +24,7 @@ class GovernmentController extends Controller
      */
     public function index()
     {
-        $governments = Government::OrderBy('created_at', 'desc')->paginate(10);
+        $governments = Government::with(['country'])->OrderBy('created_at', 'desc')->get();
         return responseJson(1, "ok", $governments);
     }
 
@@ -48,7 +48,7 @@ class GovernmentController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required",
+            "name" => "required|unique:governments,name",
             "country_id" => 'required|exists:countries,id'
         ]);
 
@@ -160,6 +160,9 @@ class GovernmentController extends Controller
 
     public function getGovernments($country_id)
     {
-        return Government::where('country_id', $country_id)->pluck('id', 'name')->toArray();
+        $governments =  Government::where('country_id', $country_id)->get();
+        return responseJson(0, "", $governments);
+
     }
+    
 }

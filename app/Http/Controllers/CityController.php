@@ -24,10 +24,11 @@ class CityController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cities = City::with(['government'])->OrderBy('created_at', 'desc')->paginate(10);
-        return responseJson(1, "ok", $request()->all());
+        $cities = City::with(['governments'])->OrderBy('created_at', 'desc')->get();
+
+        return responseJson(1, "ok", $cities);
     }
 
     /**
@@ -52,7 +53,7 @@ class CityController extends Controller
 
         $validator = validator($request->all(), [
             "name" => "required",
-            "government_id" => 'required|exists:cities'
+            "government_id" => 'required|exists:governments,id'
         ]);
 
         if ($validator->fails()) {
@@ -62,9 +63,7 @@ class CityController extends Controller
             $city = City::create($request->all());
             if ($city) {
                 return responseJson(1, __('data created successfully'), $city);
-
             } else {
-
             }
 
         } catch (Exception $th) {
@@ -81,6 +80,8 @@ class CityController extends Controller
     public function show($id)
     {
         $city = City::find($id);
+        $city->government;
+        $city->government->country;
         if (!$city) {
             return responseJson(0, __('data not found'), '');
         }
@@ -114,7 +115,7 @@ class CityController extends Controller
     {
         $validator = validator($request->all(), [
             "name" => "required",
-            "government_id" => 'required|exists:cities'
+            "government_id" => 'required|exists:governments,id'
         ]);
 
         if ($validator->fails()) {

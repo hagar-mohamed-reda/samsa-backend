@@ -24,7 +24,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $countries = Country::OrderBy('created_at', 'desc')->paginate(10);
+        $countries = Country::OrderBy('created_at', 'desc')->get();
         return responseJson(1, "ok", $countries);
     }
 
@@ -47,7 +47,7 @@ class CountryController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required",
+            "name" => "required|unique:countries,name",
         ]);
 
         if ($validator->fails()) {

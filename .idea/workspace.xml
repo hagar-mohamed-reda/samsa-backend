@@ -3,11 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="720a4159-6e59-42af-a842-297449442f0c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Settings/Entities/CaseConstraint.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Entities/CaseConstraint.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/CaseConstraintController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/CaseConstraintController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Settings/Routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Routes/api.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/City.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/City.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/CityController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/CityController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/CountryController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/CountryController.php" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/vendor/appslabke/lara-izitoast/" />
     <ignored path="$PROJECT_DIR$/vendor/asm89/stack-cors/" />
@@ -148,17 +145,35 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CityController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="28" column="41" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="41" />
+            <state relative-caret-position="408">
+              <caret line="28" column="80" selection-start-line="28" selection-start-column="80" selection-end-line="28" selection-end-column="80" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CountryController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/City.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="21" column="77" lean-forward="true" selection-start-line="21" selection-start-column="77" selection-end-line="21" selection-end-column="77" />
+            <state relative-caret-position="357">
+              <caret line="21" column="77" selection-start-line="21" selection-start-column="77" selection-end-line="21" selection-end-column="77" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Middleware/ApiAuth.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="16" column="43" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -169,7 +184,11 @@
     <findStrings>
       <find>|| $academic_year-&gt;applications&gt; 0</find>
       <find>wa</find>
+      <find>api_token</find>
     </findStrings>
+    <dirStrings>
+      <dir>E:\xampp\htdocs\SAMSA</dir>
+    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -179,7 +198,6 @@
       <list>
         <option value="$PROJECT_DIR$/app/Http/Controllers/nationalityController.php" />
         <option value="$PROJECT_DIR$/app/Country.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/CountryController.php" />
         <option value="$PROJECT_DIR$/app/Government.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/GovernmentController.php" />
         <option value="$PROJECT_DIR$/app/Language.php" />
@@ -202,8 +220,9 @@
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/AcademicYearController.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/CaseConstraintController.php" />
         <option value="$APPLICATION_CONFIG_DIR$/phpstorm64.exe.vmoptions" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/CityController.php" />
         <option value="$PROJECT_DIR$/app/City.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/CityController.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/CountryController.php" />
       </list>
     </option>
   </component>
@@ -319,7 +338,7 @@
       <path value="$PROJECT_DIR$/vendor/phar-io/version" />
     </include_path>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-31" />
     <option name="y" value="16" />
     <option name="width" value="1346" />
@@ -414,6 +433,8 @@
       <workItem from="1599979153212" duration="20128000" />
       <workItem from="1600065468568" duration="1295000" />
       <workItem from="1600066862551" duration="7990000" />
+      <workItem from="1600162280364" duration="2221000" />
+      <workItem from="1600243216323" duration="591000" />
     </task>
     <task id="LOCAL-00003" summary="City api Json response">
       <created>1599915312748</created>
@@ -464,16 +485,23 @@
       <option name="project" value="LOCAL" />
       <updated>1600004433719</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="cities api JSON response">
+      <created>1600162384238</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1600162384238</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43165000" />
+    <option name="totallyTimeSpent" value="45977000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28614685" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2952309" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -484,8 +512,8 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32649574" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.42222223" />
+      <window_info anchor="bottom" id="Version Control" order="8" visible="true" weight="0.32649574" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.42222223" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5003785" side_tool="true" weight="0.42222223" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="GraphQL" order="12" />
@@ -510,7 +538,8 @@
     <MESSAGE value="(Academic years and qualification) api JSON response" />
     <MESSAGE value="qualification types api JSON response" />
     <MESSAGE value="parent jobs api JSON response" />
-    <option name="LAST_COMMIT_MESSAGE" value="parent jobs api JSON response" />
+    <MESSAGE value="cities api JSON response" />
+    <option name="LAST_COMMIT_MESSAGE" value="cities api JSON response" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/Nationality.php">
@@ -558,13 +587,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CountryController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="152" column="58" selection-start-line="152" selection-start-column="58" selection-end-line="152" selection-end-column="58" />
         </state>
       </provider>
     </entry>
@@ -758,15 +780,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CityController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="28" column="41" selection-start-line="28" selection-start-column="31" selection-end-line="28" selection-end-column="41" />
+        <state relative-caret-position="408">
+          <caret line="28" column="80" selection-start-line="28" selection-start-column="80" selection-end-line="28" selection-end-column="80" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/City.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="21" column="77" lean-forward="true" selection-start-line="21" selection-start-column="77" selection-end-line="21" selection-end-column="77" />
+        <state relative-caret-position="357">
+          <caret line="21" column="77" selection-start-line="21" selection-start-column="77" selection-end-line="21" selection-end-column="77" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Middleware/ApiAuth.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="16" column="43" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CountryController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
         </state>
       </provider>
     </entry>
