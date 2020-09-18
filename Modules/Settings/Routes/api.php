@@ -65,5 +65,7 @@ Route::group(['middleware' => 'api_auth'], function () {
 //    Route::resource('case-constraint', 'CaseConstraintController');
 //case-constraint end
 
-
+    // translation
+    Route::get('translation', 'TranslationController@index');
+    Route::post('translation/update', 'TranslationController@update');
 });

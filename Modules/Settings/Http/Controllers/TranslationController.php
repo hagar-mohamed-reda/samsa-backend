@@ -7,6 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 use App\Translation;
+use DB;
 
 class TranslationController extends Controller
 {
@@ -15,8 +16,8 @@ class TranslationController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index() {
-        return view('settings::translation.index');
+    public function index() { 
+        return Translation::get()->pluck('value', 'key');
     }
 
     /**
@@ -26,14 +27,23 @@ class TranslationController extends Controller
      */
     public function update(Request $request) {
         try {
-            $data = json_decode($request->data); 
+            $data = $request->data;//json_decode(); 
             
             foreach($data as $item) { 
+                $item = json_decode(json_encode($item));
                 $translation = Translation::find($item->id);
-                $translation->update([
-                    "name_ar" => $item->name_ar,
-                    "name_en" => $item->name_en
-                ]);
+                if ($translation) {
+                    $translation->update([
+                        "name_ar" => $item->name_ar,
+                        "name_en" => $item->name_en
+                    ]);
+                } else {
+                    $translation = Translation::create([
+                        "key" => $item->key,
+                        "name_ar" => $item->key,
+                        "name_ar" => $item->key,
+                    ]);
+                }
             }
              
             notfy(__('change translation'), __('change translation'), "fa fa-language"); 
