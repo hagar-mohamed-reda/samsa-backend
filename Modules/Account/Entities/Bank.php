@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bank extends Model
 {
+    // table of bank
     protected $table = "account_banks";
     
     protected $fillable = [
