@@ -34,7 +34,7 @@ Route::group(['middleware' => 'api_auth'], function () {
         // academic_year_expense routes
         Route::get('academic_year_expenses', 'AcademicYearExpenseController@index');
         Route::post('academic_year_expenses/store', 'AcademicYearExpenseController@store');
-        Route::post('academic_year_expenses/update/{resource}', 'AcademicYearExpenseController@update');
+        Route::post('academic_year_expenses/update', 'AcademicYearExpenseController@update');
         Route::post('academic_year_expenses/delete/{resource}', 'AcademicYearExpenseController@destroy');
         
         // account routes
@@ -48,6 +48,17 @@ Route::group(['middleware' => 'api_auth'], function () {
 
         // main
         Route::get('search_student', 'AccountController@searchStudent');
+
+        Route::get('levels', function(){
+          return DB::table('levels')->get();
+        });
+        Route::get('divisions', function(){
+          return DB::table('divisions')->get();
+        });
+        Route::get('terms', function(){
+          return DB::table('terms')->get();
+        });
+
     });
 });
 

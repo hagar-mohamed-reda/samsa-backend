@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Account\Entities\Installment;
 use Modules\Account\Entities\Student;
+use Modules\Account\Entities\AccountSetting;
 
 class InstallmentController extends Controller
 {
@@ -66,6 +67,7 @@ class InstallmentController extends Controller
      */
     public function update(Request $request) {
         try {
+            $academicYear = AccountSetting::getCurrentAcademicYear();
             // retrieve all json data
             $data = $request->all();
 
@@ -97,6 +99,7 @@ class InstallmentController extends Controller
                     $installment = Installment::find($item['id']);
                     $installment->update($item);
                 } else {
+                    $item['academic_year_id'] = $academicYear->id;
                     $installment = Installment::create($item);
                 }
             }

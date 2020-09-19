@@ -3,7 +3,7 @@
 namespace Modules\Account\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-
+use DB;
 class AcademicYearExpenseDetail extends Model
 {
     protected $table = "account_academic_year_expenses_details";
@@ -29,4 +29,14 @@ class AcademicYearExpenseDetail extends Model
     }
      
     
+    public function canDelete() {
+        $academicYear = AccountSetting::getCurrentAcademicYear();
+        $valid = true;
+ 
+        if (DB::table('account_payments')->where('model_type', 'academic_year_expense')->where('model_id', $this->id)->first())
+            $valid = false;
+        
+        
+        return $valid;
+    }
 }
