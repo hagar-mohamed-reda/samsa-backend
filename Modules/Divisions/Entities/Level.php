@@ -8,6 +8,7 @@ class Level extends Model {
 
     protected $table = "levels";
     protected $fillable = ['name', 'notes'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function department() {
         return $this->hasMany('Modules\Divisions\Entities\Department', 'level_id');

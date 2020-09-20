@@ -11,10 +11,10 @@ use Modules\Divisions\Http\Requests\LevelRequest;
 class LevelController extends Controller {
 
     public function __construct() {
-        $this->middleware(['permission:levels_read'])->only('index');
-        $this->middleware(['permission:levels_create'])->only('create');
-        $this->middleware(['permission:levels_update'])->only('edit');
-        $this->middleware(['permission:levels_delete'])->only('destroy');
+        // $this->middleware(['permission:levels_read'])->only('index');
+        // $this->middleware(['permission:levels_create'])->only('create');
+        // $this->middleware(['permission:levels_update'])->only('edit');
+        // $this->middleware(['permission:levels_delete'])->only('destroy');
     }
 
     /**
@@ -23,7 +23,7 @@ class LevelController extends Controller {
      */
     public function index() {
         $levels = Level::OrderBy('created_at', 'desc')->get();
-        return view('divisions::levels.index', compact('levels'));
+        return responseJson(1, "ok", $levels);
     }
 
     /**

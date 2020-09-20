@@ -25,7 +25,7 @@ class AcademicYearController extends Controller
      */
     public function index()
     {
-        $academic_years = AcademicYear::OrderBy('created_at', 'desc')->paginate(10);
+        $academic_years = AcademicYear::OrderBy('created_at', 'desc')->get();
         return responseJson(1, "ok", $academic_years);
     }
 
@@ -55,6 +55,7 @@ class AcademicYearController extends Controller
         }
         try {
             $data = $request->all();
+//            return responseJson(1, __('hahaha'),  $request->all());
             $data['name'] = date('Y', strtotime($data['start_date'])) . "-" . date('Y', strtotime($data['end_date']));
             $academic_years_name = AcademicYear::all()->pluck('name');
             $academic_years_name = $academic_years_name->toArray();
@@ -65,7 +66,7 @@ class AcademicYearController extends Controller
             } else {
                 $academic_year = AcademicYear::create($data);
                 if ($academic_year) {
-                    log(_('Academic year was created'), $icon = 'fa fa-accusoft');
+//                    log(_('Academic year was created'), $icon = 'fa fa-accusoft');
                     return responseJson(1, __('data created successfully'), $academic_year);
                 }
             }
@@ -118,8 +119,8 @@ class AcademicYearController extends Controller
     public function update(Request $request, $id)
     {
         $validator = validator($request->all(), [
-            'start_date' => 'required|unique:academic_years,start_date',
-            'end_date' => 'required|unique:academic_years,end_date',
+            'start_date' => 'required|unique:academic_years,id',
+            'end_date' => 'required|unique:academic_years,id',
         ]);
 
         if ($validator->fails()) {

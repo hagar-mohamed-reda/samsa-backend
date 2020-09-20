@@ -11,14 +11,14 @@ class QualificationTypes extends Model
 
     protected $hidden = ['created_at', 'updated_at'];
 
-    public function qualifications()
+    public function qualification()
     {
         return $this->belongsTo('Modules\Settings\Entities\Qualification','qualification_id');
     }
 
     public function level()
     {
-        return $this->belongsTo('Modules\Settings\Entities\Level','level_id');
+        return $this->belongsTo('Modules\Divisions\Entities\Level','level_id');
     }
     
     public function academicYear() {

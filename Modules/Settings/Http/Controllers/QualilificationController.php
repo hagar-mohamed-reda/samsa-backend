@@ -46,7 +46,7 @@ class QualilificationController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            'name' => 'required',
+            'name' => 'required|unique:qualifications,name',
             'grade' => 'required',
         ]);
 
@@ -111,7 +111,7 @@ class QualilificationController extends Controller
     public function update(Request $request, $id)
     {
         $validator = validator($request->all(), [
-            'name' => 'required',
+            'name' => 'required|unique:qualifications,name,'.$id,
             'grade' => 'required',
         ]);
 

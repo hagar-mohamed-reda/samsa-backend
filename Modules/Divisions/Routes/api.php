@@ -16,3 +16,10 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/divisions', function (Request $request) {
     return $request->user();
 });
+Route::group(['middleware' => 'api_auth'], function () {
+    Route::get('levels', 'LevelController@index');
+    Route::get('levels/{id}', 'LevelController@show');
+    Route::post('levels', 'LevelController@store');
+    Route::delete('levels/{id}', 'LevelController@destroy');
+    Route::put('levels/{id}', 'LevelController@update');
+});

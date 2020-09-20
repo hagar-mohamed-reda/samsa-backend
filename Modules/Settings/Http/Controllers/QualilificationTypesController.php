@@ -33,7 +33,7 @@ class QualilificationTypesController extends Controller
         if (request()->academic_year_id > 0)
             $query->where('academic_year_id', request()->academic_year_id);
 
-        $qualification_types = $query->OrderBy('created_at', 'desc')->paginate(10);
+        $qualification_types = $query->with(['level','qualification'])->OrderBy('created_at', 'desc')->get();
         return responseJson(1, "ok", $qualification_types);
     }
 
