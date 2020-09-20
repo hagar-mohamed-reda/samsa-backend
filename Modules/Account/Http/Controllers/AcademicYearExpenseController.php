@@ -21,11 +21,20 @@ class AcademicYearExpenseController extends Controller
      * return all data in json format
      * @return json
      */
-    public function index() {
+    public function index(Request $request) {
         $academicYear = AccountSetting::getCurrentAcademicYear();
         $resources = AcademicYearExpense::with(['academic_year', 'level', 'division', 'details'])
                 ->where('academic_year_id', $academicYear->id)
-                ->get();
+                ->where('level_id', $request->level_id)
+                ->first();
+
+        if (!$resources) {
+            $resources = AcademicYearExpense::create([
+                "level_id" => $request->level_id,
+                "division_id" => $request->division_id,
+                "academic_year_id" => $academicYear->id,
+            ]);
+        }
         return $resources;
     }
  
@@ -80,10 +89,29 @@ class AcademicYearExpenseController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, AcademicYearExpenseDetail $resource) {
-        try { 
-            $resource->update($request->all()); 
-            watch(__('edit academic year expense ') . $resource->name, "fa fa-money");
+    public function update(Request $request) {
+        try {   
+
+            foreach($request->details as $item) {
+                $detail = isset($item['id'])? AcademicYearExpenseDetail::find($item['id']) : null;
+
+                if ($detail) {
+                    $detail->update($item);
+                } else {
+                    if (
+                        isset($item['name']) && 
+                        isset($item['priorty']) &&
+                        isset($item['term_id']) &&
+                        isset($item['value'])  
+                    ) {
+                        $data = $item; 
+                        $data['store_id'] = 1;
+                        $detail = AcademicYearExpenseDetail::create($data);
+                    }
+                }
+            }
+ 
+            watch(__('edit academic year expense '), "fa fa-money");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
@@ -97,9 +125,11 @@ class AcademicYearExpenseController extends Controller
      * @return Response
      */
     public function destroy(AcademicYearExpenseDetail $resource) { 
+        if (!$resource->canDelete())
+            return responseJson(1, __('cant delete this academic year expense'));
         try { 
             watch(__('remove academic year expense ') . $resource->name, "fa fa-money"); 
-           // $resource->delete();
+            $resource->delete();
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }

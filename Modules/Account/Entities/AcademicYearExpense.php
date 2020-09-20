@@ -3,6 +3,7 @@
 namespace Modules\Account\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class AcademicYearExpense extends Model
 {
@@ -29,4 +30,5 @@ class AcademicYearExpense extends Model
     public function details() {
         return $this->hasMany('Modules\Account\Entities\AcademicYearExpenseDetail', 'academic_year_expense_id')->with('store', 'term');
     }
+
 }

@@ -76,7 +76,7 @@ class AccountController extends Controller
      */
     public function performPayment(Student $student, $value, User $user) { 
         // old balance
-        $oldBalance = $student->getStudentBalance()->getOldBalance();
+        $oldBalance = $student->getStudentBalance()->getOldBalance(); 
         
         // type of payment
         $modelType = "";
