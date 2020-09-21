@@ -8,6 +8,7 @@ class Department extends Model
 {
     protected $table =  "departments";
     protected $fillable = ['name', 'level_id', 'notes'];
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function level(){
         return $this->belongsTo('Modules\Divisions\Entities\Level', 'level_id');

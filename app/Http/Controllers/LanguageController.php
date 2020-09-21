@@ -24,7 +24,7 @@ class LanguageController extends Controller
      */
     public function index()
     {
-        $languages = Language::OrderBy('created_at', 'desc')->paginate(10);
+        $languages = Language::OrderBy('created_at', 'desc')->get();
         return responseJson(1, "ok", $languages);
     }
 

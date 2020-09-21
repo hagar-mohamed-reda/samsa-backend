@@ -163,8 +163,7 @@ class AcademicYearController extends Controller
             $qualificationTypes = $academic_year->qualificationTypes->count();
 
             if (!$academic_year) {
-                notify()->warning(__('data not found'), "", "bottomLeft");
-                return redirect()->route('academic-years.index');
+                return responseJson(0, __('data not found'), '');
             }
             if ((isset($qualificationTypes) && $qualificationTypes > 0) ||
                 $academic_year->applications->count() > 0 ||

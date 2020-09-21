@@ -24,7 +24,7 @@ class ParentJobsController extends Controller
      */
     public function index()
     {
-        $parent_jobs = ParentJobs::OrderBy('created_at', 'desc')->paginate(10);
+        $parent_jobs = ParentJobs::OrderBy('created_at', 'desc')->get();
         return responseJson(1, "ok", $parent_jobs);
     }
 

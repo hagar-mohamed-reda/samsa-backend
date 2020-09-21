@@ -12,10 +12,10 @@ use Modules\Adminsion\Entities\RegisterationStatusDocument;
 class RegisterationStatusController extends Controller {
 
     public function __construct() {
-        $this->middleware(['permission:registeration-status_read'])->only('index');
-        $this->middleware(['permission:registeration-status_create'])->only('create');
-        $this->middleware(['permission:registeration-status_update'])->only('edit');
-        $this->middleware(['permission:registeration-status_delete'])->only('destroy');
+//        $this->middleware(['permission:registeration-status_read'])->only('index');
+//        $this->middleware(['permission:registeration-status_create'])->only('create');
+//        $this->middleware(['permission:registeration-status_update'])->only('edit');
+//        $this->middleware(['permission:registeration-status_delete'])->only('destroy');
     }
 
     /**

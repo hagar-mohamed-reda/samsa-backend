@@ -11,10 +11,10 @@ use Modules\Settings\Http\Requests\RegisterationMethodsRequest;
 class RegistrationMethodsController extends Controller {
 
     public function __construct() {
-        $this->middleware(['permission:registeration-methods_read'])->only('index');
-        $this->middleware(['permission:registeration-methods_create'])->only('create');
-        $this->middleware(['permission:registeration-methods_update'])->only('edit');
-        $this->middleware(['permission:registeration-methods_delete'])->only('destroy');
+//        $this->middleware(['permission:registeration-methods_read'])->only('index');
+//        $this->middleware(['permission:registeration-methods_create'])->only('create');
+//        $this->middleware(['permission:registeration-methods_update'])->only('edit');
+//        $this->middleware(['permission:registeration-methods_delete'])->only('destroy');
     }
 
     /**
@@ -23,7 +23,7 @@ class RegistrationMethodsController extends Controller {
      */
     public function index() {
         $registerationMethods = RegistrationMethod::OrderBy('created_at', 'desc')->get();
-        return view('settings::registeration_methods.index', compact('registerationMethods'));
+        return responseJson(1, "ok", $registerationMethods);
     }
 
     /**
@@ -39,18 +39,24 @@ class RegistrationMethodsController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function store(RegisterationMethodsRequest $request) {
+    public function store(Request $request) {
+        $validator = validator($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $registerationMethods = RegistrationMethod::create($request->all());
             if ($registerationMethods) {
-                notify()->success(__('data created successfully'), "", "bottomLeft");
+                return responseJson(1, __('data created successfully'), $registerationMethods);
             } else {
                 notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft");
             }
-        } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft");
+        } catch (\Exception $ex) {
+            return responseJson(0, $ex->getMessage(), "" );
         }
-        return redirect()->route('registeration-methods.index');
     }
 
     /**
@@ -59,8 +65,11 @@ class RegistrationMethodsController extends Controller {
      * @return Response
      */
     public function show($id) {
-        return view('settings::show');
-    }
+        $registerationMethods = RegistrationMethod::find($id);
+        if (!$registerationMethods) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $registerationMethods);    }
 
     /**
      * Show the form for editing the specified resource.
@@ -82,19 +91,27 @@ class RegistrationMethodsController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function update(RegisterationMethodsRequest $request, $id) {
+    public function update(Request $request, $id) {
+        $validator = validator($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $registerationMethods = RegistrationMethod::find($id);
             if (!$registerationMethods) {
-                notify()->warning(__('data not found'), "", "bottomLeft");
+                return responseJson(0, __('data not found'), '');
             } else {
+
                 $registerationMethods->update($request->all());
-                notify()->success(__('data updated successfully'), "", "bottomLeft");
+
+                return responseJson(1, __('data updated successfully'), $registerationMethods);
             }
         } catch (\Exception $ex) {
-            notify()->error($ex->getMessage(), "", "bottomLeft");
+            return responseJson(0, "", $ex->getMessage());
         }
-        return redirect()->route('registeration-methods.index');
     }
 
     /**
@@ -106,14 +123,16 @@ class RegistrationMethodsController extends Controller {
         try {
             $registerationMethods = RegistrationMethod::find($id);
             if (!$registerationMethods) {
-                notify()->warning(__('data not found'), "", "bottomLeft");
+                return responseJson(0, __('data not found'), '');
+            }
+            if ($registerationMethods->applications->count() > 0 || $registerationMethods->students->count()  > 0 ) {
+                return responseJson(0, __('this item can not be deleted'), $registerationMethods->fresh());
             }
             $registerationMethods->delete();
-            notify()->success(__('data deleted successsfully'), "", "bottomLeft");
+            return responseJson(1, __('deleted successfully'), '');
         } catch (\Exception $ex) {
-            notify()->error($ex->getMessage(), "", "bottomLeft");
+            return responseJson(0, "", $ex->getMessage());
         }
-        return redirect()->route('registeration-methods.index');
     }
 
 }

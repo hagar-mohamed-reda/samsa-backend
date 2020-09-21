@@ -16,8 +16,7 @@ class DivisionsController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
-    {
+    public function index(){
         $query = Division::query();
         
         if (request()->level_id > 0) {
@@ -28,8 +27,8 @@ class DivisionsController extends Controller
         if (request()->department_id > 0) 
             $query->where('department_id', request()->department_id);
         
-        $divisions = $query->OrderBy('created_at', 'desc')->get();
-        return view('divisions::divisions.index', compact('divisions'));
+        $divisions = Division::with(['department'])->OrderBy('created_at', 'desc')->get();
+        return responseJson(1, "ok", $divisions);
     }
 
     /**
@@ -46,20 +45,26 @@ class DivisionsController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(DivisionRequest $request)
-    {
+    public function store(Request $request) {
+        $validator = validator($request->all(), [
+            "name" => "required",
+            'department_id'=>'required'
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
+
         try {
             $division = Division::create($request->all());
             if($division){
-                notify()->success( __('data created successfully'), "", "bottomLeft");
-                return redirect()->route('divisions.index');
+                return responseJson(1, __('data created successfully'), $division);
             }else{
                 notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft");
                 return redirect()->route('divisions.index');
             }
-        } catch (\Exception $th) {
-            notify()->error( $th->getMessage(), "", "bottomLeft");
-            return redirect()->route('divisions.index');
+        } catch (\Exception $ex) {
+            return responseJson(0, $ex->getMessage(),"");
         }
     }
 
@@ -68,9 +73,13 @@ class DivisionsController extends Controller
      * @param int $id
      * @return Response
      */
-    public function show($id)
-    {
-        return view('divisions::show');
+    public function show($id){
+        $division = Division::find($id);
+        $division->department;
+        if (!$division) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $division);
     }
 
     /**
@@ -78,8 +87,7 @@ class DivisionsController extends Controller
      * @param int $id
      * @return Response
      */
-    public function edit($id)
-    {
+    public function edit($id){
         $devision = Division::find($id);
         if (!$devision) {
             notify()->error( __('data not found'), "", "bottomLeft");
@@ -94,21 +102,25 @@ class DivisionsController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(DivisionRequest $request, $id)
-    {
+    public function update(DivisionRequest $request, $id){
+        $validator = validator($request->all(), [
+            "name" => "required",
+            'department_id'=>'required'
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $division = Division::find($id);
             if (!$division) {
-                notify()->error( __('data not found'), "", "bottomLeft");
-                return redirect()->route('divisions.index');
+                return responseJson(0, __('data not found'), '');
             } else {
                 $division->update($request->all());
-                notify()->success( __('data updated successfully'), "", "bottomLeft");
-                return redirect()->route('divisions.index');
+                return responseJson(1, __('data updated successfully'), $division);
             }
         } catch (\Exception $ex) {
-            notify()->error( $ex->getMessage(), "", "bottomLeft");
-            return redirect()->route('divisions.index');
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
 
@@ -117,20 +129,18 @@ class DivisionsController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy($id)
-    {
+    public function destroy($id){
+        $division = Division::find($id);
+        if (!$division) {
+            return responseJson(0, __('data not found'), '');
+        }
         try {
-            $division = Division::find($id);
-            if (!$division) {
-                notify()->warning( __('data not found'), "", "bottomLeft");
-                return redirect()->route('divisions.index');
-            }
             $division->delete();
-            notify()->success( __('data deleted successfully'), "", "bottomLeft");
-            return redirect()->route('divisions.index');
+            return responseJson(1, __('deleted successfully'), '');
         } catch (\Exception $ex) {
-            notify()->error( $ex->getMessage(), "", "bottomLeft");
-            return redirect()->route('divisions.index');}
-
+            return responseJson(0, $ex->getMessage(), "");
+        }
     }
+        
+    
 }

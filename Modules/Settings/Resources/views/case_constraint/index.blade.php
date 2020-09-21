@@ -12,7 +12,7 @@ $links = [
      <div class="card">
         <div class="card-header">
             @permission('parent-jobs_create')
-            <a class="btn btn-relief-primary mr-1 mb-1 waves-effect waves-light" href="{{route('case constraint.create')}}"><i class="ik ik-plus-circle"></i> {{ __('create') }}</a>
+            <a class="btn btn-relief-primary mr-1 mb-1 waves-effect waves-light" href="{{route('case-constraint.create')}}"><i class="ik ik-plus-circle"></i> {{ __('create') }}</a>
             @endpermission
         </div>
         <div class="card-content">
