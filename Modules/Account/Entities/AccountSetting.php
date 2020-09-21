@@ -44,6 +44,10 @@ class AccountSetting
     public static function canStudentGetService(Service $service, Student $student) {
         $valid = true;
 
+        // check if there is old value
+        if ($student->old_balance > 0)
+            $valid = false;
+
         // check if student take this service
         if (!$service->repeat) {
             if (StudentService::where('student_id', $student->id)->where('service_id', $service->id)->exists()) {

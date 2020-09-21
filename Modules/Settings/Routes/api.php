@@ -67,5 +67,6 @@ Route::group(['middleware' => 'api_auth'], function () {
 
     // translation
     Route::get('translation', 'TranslationController@index');
+    Route::get('translation/get', 'TranslationController@get');
     Route::post('translation/update', 'TranslationController@update');
 });

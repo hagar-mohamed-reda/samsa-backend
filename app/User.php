@@ -24,9 +24,13 @@ class User extends Authenticatable
     ];
     
     protected $appends = [
-        'role_id'
+        'role_id', 'image_url'
     ];
     
+    public function getImageUrlAttribute() {
+        return url($this->image);
+    }
+
     public function getRoleIdAttribute() {
         return optional(RoleUser::where('user_id', $this->id)->first())->role_id;
     }

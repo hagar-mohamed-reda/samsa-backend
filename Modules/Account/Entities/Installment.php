@@ -20,7 +20,9 @@ class Installment extends Model
         'type', // ['old', 'new']
         'value',
         'date',
-        'paid'
+        'paid',
+        'academic_year_id',
+        'model_id'
     ];
      
     public function student() {

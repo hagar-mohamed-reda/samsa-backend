@@ -21,6 +21,13 @@ class TranslationController extends Controller
     }
 
     /**
+     * Display a listing of the resource.
+     * @return Response
+     */
+    public function get() { 
+        return Translation::get();
+    }
+    /**
      * Store a newly created resource in storage.
      * @param Request $request
      * @return Response
@@ -29,19 +36,20 @@ class TranslationController extends Controller
         try {
             $data = $request->data;//json_decode(); 
             
-            foreach($data as $item) { 
-                $item = json_decode(json_encode($item));
-                $translation = Translation::find($item->id);
+            foreach($data as $item) {  
+                $translation = isset($item['key'])? Translation::where('key', $item['key'])->first() : null;
                 if ($translation) {
                     $translation->update([
-                        "name_ar" => $item->name_ar,
-                        "name_en" => $item->name_en
+                        "key" => $item['key'],
+                        "name_ar" => $item['name_ar'],
+                        "name_en" => $item['name_en']
                     ]);
                 } else {
+                    if (strlen($item['key']) > 0)
                     $translation = Translation::create([
-                        "key" => $item->key,
-                        "name_ar" => $item->key,
-                        "name_ar" => $item->key,
+                        "key" => $item['key'],
+                        "name_ar" => $item['name_ar'],
+                        "name_en" => $item['name_en'],
                     ]);
                 }
             }

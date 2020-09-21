@@ -21,4 +21,8 @@ class Translation extends Model
     	];
     }
 
+    public function getKeyAttribute() {
+        return str_replace(' ', '_', $this->attributes['key']);
+    }
+
 }

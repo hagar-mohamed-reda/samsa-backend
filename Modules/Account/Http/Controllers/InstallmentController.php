@@ -98,9 +98,10 @@ class InstallmentController extends Controller
                 } else if (isset($item['id']) && $item['paid'] != 1) {
                     $installment = Installment::find($item['id']);
                     $installment->update($item);
-                } else {
-                    $item['academic_year_id'] = $academicYear->id;
-                    $installment = Installment::create($item);
+                } else if (!isset($item['id']) && $item['paid'] == '0') {
+                    $newItem = $item;
+                    $newItem['academic_year_id'] = $academicYear->id;
+                    $installment = Installment::create($newItem);
                 }
             }
   

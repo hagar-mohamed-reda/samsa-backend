@@ -53,7 +53,7 @@ class Student extends StudentOrigin
         $resource = DB::table('student_required_documents')->where('student_id', $this->id)->where('required_document_id', 4)->first();
         $path = optional($resource)->path;
 
-        return $path? url($path) : null;
+        return $path? url($path) : '/assets/img/avatar.png';
     }
 
     public function getStudentBalance() {
@@ -64,6 +64,7 @@ class Student extends StudentOrigin
         $installment = DB::table('account_installments')
                 ->where('student_id', $this->id)
                 ->where('type', 'new')
+                ->where('paid', '0')
                 ->first();
         
         return $installment? true : false;
@@ -73,6 +74,7 @@ class Student extends StudentOrigin
         $installment = DB::table('account_installments')
                 ->where('student_id', $this->id)
                 ->where('type', 'old')
+                ->where('paid', '0')
                 ->first();
         
         return $installment? true : false;

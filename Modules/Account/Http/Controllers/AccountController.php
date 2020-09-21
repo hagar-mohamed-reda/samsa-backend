@@ -117,7 +117,7 @@ class AccountController extends Controller
     
 
     public function searchStudent(Request $request) {
-        return DB::table('students')
+        return Student::query()//DB::table('students')
                 ->where('name', 'like', '%'.$request->key.'%')
                 ->orWhere('code', 'like', '%'.$request->key.'%')
                 ->orWhere('national_id', 'like', '%'.$request->key.'%')
@@ -138,6 +138,26 @@ class AccountController extends Controller
         $student = Student::find($request->student_id); 
         return $student->getAvailableServices();
 
+    }
+
+    public function writeStudentNote(Request $request) {
+        $validator = validator($request->all(), [  
+            "notes" =>  "required",
+            "student_id" =>  "required"       
+        ]); 
+        if ($validator->failed()) {
+            return responseJson(0, __('write some notes'));
+        }
+
+        $student = Student::find($request->student_id); 
+
+        if ($student->notes)
+            $student->notes .=  "\n" . $request->notes;
+        else
+            $student->notes = $request->notes;
+
+        $student->update();
+        return responseJson(1, __('done'));
     }
  
 }

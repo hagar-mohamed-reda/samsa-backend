@@ -19,33 +19,54 @@ class StudentBalance extends Student
         
         // caculated balance
         $balance = 0;
+
+        $studentOldBalance = StudentOldBalance::where('student_id', $this->id)->first();
         
-        $balance += StudentOldBalance::where('student_id', $this->id)->sum('value');
+        $balance += optional($studentOldBalance)->value;
         
-        
-        // paid
-        $paid = Payment::where('student_id', $this->id)->whereIn('model_type', ['academic_year_expense', 'installment'])->pluck("model_id")->toArray();
-        $oldAcademicYearExpenses = AcademicYearExpenseDetail::join('account_academic_year_expenses', 'account_academic_year_expenses.id', '=', 'account_academic_year_expenses_details.academic_year_expense_id')
-                ->where("academic_year_id", "!=", $academicYear->id)
-                ->whereNotIn('account_academic_year_expenses_details.id', $paid)
-                ->sum('value');
-        
-        $balance += $oldAcademicYearExpenses; 
+        // check on payment value
+        $balance -= Payment::where('student_id', $this->id)->whereIn('model_type', ['old_academic_year_expense'])->sum('value');
+ 
+        // check if there is paid installment for old value
+        $balance -= Installment::where('student_id', $this->id)->where('type', 'old')->where('paid', '1')->sum('value');
+ 
+
         return $balance;
     }
     
     public function getCurrentExpenses($term = null) {
         // current academic year
-        $academicYear = AccountSetting::getCurrentAcademicYear();
+        $academicYear = AccountSetting::getCurrentAcademicYear(); 
+        // current date
+        $date = date('Y-m-d');
+        
+
+        
+
+
+
+
+
+
+
+
         
         // paid
         $paid = Payment::where('student_id', $this->id)->whereIn('model_type', ['academic_year_expense', 'installment'])->pluck("model_id")->toArray();
+
+        $installment = Installment::where('student_id', $this->id)->where('date', '<=', $date)->where('paid', '0')->first();
+
+        if ($this->is_current_installed) {
+        }
+
         $query = AcademicYearExpenseDetail::join('account_academic_year_expenses', 'account_academic_year_expenses.id', '=', 'account_academic_year_expenses_details.academic_year_expense_id')
                 ->where("academic_year_id", $academicYear->id)
                 ->whereNotIn('account_academic_year_expenses_details.id', $paid);
         
         if ($term) 
             $query->where('term_id', $term);
+
+
         return $query;
     }
     
@@ -61,6 +82,18 @@ class StudentBalance extends Student
         
         $balance += $currentAcademicYearExpenses; 
         return $balance;
+    }
+
+
+    public function getReadyInstallment($type) {
+        $date = date('Y-m-d');
+        $installment = Installment::where('student_id', $this->id)
+            ->where('type', $type)
+            ->where('paid', '0')
+            ->whereDate('date', '<=', $date)
+            ->first();
+
+        return $installment;
     }
     
     /**
@@ -80,7 +113,8 @@ class StudentBalance extends Student
          
         if ($oldBalance > 0) {
             if ($this->is_old_installed) {
-                $value = optional(Installment::where('student_id', $this->id)->where('type', 'old')->where('paid', '0')->first())->value;
+                $installment = $this->getReadyInstallment('old');
+                $value = optional($installment)->value;
             } else 
                 $value = $oldBalance;
         } else {
