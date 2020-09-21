@@ -16,8 +16,8 @@ class MilitaryAreasController extends Controller
      */
     public function index()
     {
-        $militarAreas = MilitaryAreas::OrderBy('created_at', 'desc')->get();
-        return view('military::military_areas.index', compact('militarAreas'));
+        $militarAreas = MilitaryAreas::with(['government'])->OrderBy('created_at', 'desc')->get();
+        return responseJson(1, "ok", $militarAreas);
     }
 
     /**
@@ -36,18 +36,25 @@ class MilitaryAreasController extends Controller
      */
     public function store(MilitaryAreaRequest $request)
     {
+        $validator = validator($request->all(), [
+            "name" => "required",
+            "government_id" => 'required|exists:governments,id'
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
+
         try {
             $militaryArea = MilitaryAreas::create($request->all());
             if ($militaryArea) {
-                notify()->success( __('data created successfully'), "", "bottomLeft");
-                return redirect()->route('military-areas.index');
+                return responseJson(1, __('data created successfully'), $militaryArea);
             } else {
                 notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft");
                 return redirect()->route('military-areas.index');
             }
-        } catch (\Exception $th) {
-            notify()->error( $th->getMessage(), "", "bottomLeft");
-            return redirect()->route('military-areas.index');
+        } catch (\Exception $ex) {
+            return responseJson(0, "", $ex->getMessage());
         }
     }
 
@@ -58,7 +65,13 @@ class MilitaryAreasController extends Controller
      */
     public function show($id)
     {
-        return view('military::show');
+        $militaryArea = MilitaryAreas::find($id);
+        $militaryArea->government;
+        $militaryArea->government->country;
+        if (!$militaryArea) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $militaryArea);
     }
 
     /**
@@ -82,20 +95,26 @@ class MilitaryAreasController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(MilitaryAreaRequest $request, MilitaryAreas $militaryArea)
+    public function update(Request $request, $id)
     {
+        $validator = validator($request->all(), [
+            "name" => "required",
+            "government_id" => 'required|exists:governments,id'
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
+            $militaryArea = MilitaryAreas::find($id);
             if (!$militaryArea) {
-                notify()->warning(__('data not found'), "", "bottomLeft");
-                return redirect()->route('military-areas.index');
+                return responseJson(0, __('data not found'), '');
             } else {
                 $militaryArea->update($request->all());
-                notify()->success( __('data updated successfully'), "", "bottomLeft");
-                return redirect()->route('military-areas.index');
+                return responseJson(1, __('data updated successfully'), $militaryArea);
             }
-        } catch (\Exception $th) {
-            notify()->error( $th->getMessage(), "", "bottomLeft");
-            return redirect()->route('military-areas.index');
+        } catch (\Exception $ex) {
+            return responseJson(0, "", $ex->getMessage());
         }
     }
 

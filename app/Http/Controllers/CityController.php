@@ -128,7 +128,6 @@ class CityController extends Controller
             } else {
                 $city->update($request->all());
                 return responseJson(1, __('data updated successfully'), $city);
-
             }
         } catch (Exception $ex) {
             return responseJson(0, "", $ex->getMessage());
