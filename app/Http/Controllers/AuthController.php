@@ -40,6 +40,10 @@ class AuthController extends Controller
             if (!$user)
                 return responseJson(0, __('email or password error'));
               
+            $user->update([
+                "api_token" => time()
+            ]);
+            
             $resource = $user;
             LoginHistory::create([
                 'ip' => $request->ip(),
