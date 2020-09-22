@@ -50,7 +50,6 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
-
         $validator = validator($request->all(), [
             "name" => "required",
             "government_id" => 'required|exists:governments,id'
