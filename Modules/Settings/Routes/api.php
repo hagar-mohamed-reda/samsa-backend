@@ -19,6 +19,12 @@ Route::middleware('auth:api')->get('/settings', function (Request $request) {
 
 Route::group(['middleware' => 'api_auth'], function () {
 
+    Route::get('users', 'UserController@index');
+    Route::get('users/{id}', 'UserController@show');
+    Route::post('users', 'UserController@store');
+    Route::delete('users/{id}', 'UserController@destroy');
+    Route::put('users/{id}', 'UserController@update');
+
 //academic years start
     Route::get('academic-years', 'AcademicYearController@index');
     Route::get('academic-years/{id}', 'AcademicYearController@show');

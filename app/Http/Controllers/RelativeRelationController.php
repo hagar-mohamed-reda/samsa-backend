@@ -22,7 +22,7 @@ class RelativeRelationController extends Controller
      */
     public function index()
     {
-        $relativeRelations = RelativeRelation::OrderBy('created_at', 'DESC')->paginate(10);
+        $relativeRelations = RelativeRelation::OrderBy('created_at', 'DESC')->get();
         return responseJson(1, "ok", $relativeRelations);
     }
 
@@ -61,7 +61,7 @@ class RelativeRelationController extends Controller
 
             }
         } catch (\Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0, $ex->getMessage(), "");
 
         }
     }
@@ -123,7 +123,7 @@ class RelativeRelationController extends Controller
                 return responseJson(1, __('data updated successfully'), $relativeRelation);
             }
         } catch (\Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
 
@@ -143,7 +143,7 @@ class RelativeRelationController extends Controller
             $relativeRelation->delete();
             return responseJson(1, __('deleted successfully'), '');
         } catch (\Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
 }

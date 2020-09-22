@@ -66,8 +66,8 @@ class CityController extends Controller
             } else {
             }
 
-        } catch (Exception $th) {
-            return responseJson(0, "", $th->getMessage());
+        } catch (Exception $ex) {
+            return responseJson(0, $ex->getMessage(), "" );
         }
     }
 
@@ -130,7 +130,7 @@ class CityController extends Controller
                 return responseJson(1, __('data updated successfully'), $city);
             }
         } catch (Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
 
@@ -155,7 +155,7 @@ class CityController extends Controller
             return responseJson(1, __('deleted successfully'), '');
 
         } catch (Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0,  $ex->getMessage(), "");
         }
     }
 }

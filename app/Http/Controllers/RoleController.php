@@ -26,8 +26,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::all();
-        return view('main_settings.roles.index', compact('roles'));
+        $roles = Role::OrderBy('created_at', 'desc')->get();
+        return responseJson(1, "ok", $roles);
     }
 
     /**
@@ -48,6 +48,14 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = validator($request->all(), [
+            "name" => "required|unique,roles,name",
+            "display_name" => 'required|unique,roles,display_name'
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $role = Role::create($request->all());
             if ($role) {
@@ -64,16 +72,15 @@ class RoleController extends Controller
                         'permission_id'=> $permission_data->id
                     ];
                     RolePermission::create($permission_role);
+                    return responseJson(1, __('data created successfully'), $city);
                 }
-                notify()->success("تم حفظ الاعدادات بنجاح", "", "bottomLeft" );
-                return redirect()->route('roles.index');
+
             } else {
                 notify()->error("هناك خطأ ما يرجى المحاولةzcvvv فى وقت لاحق", "", "bottomLeft" );
                 return redirect()->route('roles.index');
             }
-        } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft" );
-            return redirect()->route('roles.index');
+        } catch (\Exception $ex) {
+            return responseJson(0, "", $ex->getMessage());
         }
     }
 
@@ -85,7 +92,12 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        //
+        $role = Role::find($id);
+       
+        if (!$role) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $role);
     }
 
     /**
@@ -114,6 +126,14 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validator = validator($request->all(), [
+            "name" => "required",
+            "display_name" => 'required|exists:governments,id'
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
 
             $role = Role::find($id);
@@ -147,17 +167,12 @@ class RoleController extends Controller
                     $role->detachPermissions([]);
                 }
                 $role->update();
-
-
-
-
-                notify()->success('تم تعديل البيانات بنجاح', "", "bottomLeft", );
-                return redirect()->route('roles.index');
+                return responseJson(1, __('data updated successfully'), $role);
+                
             }
 
         } catch (\Exception $ex) {
-            notify()->error($ex->getMessage(), "", "bottomLeft", );
-            return redirect()->route('roles.index');
+            return responseJson(0,  $ex->getMessage(), "");
         }
     }
 
@@ -174,12 +189,11 @@ class RoleController extends Controller
 
         foreach($users as $user){
             if($user -> hasRole($role->name)){
-                notify()->error(' لا يمكن حذف هذه الصلاحية', "", "bottomLeft", );
-                return redirect()->route('roles.index');
+                return responseJson(1,' لا يمكن حذف هذه الصلاحية', '');
+
             }else{
                 $role->forceDelete();
-                notify()->success('تم حذف البيانات بنجاح', "", "bottomLeft", );
-                return redirect()->route('roles.index');
+                return responseJson(1, __('deleted successfully'), '');
             }
         }
     }

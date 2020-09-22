@@ -24,6 +24,14 @@ Route::post('/auth/login', 'AuthController@login')->name('dashboard');
 
 
 Route::group(['middleware' => 'api_auth'], function () {
+
+    Route::resource('roles', 'RoleController');
+    Route::get('roles', 'RoleController@index');
+    Route::get('roles/{id}', 'RoleController@show');
+    Route::post('roles', 'RoleController@store');
+    Route::delete('roles/{id}', 'RoleController@destroy');
+    Route::put('roles/{id}', 'RoleController@update');
+
     Route::get('/', 'DashboardController@index')->name('dashboard');
     //start nationalities
     Route::get('nationalities', 'nationalityController@index')->name('nationalities');

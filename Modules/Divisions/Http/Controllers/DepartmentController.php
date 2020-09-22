@@ -16,7 +16,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments = Department::OrderBy('created_at', 'desc')->get();
+        $departments = Department::with(['level'])->OrderBy('created_at', 'desc')->get();
         return responseJson(1, "ok", $departments);
     }
 
@@ -47,12 +47,12 @@ class DepartmentController extends Controller
         try {
             $department = Department::create($request->all());
             if($department){
-                return responseJson(1, __('data created successfully'), $division);
+                return responseJson(1, __('data created successfully'), $department);
             }else{
                 notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft" );
                 return redirect()->route('departments.index')->with(['error' => 'هناك خطأ ما يرجى المحاولة فى وقت لاحق']);
             }
-        } catch (\Exception $th) {
+        } catch (\Exception $ex) {
             return responseJson(0, $ex->getMessage(),"");
         }
     }

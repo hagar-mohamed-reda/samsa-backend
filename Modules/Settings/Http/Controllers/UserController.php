@@ -11,16 +11,17 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Modules\Settings\Http\Requests\UserRequest;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
 
     public function __construct()
     {
-        $this->middleware(['permission:users_read'])->only('index');
-        $this->middleware(['permission:users_create'])->only('create');
-        $this->middleware(['permission:users_update'])->only('edit');
-        $this->middleware(['permission:users_delete'])->only('destroy');
+//        $this->middleware(['permission:users_read'])->only('index');
+//        $this->middleware(['permission:users_create'])->only('create');
+//        $this->middleware(['permission:users_update'])->only('edit');
+//        $this->middleware(['permission:users_delete'])->only('destroy');
 
     }
     /**
@@ -29,8 +30,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::OrderBy('created_at', 'desc')->get();
-        return view('settings::users.index', compact('users'));
+        $users = User::with(['role'])->OrderBy('created_at', 'desc')->get();
+        return responseJson(1, "ok", $users);
     }
 
     /**
@@ -47,8 +48,19 @@ class UserController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
+        $validator = validator($request->all(), [
+            'name' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+            'email'=>'required|email|unique:users,email',
+            'phone' => 'required|max:11|unique:users,phone',
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
 
             $input = $request->except('image', 'permissions', 'password');
@@ -59,33 +71,47 @@ class UserController extends Controller
                 $input['image'] = 'uploads/users/User_icon_2.svg.png';
             }
             $input['password'] = Hash::make($request->password);
+            $input['api_token'] = Str::random(32);
+        //    if($request->has('role_id'))
+        //    dd($request->role_id);
+
             $user = User::create($input);
-
-
             if($user){
-                $role = Role::find($request->role_id);
-                $permissions_role = RolePermission::where('role_id', $role->id)->get();
-                $user->attachRole($role->name);
-                // foreach($permissions_role as $permission_role){
-                //     $permission_user = [
-                //         'permission_id' => $permission_role->permission_id,
-                //         'user_id'=> $user->id,
-                //         'user_type'=>'App\User'
-                //     ];
-
-                //     UserPermission::create($permission_user);
-                // }
-                // $user->attachPermissions($request->permissions); // parameter can be a Permission object, array or id
-
-                notify()->success("تم حفظ الاعدادات بنجاح", "", "bottomLeft" );
-                return redirect()->route('users.index');
-            } else {
-                notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft" );
-                return redirect()->route('governments.index');
+                if($request->has('role_id')){
+                    $role = Role::find($request->role_id);
+                        $permissions_role = RolePermission::where('role_id', $role->id)->get();
+                        $user->attachRole($role->name);
+                        $user->role;
+                }
             }
-        } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft" );
-            return redirect()->route('users.index');
+            
+           
+            return responseJson(1, __('data created successfully'), $user);
+            // if($user ){
+            //     $role = Role::find($request->role_id);
+            //     $permissions_role = RolePermission::where('role_id', $role->id)->get();
+            //     $user->attachRole($role->name);
+            //     // foreach($permissions_role as $permission_role){
+            //     //     $permission_user = [
+            //     //         'permission_id' => $permission_role->permission_id,
+            //     //         'user_id'=> $user->id,
+            //     //         'user_type'=>'App\User'
+            //     //     ];
+
+            //     //     UserPermission::create($permission_user);
+            //     // }
+            //     // $user->attachPermissions($request->permissions); // parameter can be a Permission object, array or id
+
+            //     return responseJson(1, __('data created successfully'), $user);
+
+            // } else {
+            //     return responseJson(1, __('data created successfully'), $user);
+
+            //     notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft" );
+            //     return redirect()->route('governments.index');
+            // }
+        } catch (\Exception $ex) {
+            return responseJson(0, $ex->getMessage(),"" );
         }
     }
 
@@ -96,7 +122,12 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return view('settings::show');
+        $user = User::find($id);
+        $user->role;
+        if (!$user) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $user);
     }
 
     /**
@@ -116,15 +147,25 @@ class UserController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(UserRequest $request, $id)
+    public function update(Request $request, $id)
     {
+        $validator = validator($request->all(), [
+            'name' => 'required',
+            'username' => 'required',
+            'password' => 'required',
+            'email'=>'required|email|unique:users,email,'.$id,
+            'phone' => 'required|max:11|unique:users,phone,'.$id,
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
 
             $user = User::find($id);
 
             if (!$user) {
-                notify()->warning("هذا المسنخدم غير موجود", "", "bottomLeft" );
-                return redirect()->route('users.index');
+                return responseJson(0, "هذا المسنخدم غير موجود", );
             } else {
 
                 //delete all user roles
@@ -151,13 +192,11 @@ class UserController extends Controller
                 $user->attachRole($role->name);
                 $user = $user->update($input);
 
-                notify()->success("تم تعديل البيانات بنجاح", "", "bottomLeft" );
-                return redirect()->route('users.index');
+                return responseJson(1, __('data updated successfully'), $user);
             }
 
-        } catch (\Exception $th) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft" );
-            return redirect()->route('users.index');
+        } catch (\Exception $ex) {
+            return responseJson(0,  $ex->getMessage(), "");
         }
     }
 
@@ -168,17 +207,21 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::find($id);
-        if (is_null($user)) {
-            return redirect()->back();
+        try{
+            $user = User::find($id);
+            if (is_null($user)) {
+                return redirect()->back();
+            }
+    
+            if ($user->image != null) {
+                deleteFile($user->image);
+            }
+    
+            $user->delete();
+            return responseJson(1, __('deleted successfully'), '');
+        }catch (\Exception $ex) {
+            return responseJson(0,  $ex->getMessage(), "");
         }
-
-        if ($user->image != null) {
-            deleteFile($user->image);
-        }
-
-        $user->delete();
-        notify()->success("تم الحذف بنجاح", "", "bottomLeft" );
-        return redirect()->route('users.index');
+        
     }
 }

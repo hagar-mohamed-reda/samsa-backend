@@ -55,7 +55,6 @@ class AcademicYearController extends Controller
         }
         try {
             $data = $request->all();
-//            return responseJson(1, __('hahaha'),  $request->all());
             $data['name'] = date('Y', strtotime($data['start_date'])) . "-" . date('Y', strtotime($data['end_date']));
             $academic_years_name = AcademicYear::all()->pluck('name');
             $academic_years_name = $academic_years_name->toArray();
@@ -71,7 +70,7 @@ class AcademicYearController extends Controller
                 }
             }
         } catch (\Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0,  $ex->getMessage(), "");
         }
     }
 

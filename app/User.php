@@ -20,8 +20,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'username', 'image', 'phone'
+        'name', 'email', 'password', 'username', 'image', 'phone', 'api_token'
     ];
+
     
     protected $appends = [
         'role_id', 'image_url'
@@ -41,7 +42,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token','created_at', 'updated_at', 'email_verified_at', 'api_token'
     ];
 
     /**
@@ -70,6 +71,9 @@ class User extends Authenticatable
      */
     public function notifications() {
         return $this->hasMany('App\Notification', 'user_id');
+    }
+    public function role(){
+        return $this->belongsTo('App\Role', 'role_id');
     }
      
 }
