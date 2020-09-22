@@ -77,11 +77,11 @@ class UserController extends Controller
                 $permissions_role = RolePermission::where('role_id', $role->id)->get();
                 $user->attachRole($role->name);
                 
-                return responseJson(1, __('data created successfully'), $city);
+                return responseJson(1, __('data created successfully'), $user);
 
             } else {
-                notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft" );
-                return redirect()->route('governments.index');
+                return responseJson(0, 'خطأ', "");
+
             }
         } catch (\Exception $ex) {
             return responseJson(0, "", $ex->getMessage());
@@ -165,13 +165,13 @@ class UserController extends Controller
                 $user->attachRole($role->name);
                 $user = $user->update($input);
 
-                notify()->success("تم تعديل البيانات بنجاح", "", "bottomLeft" );
-                return redirect()->route('users.index');
+                return responseJson(1, __('data created successfully'), $user);
+
             }
 
-        } catch (\Exception $th) {
-            notify()->error(" هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft" );
-            return redirect()->route('users.index');
+        } catch (\Exception $ex) {
+            return responseJson(0,  $ex->getMessage(), "");
+
         }
     }
 
@@ -192,7 +192,6 @@ class UserController extends Controller
         }
 
         $user->delete();
-        notify()->success("تم الحذف بنجاح", "", "bottomLeft" );
-        return redirect()->route('users.index');
+        return responseJson(0, "", $ex->getMessage());
     }
 }
