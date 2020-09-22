@@ -3,14 +3,27 @@
   <component name="ChangeListManager">
     <list default="true" id="720a4159-6e59-42af-a842-297449442f0c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Divisions/Entities/Level.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Divisions/Entities/Level.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Divisions/Entities/Department.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Divisions/Entities/Department.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Divisions/Entities/Division.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Divisions/Entities/Division.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Divisions/Http/Controllers/DepartmentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Divisions/Http/Controllers/DepartmentController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Divisions/Http/Controllers/DivisionsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Divisions/Http/Controllers/DivisionsController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Modules/Divisions/Http/Controllers/LevelController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Divisions/Http/Controllers/LevelController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Modules/Divisions/Routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Divisions/Routes/api.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Settings/Entities/QualificationTypes.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Entities/QualificationTypes.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Entities/ConstraintStatus.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Entities/ConstraintStatus.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Entities/RegistrationMethod.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Entities/RegistrationMethod.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/AcademicYearController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/AcademicYearController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationTypesController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationTypesController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/lang/en/validation.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/en/validation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/CaseConstraintController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/CaseConstraintController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/ConstraintStatusController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/ConstraintStatusController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/ParentJobsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/ParentJobsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/RegisterationStatusController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/RegisterationStatusController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/RegistrationMethodsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Http/Controllers/RegistrationMethodsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Resources/views/case_constraint (copy)/create.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Resources/views/case_constraint (copy)/edit.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Resources/views/case_constraint (copy)/index.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Resources/views/case_constraint (copy)/table.blade.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Resources/views/case_constraint/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Resources/views/case_constraint/index.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Modules/Settings/Routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/Modules/Settings/Routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/LanguageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/LanguageController.php" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/vendor/appslabke/lara-izitoast/" />
     <ignored path="$PROJECT_DIR$/vendor/asm89/stack-cors/" />
@@ -149,19 +162,55 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CityController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2108">
+              <caret line="128" column="28" selection-start-line="128" selection-end-line="129" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/City.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="425">
+              <caret line="25" column="5" selection-start-line="19" selection-start-column="4" selection-end-line="25" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/web.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="24" column="17" selection-start-line="24" selection-end-line="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/api.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+            <state relative-caret-position="1343">
+              <caret line="79" column="36" selection-start-line="79" selection-start-column="16" selection-end-line="79" selection-end-column="36" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationController.php">
+        <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/RegistrationMethodsController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="115" column="11" selection-start-line="115" selection-start-column="11" selection-end-line="115" selection-end-column="11" />
+            <state relative-caret-position="-81">
+              <caret line="113" column="9" selection-start-line="113" selection-start-column="9" selection-end-line="113" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/Settings/Entities/RegistrationMethod.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="16" column="89" selection-start-line="16" selection-start-column="89" selection-end-line="16" selection-end-column="89" />
             </state>
           </provider>
         </entry>
@@ -202,15 +251,21 @@
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationTypesController.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Entities/ParentJobs.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/ParentJobsController.php" />
-        <option value="$PROJECT_DIR$/Modules/Settings/Routes/api.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Entities/CaseConstraint.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/CaseConstraintController.php" />
         <option value="$APPLICATION_CONFIG_DIR$/phpstorm64.exe.vmoptions" />
         <option value="$PROJECT_DIR$/app/City.php" />
-        <option value="$PROJECT_DIR$/app/Http/Controllers/CityController.php" />
         <option value="$PROJECT_DIR$/app/Http/Controllers/CountryController.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/AcademicYearController.php" />
         <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationController.php" />
+        <option value="$PROJECT_DIR$/Modules/Military/Routes/api.php" />
+        <option value="$PROJECT_DIR$/Modules/Military/Entities/MilitaryAreas.php" />
+        <option value="$PROJECT_DIR$/app/Http/Controllers/CityController.php" />
+        <option value="$PROJECT_DIR$/Modules/Military/Http/Controllers/MilitaryAreasController.php" />
+        <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/RegisterationStatusController.php" />
+        <option value="$PROJECT_DIR$/Modules/Settings/Routes/api.php" />
+        <option value="$PROJECT_DIR$/Modules/Settings/Entities/RegistrationMethod.php" />
+        <option value="$PROJECT_DIR$/Modules/Settings/Http/Controllers/RegistrationMethodsController.php" />
       </list>
     </option>
   </component>
@@ -338,13 +393,30 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
               <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="Http" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="Http" type="462c0819:PsiDirectoryNode" />
+              <item name="Controllers" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
@@ -372,10 +444,18 @@
               <item name="Http" type="462c0819:PsiDirectoryNode" />
               <item name="Controllers" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="SAMSA" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SAMSA" type="462c0819:PsiDirectoryNode" />
+              <item name="Modules" type="462c0819:PsiDirectoryNode" />
+              <item name="Settings" type="462c0819:PsiDirectoryNode" />
+              <item name="Routes" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -433,7 +513,12 @@
       <workItem from="1600243216323" duration="591000" />
       <workItem from="1600454789813" duration="2064000" />
       <workItem from="1600500472432" duration="4902000" />
-      <workItem from="1600583203415" duration="689000" />
+      <workItem from="1600583203415" duration="1479000" />
+      <workItem from="1600609599150" duration="322000" />
+      <workItem from="1600623557227" duration="3093000" />
+      <workItem from="1600670006707" duration="4670000" />
+      <workItem from="1600693264513" duration="594000" />
+      <workItem from="1600714317065" duration="1592000" />
     </task>
     <task id="LOCAL-00003" summary="City api Json response">
       <created>1599915312748</created>
@@ -491,16 +576,30 @@
       <option name="project" value="LOCAL" />
       <updated>1600162384238</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="academic years &lt;+&gt; qualification &lt;+&gt; qualification types&#10;change response">
+      <created>1600584427932</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1600584427932</updated>
+    </task>
+    <task id="LOCAL-00012" summary="military api response">
+      <created>1600673079739</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1600673079739</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53632000" />
+    <option name="totallyTimeSpent" value="64693000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.3012869" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.31642696" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -511,7 +610,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" weight="0.30427352" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" weight="0.26666668" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.42222223" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5003785" side_tool="true" weight="0.42222223" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -523,6 +622,30 @@
       <window_info anchor="right" id="Database" order="3" weight="0.32980332" />
       <window_info anchor="right" id="Remote Host" order="4" weight="0.21801665" />
     </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.31642696" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Database Changes" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="8" visible="true" weight="0.26666668" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.42222223" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5003785" side_tool="true" weight="0.42222223" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="bottom" id="GraphQL" order="12" />
+      <window_info anchor="bottom" id="TypeScript" order="13" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" weight="0.32980332" />
+      <window_info anchor="right" id="Remote Host" order="4" weight="0.21801665" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -538,7 +661,9 @@
     <MESSAGE value="qualification types api JSON response" />
     <MESSAGE value="parent jobs api JSON response" />
     <MESSAGE value="cities api JSON response" />
-    <option name="LAST_COMMIT_MESSAGE" value="cities api JSON response" />
+    <MESSAGE value="academic years &lt;+&gt; qualification &lt;+&gt; qualification types&#10;change response" />
+    <MESSAGE value="military api response" />
+    <option name="LAST_COMMIT_MESSAGE" value="military api response" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/app/Nationality.php">
@@ -634,13 +759,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/api.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="91" column="3" lean-forward="true" selection-start-line="91" selection-end-line="92" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Requests/QualificationRequest.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="44">
@@ -669,13 +787,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Helpers/Helpers.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="139" column="18" selection-start-line="139" selection-start-column="13" selection-end-line="139" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Modules/Settings/Entities/AcademicYear.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -687,13 +798,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="30" column="89" selection-start-line="30" selection-start-column="89" selection-end-line="30" selection-end-column="89" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="16" lean-forward="true" selection-start-line="12" selection-start-column="16" selection-end-line="12" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -732,13 +836,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/web.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="21" column="28" selection-start-line="21" selection-end-line="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/phpstorm64.exe.vmoptions">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -756,24 +853,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CityController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="28" column="80" selection-start-line="28" selection-start-column="80" selection-end-line="28" selection-end-column="80" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CountryController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="27" column="19" selection-start-line="27" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/City.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="24" column="77" selection-start-line="24" selection-start-column="77" selection-end-line="24" selection-end-column="77" />
         </state>
       </provider>
     </entry>
@@ -798,17 +881,139 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/api.php">
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+        <state relative-caret-position="312">
+          <caret line="102" column="5" selection-start-line="102" selection-start-column="5" selection-end-line="102" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/QualilificationController.php">
+    <entry file="file://$PROJECT_DIR$/.env">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="115" column="11" selection-start-line="115" selection-start-column="11" selection-end-line="115" selection-end-column="11" />
+        <state relative-caret-position="-311">
+          <caret line="11" selection-start-line="11" selection-end-line="12" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/api.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="25" column="11" lean-forward="true" selection-start-line="25" selection-end-line="96" />
+          <folding>
+            <element signature="e#733#3859#1#PHP" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Military/Routes/web.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="15" column="25" lean-forward="true" selection-start-line="15" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Military/Routes/api.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="22" column="30" selection-start-line="22" selection-start-column="16" selection-end-line="22" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Military/Http/Controllers/MilitarySettingController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="8" column="6" selection-start-line="8" selection-start-column="6" selection-end-line="8" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Military/Http/Controllers/MilitaryAreasController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1547">
+          <caret line="95" column="23" selection-start-line="95" selection-start-column="23" selection-end-line="95" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Military/Http/Requests/MilitaryAreaRequest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="41" selection-start-line="16" selection-start-column="12" selection-end-line="17" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Military/Entities/MilitaryAreas.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Military/Http/Controllers/MilitaryStatusSettingController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="50" column="5" selection-start-line="50" selection-start-column="5" selection-end-line="50" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/RegisterationStatusController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/php/lib/php.jar!/stubs/standard/standard_9.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="735">
+          <caret line="184" column="3" lean-forward="true" selection-start-line="184" selection-start-column="3" selection-end-line="184" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Helpers/Helpers.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="89">
+          <caret line="159" column="22" lean-forward="true" selection-start-line="159" selection-start-column="22" selection-end-line="174" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/Http/Controllers/CityController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2108">
+          <caret line="128" column="28" selection-start-line="128" selection-end-line="129" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/City.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="25" column="5" selection-start-line="19" selection-start-column="4" selection-end-line="25" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/web.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="24" column="17" selection-start-line="24" selection-end-line="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Routes/api.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1343">
+          <caret line="79" column="36" selection-start-line="79" selection-start-column="16" selection-end-line="79" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Entities/RegistrationMethod.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="89" selection-start-line="16" selection-start-column="89" selection-end-line="16" selection-end-column="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Settings/Http/Controllers/RegistrationMethodsController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-81">
+          <caret line="113" column="9" selection-start-line="113" selection-start-column="9" selection-end-line="113" selection-end-column="9" />
         </state>
       </provider>
     </entry>

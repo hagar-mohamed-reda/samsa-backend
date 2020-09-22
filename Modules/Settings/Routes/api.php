@@ -65,6 +65,24 @@ Route::group(['middleware' => 'api_auth'], function () {
 //    Route::resource('case-constraint', 'CaseConstraintController');
 //case-constraint end
 
+//case-constraint start
+Route::get('constraint-status', 'ConstraintStatusController@index');
+Route::get('constraint-status/{id}', 'ConstraintStatusController@show');
+Route::post('constraint-status', 'ConstraintStatusController@store');
+Route::delete('constraint-status/{id}', 'ConstraintStatusController@destroy');
+Route::put('constraint-status/{id}', 'ConstraintStatusController@update');
+//    Route::resource('case-constraint', 'CaseConstraintController');
+//case-constraint end
+
+    Route::resource('registration-methods', 'RegistrationMethodsController');
+
+    //
+    Route::get('registration-methods', 'RegistrationMethodsController@index');
+    Route::get('registration-methods/{id}', 'RegistrationMethodsController@show');
+    Route::post('registration-methods', 'RegistrationMethodsController@store');
+    Route::delete('registration-methods/{id}', 'RegistrationMethodsController@destroy');
+    Route::put('registration-methods/{id}', 'RegistrationMethodsController@update');
+    //
     // translation
     Route::get('translation', 'TranslationController@index');
     Route::get('translation/get', 'TranslationController@get');

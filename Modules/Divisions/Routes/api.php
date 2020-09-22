@@ -22,4 +22,19 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::post('levels', 'LevelController@store');
     Route::delete('levels/{id}', 'LevelController@destroy');
     Route::put('levels/{id}', 'LevelController@update');
+
+
+    Route::get('divisions', 'DivisionsController@index');
+    Route::get('divisions/{id}', 'DivisionsController@show');
+    Route::post('divisions', 'DivisionsController@store');
+    Route::delete('divisions/{id}', 'DivisionsController@destroy');
+    Route::put('divisions/{id}', 'DivisionsController@update');
+
+    Route::get('departments', 'DepartmentController@index');
+    Route::get('departments/{id}', 'DepartmentController@show');
+    Route::post('departments', 'DepartmentController@store');
+    Route::delete('departments/{id}', 'DepartmentController@destroy');
+    Route::put('departments/{id}', 'DepartmentController@update');
+    Route::get('department/{level_id}', 'DepartmentController@getDepartments');
+
 });

@@ -16,7 +16,7 @@ class CaseConstraintController extends Controller
      */
     public function index()
     {
-        $resources = CaseConstraint::orderBy('created_at', 'DESC')->paginate(10);
+        $resources = CaseConstraint::orderBy('created_at', 'DESC')->get();
         return responseJson(1, "ok", $resources);
     }
 
@@ -50,10 +50,9 @@ class CaseConstraintController extends Controller
                 watch(_('Case Constraint year was created'), $icon = 'fa fa-accusoft');
                 return responseJson(1, __('data created successfully'), $resource);
             }
-        } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft");
+        } catch (\Exception $ex) {
+            return responseJson(0,  $ex->getMessage(),"");
         }
-        return redirect()->route('case-constraint.index');
     }
 
     /**
@@ -117,7 +116,7 @@ class CaseConstraintController extends Controller
             return responseJson(1, __('data updated successfully'), $resource);
 
         } catch (\Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0,  $ex->getMessage(),"");
         }
     }
 
@@ -131,15 +130,14 @@ class CaseConstraintController extends Controller
         try {
             $resource = CaseConstraint::find($id);
             if (!$resource) {
-                notify()->warning(__('data not found'), "", "bottomLeft");
+                return responseJson(0, __('data not found'), '');
             } else {
                 $resource->delete();
-                notify()->success(__('data has been deleted successfully'), "", "bottomLeft");
+                return responseJson(1, __('deleted successfully'), '');
             }
         } catch (\Exception $ex) {
-            notify()->error($ex->getMessage(), "", "bottomLeft");
+            return responseJson(0,  $ex->getMessage(),"");
         }
-        return redirect()->route('case-constraint.index');
     }
 
 }

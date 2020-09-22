@@ -17,7 +17,7 @@ class DepartmentController extends Controller
     public function index()
     {
         $departments = Department::OrderBy('created_at', 'desc')->get();
-        return view('divisions::departments.index', compact('departments'));
+        return responseJson(1, "ok", $departments);
     }
 
     /**
@@ -34,20 +34,26 @@ class DepartmentController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(DepartmentRequest $request)
+    public function store(Request $request)
     {
+        $validator = validator($request->all(), [
+            "name" => "required",
+            'level_id'=>'required'
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $department = Department::create($request->all());
             if($department){
-                notify()->success( __('data created successfully'), "", "bottomLeft" );
-                return redirect()->route('departments.index');
+                return responseJson(1, __('data created successfully'), $division);
             }else{
                 notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft" );
                 return redirect()->route('departments.index')->with(['error' => 'هناك خطأ ما يرجى المحاولة فى وقت لاحق']);
             }
         } catch (\Exception $th) {
-            notify()->error( $th->getMessage(), "", "bottomLeft" );
-            return redirect()->route('departments.index');
+            return responseJson(0, $ex->getMessage(),"");
         }
     }
 
@@ -58,7 +64,12 @@ class DepartmentController extends Controller
      */
     public function show($id)
     {
-        return view('divisions::show');
+        $department = Department::find($id);
+        $department->level;
+        if (!$department) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $department);
     }
 
     /**
@@ -82,21 +93,27 @@ class DepartmentController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(DepartmentRequest $request, $id)
+    public function update(Request $request, $id)
     {
+        $validator = validator($request->all(), [
+            "name" => "required",
+            'level_id'=>'required'
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $department = Department::find($id);
             if (!$department) {
-                notify()->warning( __('data not found'), "", "bottomLeft" );
-                return redirect()->route('departments.index');
+                return responseJson(0, __('data not found'), '');
             } else {
                 $department->update($request->all());
-                notify()->success( __('data updated successfully'), "", "bottomLeft");
-                return redirect()->route('departments.index');
+                return responseJson(1, __('data updated successfully'), $department);
+
             }
-        } catch (\Exception $th) {
-            notify()->error( $th->getMessage(), "", "bottomLeft");
-            return redirect()->route('departments.index');
+        } catch (\Exception $ex) {
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
 
@@ -111,22 +128,22 @@ class DepartmentController extends Controller
             $department = Department::find($id);
             $divisions = $department->division->count();
             if (!$department) {
-                notify()->warning(__('data not found'), "", "bottomLeft" );
-                return redirect()->route('departments.index');
+                return responseJson(0, __('data not found'), '');
+
             }
             if(isset($divisions) && $divisions > 0){
-                 notify()->error(__('this item can not be deleted'), "", "bottomLeft" );
-                return redirect()->route('departments.index');
+                 return responseJson(0,__('this item can not be deleted'), '');
             }
             $department->delete();
-            notify()->success( __('data deleted successsfully'), "", "bottomLeft");
-            return redirect()->route('departments.index');
+            return responseJson(1, __('deleted successfully'), '');
+
         } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft");
-            return redirect()->route('departments.index');
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
     public function getDepartments($level_id){
-        return  Department::where('level_id', $level_id)->pluck('id','name')->toArray();
+        $departments = Department::where('level_id', $level_id)->get();
+        return responseJson(1,'ok', $departments);
+
     }
 }

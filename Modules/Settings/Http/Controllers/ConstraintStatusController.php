@@ -16,7 +16,7 @@ class ConstraintStatusController extends Controller
     public function index()
     {
         $resources = ConstraintStatus::orderBy('created_at', 'DESC')->get();
-        return view('settings::constraint_status.index', compact('resources'));
+        return responseJson(1, "ok", $resources);
     }
 
     /**
@@ -35,20 +35,22 @@ class ConstraintStatusController extends Controller
      */
     public function store(Request $request)
     {
-         $request->validate([
+        $validator = validator($request->all(), [
             'name' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
 
         try {
             $resource = ConstraintStatus::create($request->all());
             if ($resource) {
-                notfy(__('add constraint status'), __('add constraint status'), "fa fa-language");
-                notify()->success(__('data creadted successfully'), "", "bottomLeft");
+                return responseJson(1, __('data created successfully'), $resource);
             }
         } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft");
+            return responseJson(0, "", $ex->getMessage());
         }
-        return redirect()->route('constraint-status.index');
     }
 
     /**
@@ -58,7 +60,11 @@ class ConstraintStatusController extends Controller
      */
     public function show($id)
     {
-        return view('settings::show');
+        $resource = ConstraintStatus::find($id);
+        if (!$resource) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $resource);
     }
 
     /**
@@ -90,21 +96,24 @@ class ConstraintStatusController extends Controller
      */
     public function update(Request $request, $id)
     {
-         $request->validate([
+        $validator = validator($request->all(), [
             'name' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $resource = ConstraintStatus::find($id);
             if (!$resource) {
-                notify()->warning(__('data not found'), "", "bottomLeft");
+                return responseJson(0, __('data not found'), '');
             } else {
                 $resource->update($request->all());
-                notify()->success(__('data updated successfully'), "", "bottomLeft");
+                return responseJson(1, __('data updated successfully'), $resource);
             }
         } catch (\Exception $ex) {
-            notify()->error($th->getMessage(), "", "bottomLeft");
+            return responseJson(0, $ex->getMessage(), "");
         }
-        return redirect()->route('constraint-status.index');
     }
 
     /**
@@ -117,15 +126,14 @@ class ConstraintStatusController extends Controller
           try {
             $resource = ConstraintStatus::find($id);
             if (!$resource) {
-                notify()->warning(__('data not found'), "", "bottomLeft");
+                return responseJson(0, __('data not found'), '');
             } else {
                 $resource->delete();
-                notify()->success(__('data has been deleted successfully'), "", "bottomLeft");
+                return responseJson(1, __('deleted successfully'), '');
             }
         } catch (\Exception $ex) {
-            notify()->error( $ex->getMessage(), "", "bottomLeft");
+            return responseJson(0, "", $ex->getMessage());
         }
-        return redirect()->route('constraint-status.index');
     }
     
 }

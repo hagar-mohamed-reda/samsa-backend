@@ -39,19 +39,26 @@ class LevelController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function store(LevelRequest $request) {
+    public function store(Request $request) {
+        
+        $validator = validator($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $level = Level::create($request->all());
             if ($level) {
-                notify()->success( __('data created successfully'), "", "bottomLeft");
-                return redirect()->route('levels.index');
+                return responseJson(1, __('data created successfully'), $level);
+
             } else {
                 notify()->error("هناك خطأ ما يرجى المحاولة فى وقت لاحق", "", "bottomLeft");
                 return redirect()->route('levels.index');
             }
         } catch (\Exception $ex) {
-            notify()->error( $ex->getMessage(), "", "bottomLeft");
-            return redirect()->route('levels.index');
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
 
@@ -61,7 +68,11 @@ class LevelController extends Controller {
      * @return Response
      */
     public function show($id) {
-        return view('divisions::show');
+        $level = Level::find($id);
+        if (!$level) {
+            return responseJson(0, __('data not found'), '');
+        }
+        return responseJson(1, "ok", $level);
     }
 
     /**
@@ -84,21 +95,24 @@ class LevelController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function update(LevelRequest $request, $id) {
+    public function update(Request $request, $id) {
+        $validator = validator($request->all(), [
+            "name" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->getMessages(), "");
+        }
         try {
             $level = Level::find($id);
             if (!$level) {
-                notify()->warning( __('data not found'), "", "bottomLeft");
-                return redirect()->route('levels.index');
+                return responseJson(0, __('data not found'), '');
             } else {
-
                 $level->update($request->all());
-                notify()->success(  __('data updated successfully'), "", "bottomLeft");
-                return redirect()->route('levels.index');
+                return responseJson(1, __('data updated successfully'), $level);
             }
         } catch (\Exception $ex) {
-            notify()->error( $ex->getMessage(), "", "bottomLeft");
-            return redirect()->route('levels.index');
+            return responseJson(0, "", $ex->getMessage());
         }
     }
 
@@ -110,22 +124,21 @@ class LevelController extends Controller {
     public function destroy($id) {
         try {
             $level = Level::find($id);
-            $departments = $level->department->count();
-
             if (!$level) {
-                notify()->warning( __('data not found'), "", "bottomLeft");
+                return responseJson(0, __('data not found'), '');
             }
+            $departments = $level->department->count();
+            $applications = $level->applications->count();
+            $students = $level->students->count();
 
-            if(isset($departments) && $departments > 0){
-                 notify()->error(__('this item can not be deleted'), "", "bottomLeft");
-                return redirect()->route('levels.index');
+            if($departments > 0 && $applications > 0 && $students > 0){
+                return responseJson(0, __('this item can not be deleted'), $city->fresh());
             }
             $level->delete();
-            notify()->success( __('data deleted successfully'), "", "bottomLeft");
+            return responseJson(1, __('deleted successfully'), '');
         } catch (\Exception $ex) {
-            notify()->error( $ex->getMessage(), "", "bottomLeft");
+            return responseJson(0, $ex->getMessage(), "");
         }
-        return redirect()->route('levels.index');
     }
 
 }
