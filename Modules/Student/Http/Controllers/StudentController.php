@@ -23,7 +23,7 @@ class StudentController extends Controller {
      */
     public function index() {
         $fillable = (new Student)->fillable;
-        $query = Student::query();
+        $query = Student::with(['academicYear', 'qualification', 'level']);
 
         if (request()->search_key) {
             foreach ($fillable as $field)
@@ -43,7 +43,8 @@ class StudentController extends Controller {
             $query->where('qualification_types_id', request()->qualification_types_id);
 
         $resources = $query->latest()->paginate(100);
-        return view('student::students.index', compact('resources'));
+
+        return $resources;
     }
 
     /**
@@ -120,7 +121,7 @@ class StudentController extends Controller {
             // upload files
             $applicationStore->uploadStudentFiles($request, $student);
 
-            notfy(__('new application'), __('new application') . $student->name, 'fa fa-file-o');
+            notfy(__('new student'), __('new student') . $student->name, 'fa fa-user');
         } catch (\Exception $th) {
             return $th->getMessage();
 
@@ -341,7 +342,7 @@ class StudentController extends Controller {
         $application->save();
         notify()->success(__('student added successfully'), "", "bottomLeft");
         notfy(__('add student'), __('add student ') . $student->name, 'fa fa-building-o');
-        return redirect()->route('applications.index');
+        return responseJson(1, __('application enroll to student'));
     }
 
 }

@@ -21,11 +21,22 @@ class ApplicationStoreController extends Controller {
         try { 
             $path = Application::$FOLDER_PREFIX . $application->id;
             foreach (RequiredDocument::all() as $item) { 
+
+                
                 //required_document_
                 uploadImg($request->file('required_document_' . $item->id), $path, function($filename) use ($application, $item, $path) {
+                    $resource = StudentRequiredDocument::where('required_document_id', $item->id)->where('student_id', $application->id)->first();
+
+                    if ($resource) {
+                        $file = public_path($resource->path);
+                        // remove old file if exists
+                        if (file_exists($file)) {
+                            unlink($file);
+                        }
+                    }
                     StudentRequiredDocument::create([
                         "required_document_id" => $item->id,
-                        "application_id" => $application->id,
+                        "student_id" => $application->id,
                         "path" => $path . "/" . $filename,
                     ]); 
                 }); 

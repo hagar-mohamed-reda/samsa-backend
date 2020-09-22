@@ -74,6 +74,17 @@ class Student extends Model {
         'accepted_by'
     ];
 
+    protected $appends = [
+        'personal_photo_url'
+    ];
+
+    public function getPersonalPhotoUrlAttribute() {
+          
+        $path = $this->personal_photo;
+
+        return $path? url('/'). '' . $path : '/assets/img/avatar.png';
+    }
+
     public function division() {
         return $this->belongsTo('Modules\Divisions\Entities\Division', 'division_id');
     }

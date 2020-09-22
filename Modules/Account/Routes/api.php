@@ -30,6 +30,11 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('services/update/{service}', 'ServiceController@update');
         Route::post('services/delete/{service}', 'ServiceController@destroy');
         
+        // stores routes
+        Route::get('stores', 'StoreController@index');
+        Route::post('stores/store', 'StoreController@store');
+        Route::post('stores/update/{service}', 'StoreController@update');
+        Route::post('stores/delete/{service}', 'StoreController@destroy');
         
         // academic_year_expense routes
         Route::get('academic_year_expenses', 'AcademicYearExpenseController@index');

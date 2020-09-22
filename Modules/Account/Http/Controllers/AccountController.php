@@ -10,6 +10,7 @@ use Modules\Account\Entities\Student;
 use Modules\Account\Entities\StudentBalance;
 use Modules\Account\Entities\AccountSetting;
 use Modules\Account\Entities\Payment; 
+use Modules\Account\Entities\Store; 
 use App\User;
 use DB;
 
@@ -110,7 +111,11 @@ class AccountController extends Controller
                 "paid" => "1"
             ]);
         } 
-         
+
+        // update store
+        $store = Store::find(1);
+        $store->updateStore($value);
+        
         return $payment;
     }
 

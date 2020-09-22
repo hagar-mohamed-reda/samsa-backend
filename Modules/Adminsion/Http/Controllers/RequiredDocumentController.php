@@ -18,7 +18,7 @@ class RequiredDocumentController extends Controller
     public function index()
     {
         $requiredDocuments = RequiredDocument::latest()->get();
-        return view('adminsion::required_documents.index', compact('requiredDocuments'));
+        return $requiredDocuments;
     }
 
     /**
@@ -38,12 +38,11 @@ class RequiredDocumentController extends Controller
     public function store(Request $request)
     {
         try {
-            RequiredDocument::create($request->all()); 
-            notify()->success(__('process has been success'), "", "bottomLeft"); 
+            RequiredDocument::create($request->all());   
         } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft"); 
+            return responseJson(0, $th->getMessage());
         }
-        return redirect()->route('required_documents.index');
+        return responseJson(1, __('done'));
     }
 
     /**
@@ -73,15 +72,15 @@ class RequiredDocumentController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, RequiredDocument $id)
+    public function update(Request $request, $resource)
     { 
+        $resource = RequiredDocument::find($resource);
         try {
-            $id->update($request->all());
-            notify()->success(__('process has been success'), "", "bottomLeft"); 
+            $resource->update($request->all()); 
         } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft"); 
+            return responseJson(0, $th->getMessage());
         }
-        return redirect()->route('required_documents.index');
+        return responseJson(1, __('done'));
     }
 
     /**
@@ -89,20 +88,18 @@ class RequiredDocumentController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy($id)
-    { 
-        $requiredDocument = RequiredDocument::find($id); 
+    public function destroy( $resource)
+    {  
+        $resource = RequiredDocument::find($resource); 
         try {
-            if ($requiredDocument->studentRequiredDocuments()->count() > 0)  {
+            /*if ($requiredDocument->studentRequiredDocuments()->count() > 0)  {
                 notify()->error(__('cant delete data depend on data'), "", "bottomLeft"); 
                 return redirect()->route('required_documents.index');
-            }
-            
-            $requiredDocument->delete();
-            notify()->success(__('process has been success'), "", "bottomLeft"); 
+            }*/ 
+            $resource->delete(); 
         } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft"); 
+            return responseJson(0, $th->getMessage());
         }
-        return redirect()->route('required_documents.index');
+        return responseJson(1, __('done'));
     }
 }

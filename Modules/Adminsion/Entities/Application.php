@@ -4,6 +4,8 @@ namespace Modules\Adminsion\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 
+use DB;
+
 class Application extends Model {
 
     /**
@@ -67,6 +69,17 @@ class Application extends Model {
         'writen_by'
     ];
 
+    protected $appends = [
+        'personal_photo_url'
+    ];
+
+    public function getPersonalPhotoUrlAttribute() {
+          
+        $path = $this->personal_photo;
+
+        return $path? url('/'). '' . $path : '/assets/img/avatar.png';
+    }
+
     public function parentJob() {
         return $this->belongsTo('Modules\Settings\Entities\ParentJobs', 'parent_job_id');
     }
@@ -128,7 +141,7 @@ class Application extends Model {
     }
 
     public function studentRequiredDocument() {
-        return $this->hasMany('Modules\Adminsion\Entities\StudentRequiredDocument', 'application_id');
+        return $this->hasMany('Modules\Adminsion\Entities\StudentRequiredDocument', 'student_id')->with(['requiredDocument']);
     }
 
     public function user() {

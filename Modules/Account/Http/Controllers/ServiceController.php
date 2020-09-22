@@ -36,14 +36,12 @@ class ServiceController extends Controller
             //return dump(toClass($data)->api_token);
             $validator = validator($request->json()->all(), [
                 "name" =>  "required|unique:account_services",
-                "value" =>  "required",  
-                "store_id" =>  "required", 
+                "value" =>  "required",   
                 "type" =>  "required", 
             ], [
                 "name.unique" => __('name already exist'),
                 "name.required" => __('fill all required data'),
-                "value.required" => __('fill all required data'),
-                "store_id.required" => __('fill all required data'),
+                "value.required" => __('fill all required data'), 
                 "type.required" => __('fill all required data'),
             ]);
             

@@ -20,9 +20,8 @@ class ApplicationController extends Controller {
      * 
      * @return Response String
      */
-    public function index() {
-        $fillable = (new Application)->fillable;
-        $query = Application::query();
+    public function index() { 
+        $query = Application::with(['academicYear', 'qualification', 'level', 'studentRequiredDocument']);
 
         if (request()->search_key) {
             foreach ($fillable as $field)
@@ -40,24 +39,15 @@ class ApplicationController extends Controller {
 
         if (request()->qualification_types_id > 0)
             $query->where('qualification_types_id', request()->qualification_types_id);
-//        dd(request()['files']);
-
-        if (request()['files'] == 1)
-            $query->where('level_id', '!=', null);
-        if (request()['files'] == 2)
-            $query->where('level_id', '=', null);
-
+ 
         $resources = $query->latest()->paginate(6);
-        return view('adminsion::applications.index', compact('resources'));
+        return $resources;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Response
-     */
-    public function create() {
-        return view('adminsion::applications.create');
+    public function get($id) {
+        return Application::with(['academicYear', 'qualification', 'level', 'studentRequiredDocument'])->find($id);
     }
+ 
 
     /**
      * Store a newly created resource in storage.
@@ -69,7 +59,7 @@ class ApplicationController extends Controller {
 
         // assign code of application
         $data['code'] = date("Y-m-d-H:i:s") . "-" . rand(11111, 99999);
-        $data['writen_by'] = Auth::user()->id;
+        $data['writen_by'] = $request->user->id;
 
         // application validator
         $applicationValidator = new ApplicationValidation();
@@ -203,6 +193,9 @@ class ApplicationController extends Controller {
 
             // upload personal image 
             uploadImg($request->file('personal_photo'), Application::$FOLDER_PREFIX . $application->id, function($filename) use ($application) {
+                if (file_exists(public_path($application->personal_photo))) {
+                    unlink(public_path($application->personal_photo));
+                }
                 $application->update([
                     'personal_photo' => Application::$FOLDER_PREFIX . $application->id . "/" . $filename
                 ]);
@@ -210,7 +203,7 @@ class ApplicationController extends Controller {
 
             // upload files
             $files = $applicationStore->uploadFiles($request, $application);
-            notfy(__('new application'), __('new application') . $application->name, 'fa fa-file-o');
+            notfy(__('update application'), __('update application') . $application->name, 'fa fa-file-o');
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
