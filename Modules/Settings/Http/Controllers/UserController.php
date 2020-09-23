@@ -99,6 +99,7 @@ class UserController extends Controller
         if (!$user) {
             return responseJson(0, __('data not found'), '');
         }
+        $user->role;
         return responseJson(1, "ok", $user);
     }
 
