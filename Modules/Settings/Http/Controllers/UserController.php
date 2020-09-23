@@ -183,8 +183,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        if (is_null($user)) {
-            return redirect()->back();
+        if (!$user) {
+            return responseJson(0, __('data not found'), '');
         }
 
         if ($user->image != null) {
@@ -192,6 +192,6 @@ class UserController extends Controller
         }
 
         $user->delete();
-        return responseJson(0, "", $ex->getMessage());
+        return responseJson(1, __('deleted successfully'), '');
     }
 }
