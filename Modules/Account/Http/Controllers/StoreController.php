@@ -46,7 +46,7 @@ class StoreController extends Controller
                 return responseJson(0, $validator->errors()->first());
             }
             $data = $request->all();
-            $data['user'] = $request->user->id;
+            $data['user_id'] = $request->user->id;
             $data['balance'] = $request->init_balance;
              
             $resource = Store::create($data); 
