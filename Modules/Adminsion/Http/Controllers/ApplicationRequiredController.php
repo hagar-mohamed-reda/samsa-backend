@@ -15,7 +15,7 @@ class ApplicationRequiredController extends Controller
      */
     public function index()
     {
-        $resources = ApplicationRequired::all();
+        $resources = ApplicationRequired::get(['id', 'display_name', 'required']);
         return $resources;
     }
 
