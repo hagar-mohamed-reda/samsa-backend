@@ -37,14 +37,15 @@ class TranslationController extends Controller
             $data = $request->data;//json_decode(); 
             
             foreach($data as $item) {  
-                $translation = isset($item['key'])? Translation::where('key', $item['key'])->first() : null;
-                if ($translation) {
-                    $translation->update([ 
-                        "name_ar" => $item['name_ar'],
-                        "name_en" => $item['name_en']
-                    ]);
-                } else {
-                    if (strlen($item['key']) > 0) {
+                
+                if (isset($item['key'])) {
+                    $translation = Translation::where('key', $item['key'])->first();
+                    if ($translation) {
+                        $translation->update([ 
+                            "name_ar" => $item['name_ar'],
+                            "name_en" => $item['name_en']
+                        ]);
+                    } else { 
                         $translation = Translation::create([
                             "key" => $item['key'],
                             "name_ar" => $item['name_ar'],
