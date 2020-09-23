@@ -49,10 +49,10 @@ class Student extends StudentOrigin
         return Service::whereIn('id', $ids)->get(); 
     }
 
-    public function getImageAttribute() {
-        $resource = DB::table('student_required_documents')->where('student_id', $this->id)->where('required_document_id', 4)->first();
-        $path = optional($resource)->path;
+    public function getImageAttribute() { 
+        $studentImage = DB::table('students')->find($this->id);
 
+        $path = $studentImage->personal_photo; 
         return $path? url($path) : '/assets/img/avatar.png';
     }
 

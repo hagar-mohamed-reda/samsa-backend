@@ -22,6 +22,8 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('students/store', 'StudentController@store');
         Route::post('students/update/{resourcc}', 'StudentController@update');
         Route::post('students/delete/{resourcc}', 'StudentController@destroy'); 
+
+        Route::post('students/enroll/{id}', 'StudentController@saveToStudents'); 
  
     });
 });
