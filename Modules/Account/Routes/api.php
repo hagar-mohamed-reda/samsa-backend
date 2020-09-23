@@ -62,7 +62,7 @@ Route::group(['middleware' => 'api_auth'], function () {
           return DB::table('divisions')
           ->join('departments', 'departments.id', '=', 'divisions.department_id')
           ->join('levels', 'levels.id', '=', 'departments.level_id')
-          ->get(['divisions.id as id ', 'divisions.name', 'level.name as level', 'level_id']);
+          ->get(['divisions.id as id ', 'divisions.name', 'levels.name as level', 'level_id']);
         });
         Route::get('terms', function(){
           return DB::table('terms')->get();
