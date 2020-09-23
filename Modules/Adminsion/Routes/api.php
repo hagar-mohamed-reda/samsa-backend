@@ -22,6 +22,9 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('required_documents/update/{id}', 'RequiredDocumentController@update');
         Route::post('required_documents/delete/{id}', 'RequiredDocumentController@destroy'); 
 
+        // ApplicationRequired  routes
+        Route::get('application_requireds', 'ApplicationRequiredController@index');
+        Route::post('application_requireds/update', 'ApplicationRequiredController@update'); 
 
         // servicecs routes
         Route::get('applications', 'ApplicationController@index');

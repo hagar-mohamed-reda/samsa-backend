@@ -15,8 +15,8 @@ class ApplicationRequiredController extends Controller
      */
     public function index()
     {
-        $applicationRequirments = ApplicationRequired::all();
-        return view('adminsion::application_requirments.index', compact('applicationRequirments'));
+        $resources = ApplicationRequired::all();
+        return $resources;
     }
 
     /**
@@ -33,24 +33,15 @@ class ApplicationRequiredController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function update(Request $request)
     {
-
-        $requests = $request->except('_token');
+        $data = $required->all();
         // dd($requests);
-        foreach($requests as $index => $value){
-            // dd($value);
-            $saver = [
-                'name' => $index,
-                'required' => $value
-            ];
-            // dd($saver);
-            $application = ApplicationRequired::where('name', $index)->first();
-            $application->update( $saver);
-
+        foreach($data as $item) {
+            $applicationRequired = ApplicationRequired::where('id', $item->id);
+            $applicationRequired->update($item);
         }
-        notify()->success("تم تعديل الاعدادات بنجاح", "", "bottomLeft" );
-        return redirect()->route('application-requirments.index');
+        return responseJson(1, __('done'));
 
     }
 
@@ -63,27 +54,7 @@ class ApplicationRequiredController extends Controller
     {
         return view('adminsion::show');
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        return view('adminsion::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+ 
 
     /**
      * Remove the specified resource from storage.

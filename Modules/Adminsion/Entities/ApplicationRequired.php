@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class ApplicationRequired extends Model
 {
     protected $table = 'application_required';
-    protected $fillable = ['name', 'required'];
+    protected $fillable = ['name', 'required','display_name'];
 }
