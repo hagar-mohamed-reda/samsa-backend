@@ -21,7 +21,7 @@ class ApplicationController extends Controller {
      * @return Response String
      */
     public function index() { 
-        $query = Application::with(['academicYear', 'qualification', 'level', 'studentRequiredDocument']);
+        $query = Application::with(['academicYear', 'qualification', 'level', 'studentRequiredDocument'])->where('status', '!=', '1');
 
         if (request()->search_key) {
             foreach ($fillable as $field)

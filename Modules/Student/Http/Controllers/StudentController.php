@@ -14,6 +14,7 @@ use Modules\Adminsion\Entities\Application;
 use Modules\Adminsion\Http\Controllers\validation\ApplicationValidation;
 use Modules\Adminsion\Http\Controllers\ApplicationStoreController;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class StudentController extends Controller {
 
@@ -42,11 +43,19 @@ class StudentController extends Controller {
         if (request()->qualification_types_id > 0)
             $query->where('qualification_types_id', request()->qualification_types_id);
 
-        $resources = $query->latest()->paginate(100);
+        $resources = $query->latest()->paginate(10);
 
         return $resources;
     }
 
+    /**
+     * get
+     */
+    public function get($id) {
+        $resource = Student::with(['academicYear', 'qualification', 'level', 'division', 'department', 'studentRequiredDocument'])->find($id);
+
+        return $resource;
+    }
     /**
      * Show the form for creating a new resource.
      * @return Response
@@ -119,7 +128,7 @@ class StudentController extends Controller {
             });
 
             // upload files
-            $applicationStore->uploadStudentFiles($request, $student);
+            $applicationStore->uploadStudentFiles($request, null, $student);
 
             notfy(__('new student'), __('new student') . $student->name, 'fa fa-user');
         } catch (\Exception $th) {
@@ -189,18 +198,18 @@ class StudentController extends Controller {
             $student->update($data);
 
             // upload personal image 
-            uploadImg($request->file('personal_photo'), Application::$FOLDER_PREFIX . $application->id, function($filename) use ($application) {
-                $application->update([
-                    'personal_photo' => Application::$FOLDER_PREFIX . $application->id . "/" . $filename
+            uploadImg($request->file('personal_photo'), Student::$FOLDER_PREFIX . $student->id, function($filename) use ($student) {
+                $student->update([
+                    'personal_photo' => Student::$FOLDER_PREFIX . $student->id . "/" . $filename
                 ]);
             });
 
             // upload files
-            $applicationStore->uploadFiles($request, $application);
+            $applicationStore->uploadStudentFiles($request, $application, $student);
 
-            notfy(__('new Student'), __('new Student') . $application->name, 'fa fa-user');
+            notfy(__('new Student'), __('new Student') . $student->name, 'fa fa-user');
         } catch (\Exception $th) {
-            return responseJson(0, $th->getMessage());
+            return responseJson(0, $th->getMessage() . " from update student");
         }
         return responseJson(1, __('process has been success'));
     }
@@ -214,10 +223,11 @@ class StudentController extends Controller {
         //
     }
 
-    public function saveToStudents($id) {
+    public function saveToStudents(Request $request, $id) {
         $application = Application::find($id);
 
         $data = [
+            'personal_photo' => $application->personal_photo,
             'application_id' => $application->id,
             'name' => $application->name,
             'level_id' => $application->level_id,
@@ -229,22 +239,14 @@ class StudentController extends Controller {
             'qualification_id' => $application->qualification_id,
             'qualification_date' => $application->qualification_date,
             'password' => $application->password,
-        ];
-        if ($application->level_id != null) {
+        ]; 
             $student_code = StudentCodeSeries::
                             where('academic_year_id', $application->academic_years_id)
                             ->where('level_id', $application->level_id)->first();
 
             $start_code = substr($student_code->code, 0, 5);
 
-
-            $student_last_code = Student::where('code', 'LIKE', $start_code . '%')->pluck('code')->toArray();
-            if ($student_last_code != null) {
-                $data['code'] = (string) (max($student_last_code) + 1);
-            } else {
-                $data['code'] = (string) $student_code->code;
-            }
-
+            
             if ($application->language_1_id != null)
                 $data['language_1_id'] = $application->language_1_id;
 
@@ -334,13 +336,26 @@ class StudentController extends Controller {
             
             if ($application->relative_relation_id != null)
                 $data['relative_relation_id '] = $application->relative_relation_id ;
-        }
-        
-        $data['accepted_by'] = Auth::user()->id;
+ 
+
+            $student_last_code = Student::where('code', 'LIKE', $start_code . '%')->pluck('code')->toArray();
+            if ($student_last_code != null) {
+                $data['code'] = (string) (max($student_last_code) + 1);
+            } else {
+                $data['code'] = (string) $student_code->code;
+            }
+ 
+         
+        $data['application_id'] = $application->id;
         $student = Student::create($data);
         $application->status = 1;
-        $application->save();
-        notify()->success(__('student added successfully'), "", "bottomLeft");
+        $application->save(); 
+
+        DB::table('student_required_documents')
+        ->where('student_id', $application->id)
+        ->update([
+            'student_id' => $student->id
+        ]);
         notfy(__('add student'), __('add student ') . $student->name, 'fa fa-building-o');
         return responseJson(1, __('application enroll to student'));
     }

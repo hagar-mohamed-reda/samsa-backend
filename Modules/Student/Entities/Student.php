@@ -4,6 +4,7 @@ namespace Modules\Student\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Adminsion\Entities\Application;
+use Modules\Adminsion\Entities\studentRequiredDocument;
 
 class Student extends Model {
 
@@ -13,6 +14,12 @@ class Student extends Model {
      * @var String
      */
     public static $FOLDER_PREFIX = "/uploads/students/";
+
+    /**
+     * folder name of the application
+     *
+     * @var String
+     */ 
     protected $fillable = [
         'application_id',
         'constraint_status_id',
@@ -75,11 +82,11 @@ class Student extends Model {
     ];
 
     protected $appends = [
-        'personal_photo_url'
+        'personal_photo_url' 
     ];
-
+  
+ 
     public function getPersonalPhotoUrlAttribute() {
-          
         $path = $this->personal_photo;
 
         return $path? url('/'). '' . $path : '/assets/img/avatar.png';
@@ -87,6 +94,10 @@ class Student extends Model {
 
     public function division() {
         return $this->belongsTo('Modules\Divisions\Entities\Division', 'division_id');
+    }
+
+    public function department() {
+        return $this->belongsTo('Modules\Divisions\Entities\Department', 'department_id');
     }
 
     public function parentJob() {
@@ -150,8 +161,7 @@ class Student extends Model {
     }
 
     public function studentRequiredDocument() {
-        $application = Application::find($this->application_id);
-        return $application->hasMany('Modules\Adminsion\Entities\StudentRequiredDocument');
+        return $this->hasMany('Modules\Adminsion\Entities\StudentRequiredDocument', 'student_id')->with(['requiredDocument']);
     }
 
     public function user() {
