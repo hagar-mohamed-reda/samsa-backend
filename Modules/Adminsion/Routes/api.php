@@ -32,6 +32,9 @@ Route::group(['middleware' => 'api_auth'], function () {
 
 
         // settings
+        Route::get('get_departments', function(){
+            return DB::table('departments')->get();
+        });
         Route::get('get_case_constraints', function(){
         	return DB::table('case_constraints')->get();
         });

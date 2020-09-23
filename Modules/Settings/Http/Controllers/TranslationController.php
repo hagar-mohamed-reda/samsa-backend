@@ -45,12 +45,13 @@ class TranslationController extends Controller
                         "name_en" => $item['name_en']
                     ]);
                 } else {
-                    if (strlen($item['key']) > 0)
-                    $translation = Translation::create([
-                        "key" => $item['key'],
-                        "name_ar" => $item['name_ar'],
-                        "name_en" => $item['name_en'],
-                    ]);
+                    if (strlen($item['key']) > 0) {
+                        $translation = Translation::create([
+                            "key" => $item['key'],
+                            "name_ar" => $item['name_ar'],
+                            "name_en" => $item['name_en'],
+                        ]);
+                    }
                 }
             }
              

@@ -35,12 +35,10 @@ class StoreController extends Controller
               
             //return dump(toClass($data)->api_token);
             $validator = validator($request->json()->all(), [
-                "name" =>  "required|unique:account_Stores", 
-                "balance" =>  "required", 
+                "name" =>  "required|unique:account_Stores",  
                 "init_balance" =>  "required", 
             ], [
-                "name.unique" => __('name already exist'),
-                "balance.required" => __('fill all required data'),
+                "name.unique" => __('name already exist'), 
                 "init_balance.required" => __('fill all required data'), 
             ]);
             
@@ -49,6 +47,7 @@ class StoreController extends Controller
             }
             $data = $request->all();
             $data['user'] = $request->user->id;
+            $data['balance'] = $request->init_balance;
              
             $resource = Store::create($data); 
             watch(__('add Store ') . $resource->name, "fa fa-trophy");
