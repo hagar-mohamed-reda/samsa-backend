@@ -35,7 +35,7 @@ class ApplicationRequiredController extends Controller
      */
     public function update(Request $request)
     {
-        $data = json_decode($request->data);
+        $data = $request->data;
         // dd($requests);
         foreach($data as $item) {
             $applicationRequired = ApplicationRequired::where('id', $item['id']);
