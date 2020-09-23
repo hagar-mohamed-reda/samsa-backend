@@ -39,8 +39,7 @@ class TranslationController extends Controller
             foreach($data as $item) {  
                 $translation = isset($item['key'])? Translation::where('key', $item['key'])->first() : null;
                 if ($translation) {
-                    $translation->update([
-                        "key" => $item['key'],
+                    $translation->update([ 
                         "name_ar" => $item['name_ar'],
                         "name_en" => $item['name_en']
                     ]);
