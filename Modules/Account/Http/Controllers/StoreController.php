@@ -81,10 +81,10 @@ class StoreController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(Store $Store) { 
+    public function destroy(Store $store) { 
         try { 
             watch(__('remove Store ') . $Store->name, "fa fa-trophy"); 
-           
+            $store->delete();
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
