@@ -24,7 +24,7 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::post('users', 'UserController@store');
     Route::delete('users/{id}', 'UserController@destroy');
     Route::put('users/{id}', 'UserController@update');
-
+    Route::put('user-password/{id}', 'UserController@updateUserPassword');
 //academic years start
     Route::get('academic-years', 'AcademicYearController@index');
     Route::get('academic-years/{id}', 'AcademicYearController@show');

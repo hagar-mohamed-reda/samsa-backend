@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class QualificationTypes extends Model
 {
     protected $table = 'qualification_types';
-    protected $fillable = ['qualification_id', 'name', 'grade', 'level_id', 'academic_year_id', 'percentage'];
+    protected $fillable = ['qualification_id', 'name', 'grade', 'level_id', 'academic_year_id', 'percentage', 'notes'];
 
     protected $hidden = ['created_at', 'updated_at'];
 

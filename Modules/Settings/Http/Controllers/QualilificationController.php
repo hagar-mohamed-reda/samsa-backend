@@ -68,7 +68,7 @@ class QualilificationController extends Controller
                 return redirect()->route('qualifications.index');
             }
         } catch (\Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
 
@@ -132,7 +132,7 @@ class QualilificationController extends Controller
                 return responseJson(1, __('data updated successfully'), $qualification);
             }
         } catch (\Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
 
@@ -158,7 +158,7 @@ class QualilificationController extends Controller
                 return responseJson(1, __('deleted successfully'), '');
             }
         } catch (\Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0, $ex->getMessage(), "");
         }
     }
 
