@@ -83,7 +83,7 @@ class StoreController extends Controller
      */
     public function destroy(Store $store) { 
         try { 
-            watch(__('remove Store ') . $Store->name, "fa fa-trophy"); 
+            watch(__('remove Store ') . $store->name, "fa fa-trophy"); 
             $store->delete();
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
