@@ -20,7 +20,7 @@ class StoreController extends Controller
      * @return json
      */
     public function index() {
-        $resources = Store::get();
+        $resources = Store::latest()->get();
         return $resources;
     }
  
