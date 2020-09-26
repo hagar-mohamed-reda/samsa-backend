@@ -23,6 +23,10 @@ class Service extends Model
     ];
       
     
+    public function store() {
+        return $this->belongsTo('Modules\Account\Entities\Store', 'store_id')->select(['id', 'name']);
+    }
+     
     public function level() {
         return $this->belongsTo('Modules\Divisions\Entities\Level', 'except_level_id')->select(['id', 'name']);
     }

@@ -20,7 +20,7 @@ class ServiceController extends Controller
      * @return json
      */
     public function index() {
-        $resources = Service::with(['level', 'division'])->get();
+        $resources = Service::with(['level', 'division', 'store'])->latest()->get();
         return $resources;
     }
  
