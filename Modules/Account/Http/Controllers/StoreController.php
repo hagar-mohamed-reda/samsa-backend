@@ -35,7 +35,7 @@ class StoreController extends Controller
               
             //return dump(toClass($data)->api_token);
             $validator = validator($request->json()->all(), [
-                "name" =>  "required|unique:account_Stores",  
+                "name" =>  "required|unique:account_stores",  
                 "init_balance" =>  "required", 
             ], [
                 "name.unique" => __('name already exist'), 
