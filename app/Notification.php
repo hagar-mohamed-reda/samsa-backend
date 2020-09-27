@@ -25,7 +25,7 @@ class Notification extends Model
             "body" => $body,
             "seen" => 0,
             "icon" => $icon,
-            "user_id" => Auth::user()->id,
+            "user_id" => optional(request()->user)->id;
         ]);
     }
 
