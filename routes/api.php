@@ -103,5 +103,8 @@ Route::group(['middleware' => 'api_auth'], function () {
 
 
     // auth
-    Route::get('profile', 'AuthController@getProfile');
+    Route::get('profile', 'AuthController@getProfile'); 
+    Route::post("profile/update", "AuthController@update");
+    Route::post("profile/update-password", "AuthController@updatePassword");
+    Route::post("profile/update-phone", "AuthController@updatePhone");
 });

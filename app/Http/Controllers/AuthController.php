@@ -70,5 +70,101 @@ class AuthController extends Controller
         return $profile;
     }
 
-    
+    public function update(Request $request) {
+        try {  
+            $user = $request->user;
+            $data = $request->all();
+            $user->update($data);
+
+            uploadImg($request->file('image'), "uploads/users", function($filename) use ($user) {
+                $user->update([
+                    'image' => "uploads/users" . "/" . $filename
+                ]);
+            });
+            watch(__('update profile info'), "fa fa-id-card-o"); 
+            return responseJson(1, __('done'), $user);
+        } catch (\Exception $ex) { 
+            return responseJson(0, $ex->getMessage());
+        }
+    }
+ 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePhone(Request $request) {
+        try {
+            $validator = validator()->make($request->all(), [
+                'phone' => 'required|unique:users',
+                'confirm_phone' => 'required', 
+            ], [
+                "phone.required" => __("phone_required"), 
+                "new_phone.unique" => __("phone_already_exist"), 
+                "confirm_phone.required" => __("phone_required"), 
+            ]);
+
+            if ($validator->fails()) {
+                $key = $validator->errors()->first(); 
+                return Message::error(__($key));
+            }
+
+            if ($request->phone != $request->confirm_phone)
+                return Message::error(__('phones not match')); 
+ 
+            $user = $request->user; 
+            
+            $user->update([
+                "phone" => $request->phone
+            ]); 
+            watch(__('update profile info'), "fa fa-id-card-o");
+            return responseJson(0, __('done'), $user); 
+        } catch (\Exception $ex) {
+            return responseJson(0, $ex->getMessage());
+        }
+    }
+ 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function updatePassword(Request $request) {
+        try {
+            $validator = validator()->make($request->all(), [
+                'old_password' => 'required',
+                'new_password' => 'required|min:8',
+                'confirm_password' => 'required', 
+            ], [
+                "old_password.required" => __("old_password_required"), 
+                "new_password.required" => __("new_password_required"),  
+                "new_password.min" => __("min password character is 8"),  
+            ]);
+
+            if ($validator->fails()) {
+                $key = $validator->errors()->first(); 
+                return Message::error(__($key));
+            }
+            
+            if ($request->new_password != $request->confirm_password)
+                return Message::error(__('passwords not match')); 
+ 
+            $user = $request->user;
+
+            if ($request->old_password != $user->password)
+                return Message::error(__('your old password is not correct')); 
+ 
+            
+            $user->update([
+                "password" => $request->new_password
+            ]); 
+            
+            watch(__('update profile info'), "fa fa-id-card-o");
+            return responseJson(0, __('done'), $user); 
+        } catch (\Exception $ex) {
+            return responseJson(0, $ex->getMessage());
+        }
+    }
 }
