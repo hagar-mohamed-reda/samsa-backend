@@ -29,7 +29,7 @@ class User extends Authenticatable
     ];
     
     public function getImageUrlAttribute() {
-        return url($this->image);
+        return url("/") . "/". $this->image;
     }
 
     public function getRoleIdAttribute() {

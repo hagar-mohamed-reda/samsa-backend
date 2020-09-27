@@ -101,4 +101,7 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::put('update-password/{user_id}', 'UserProfileController@updatePassword')->name('update-password');
     Route::post('setting/update/{setting}', 'SettingController@update')->name('SettingUpdate');
 
+
+    // auth
+    Route::get('profile', 'AuthController@getProfile');
 });

@@ -59,5 +59,16 @@ class AuthController extends Controller
         return responseJson(1, __('done'), $resource);
     }
 
+
+    public getProfile(Request $request) {
+        $profile = [];
+        $profile['user'] = $request->user;
+        $profile['notifications'] = $request->user->notifications()->get();
+        $profile['loginHistory'] = $request->user->loginHistory()->get();
+
+        // 
+        return responseJson(1, $profile);
+    }
+
     
 }
