@@ -67,7 +67,7 @@ class AuthController extends Controller
         $profile['loginHistory'] = $request->user->loginHistory()->get();
 
         // 
-        return responseJson(1, $profile);
+        return $profile;
     }
 
     
