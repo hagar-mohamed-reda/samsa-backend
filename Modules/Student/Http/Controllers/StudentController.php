@@ -5,7 +5,7 @@ namespace Modules\Student\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Student\Entities\Student;
+use Modules\Account\Entities\Student;
 use Modules\Student\Http\Requests\StudentRequest;
 use Modules\Settings\Entities\QualificationTypes;
 use Modules\Settings\Entities\StudentCodeSeries;
