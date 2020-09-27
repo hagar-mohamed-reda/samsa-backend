@@ -60,7 +60,7 @@ class AuthController extends Controller
     }
 
 
-    public getProfile(Request $request) {
+    public function getProfile(Request $request) {
         $profile = [];
         $profile['user'] = $request->user;
         $profile['notifications'] = $request->user->notifications()->get();
