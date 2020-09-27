@@ -48,8 +48,7 @@ class ServiceController extends Controller
             if ($validator->fails()) {
                 return responseJson(0, $validator->errors()->first());
             }
-            $data = $request->all();
-            $data['store_id'] = 11;
+            $data = $request->all(); 
              
             $resource = Service::create($data); 
             watch(__('add service ') . $resource->name, "fa fa-trophy");
