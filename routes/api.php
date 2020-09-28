@@ -107,4 +107,8 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::post("profile/update", "AuthController@update");
     Route::post("profile/update-password", "AuthController@updatePassword");
     Route::post("profile/update-phone", "AuthController@updatePhone");
+
+    //
+
+    Route::post("system-setting", "DashboardController@getSettings");
 });
