@@ -110,5 +110,5 @@ Route::group(['middleware' => 'api_auth'], function () {
 
     //
 
-    Route::post("system-setting", "DashboardController@getSettings");
+    Route::get("system-setting", "DashboardController@getSettings");
 });
