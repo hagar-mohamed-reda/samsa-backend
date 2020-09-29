@@ -13,14 +13,14 @@ class Application extends Model {
      *
      * @var String
      */
-    public static $FOLDER_PREFIX = "/uploads/applications/";
+    public static $FOLDER_PREFIX = "/uploads/students/";
 
     /**
      * table name of the db;
      *
      * @var type string
      */
-    protected $table = 'applications';
+    protected $table = 'students';
     public $fillable = [
         'personal_photo',
         'case_constraint_id',
@@ -66,12 +66,24 @@ class Application extends Model {
         'acceptance_code',
         'acceptance_date',
         'level_id',
-        'writen_by'
+        'writen_by',
+        'is_application',
+        'application_code',
     ];
 
     protected $appends = [
-        'personal_photo_url'
+        'personal_photo_url', 'can_convert_to_student'
     ];
+
+    public function getCanConvertToStudentAttribute() {
+        $ids = DB::table("account_academic_year_expenses_details")->where('priorty', 1)->pluck('id')->toArray();
+        $paymentCounts = DB::table('account_payments')
+        ->where('model_type', 'academic_year_expense')
+        ->where('student_id', $this->id)
+        ->whereIn('model_id', $ids)->count();
+    
+        return $paymentCounts > 0? true : false;
+    }
 
     public function getPersonalPhotoUrlAttribute() {
           

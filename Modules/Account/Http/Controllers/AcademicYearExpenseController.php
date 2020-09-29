@@ -26,13 +26,12 @@ class AcademicYearExpenseController extends Controller
         $resources = AcademicYearExpense::with(['academic_year', 'level', 'division', 'details'])
                 ->where('academic_year_id', $academicYear->id)
                 ->where('level_id', $request->level_id)
-                ->where('division_id', $request->division_id)
+                //->where('division_id', $request->division_id)
                 ->first();
 
         if (!$resources) {
             $resources = AcademicYearExpense::create([
-                "level_id" => $request->level_id,
-                "division_id" => $request->division_id,
+                "level_id" => $request->level_id, 
                 "academic_year_id" => $academicYear->id,
             ]);
         }

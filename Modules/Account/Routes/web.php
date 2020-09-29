@@ -11,3 +11,6 @@
   |
  */
 
+
+// payment receipt
+Route::get('account/payment_receipt', 'PaymentController@getPaymentReceipt');

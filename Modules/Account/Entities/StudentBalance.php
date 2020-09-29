@@ -3,6 +3,7 @@
 namespace Modules\Account\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 
 class StudentBalance extends Student
 {
@@ -33,55 +34,83 @@ class StudentBalance extends Student
 
         return $balance;
     }
-    
-    public function getCurrentExpenses($term = null) {
+
+    public function isAcademicYearExpenseDetailPaid($ids) {
+        $paidValue = Payment::where('model_type', 'academic_year_expense')
+        ->where('student_id', $this->id)
+        ->whereIn('model_id', $ids)
+        ->sum('value');
+
+        $requiredValue = AcademicYearExpenseDetail::whereIn('id', $ids)->sum('value');
+ 
+        return  $paidValue >= $requiredValue? true : false;
+    }
+
+    public function getCurrrentAcademicYearExpenseDetail() {
         // current academic year
         $academicYear = AccountSetting::getCurrentAcademicYear(); 
         // current date
         $date = date('Y-m-d');
-        
+        //
+        $academicYearExpenses = AcademicYearExpense::query()
+            ->where('academic_year_id', $academicYear->id)
+            ->where('level_id', $this->level_id)
+            ->first();
+ 
+        $priorties = $academicYearExpenses->details()
+        ->orderBy('priorty')
+        ->pluck('priorty')
+        ->toArray();
+         
+        $currentPriorty = null;
+        $details = null;
+        foreach($priorties as $priorty) {
+            $details = $academicYearExpenses
+                ->details()
+                ->where('priorty', $priorty)
+                ->get();
 
-        
+            $ids = [];
+            foreach($details as $detail) {
+                if ($detail->registeration_status_id) {
+                    if ($detail->registeration_status_id ==$this->registration_status_id) {
+                        $ids[] = $detail->id;
+                    }
+                } else {
+                    $ids[] = $detail->id;
+                }
+            }
 
+            $expenses = AcademicYearExpenseDetail::whereIn('id', $ids)->get();
 
-
-
-
-
-
-
-        
-        // paid
-        $paid = Payment::where('student_id', $this->id)->whereIn('model_type', ['academic_year_expense', 'installment'])->pluck("model_id")->toArray();
-
-        $installment = Installment::where('student_id', $this->id)->where('date', '<=', $date)->where('paid', '0')->first();
-
-        if ($this->is_current_installed) {
+            if (!$this->isAcademicYearExpenseDetailPaid($ids)) {
+                return $expenses;
+            }
         }
 
-        $query = AcademicYearExpenseDetail::join('account_academic_year_expenses', 'account_academic_year_expenses.id', '=', 'account_academic_year_expenses_details.academic_year_expense_id')
-                ->where("academic_year_id", $academicYear->id)
-                ->whereNotIn('account_academic_year_expenses_details.id', $paid);
-        
-        if ($term) 
-            $query->where('term_id', $term);
-
-
-        return $query;
+        return null;
     }
-    
+
+    public function getCurrentBalanceV2() { 
+        // current academic year
+        $academicYear = AccountSetting::getCurrentAcademicYear(); 
+        // current date
+        $date = date('Y-m-d');
+        //
+        $currentDetails = $this->getCurrrentAcademicYearExpenseDetail();
+        $balance = 0;
+        if ($currentDetails)
+            $balance = $currentDetails->sum('value');
+         
+        return $balance;
+    }
+     
     /**
      * calculate current balance of the student
      * @return float
      */
     public function getCurrentBalance($term = null) {
-        // caculated balance
-        $balance = 0; 
-        $query = $this->getCurrentExpenses($term);
-        $currentAcademicYearExpenses = $query->sum('value');
-        
-        $balance += $currentAcademicYearExpenses; 
-        return $balance;
+        return $this->getCurrentBalanceV2(); 
     }
 
 
@@ -90,7 +119,7 @@ class StudentBalance extends Student
         $installment = Installment::where('student_id', $this->id)
             ->where('type', $type)
             ->where('paid', '0')
-            ->whereDate('date', '<=', $date)
+            ->where('date', '<=', $date)
             ->first();
 
         return $installment;
@@ -101,7 +130,7 @@ class StudentBalance extends Student
      * 
      * @return float
      */
-    public function getPaidValue() {
+    public function getPaidValue() { 
         // current term
         $term = AccountSetting::getCurrentTerm();
         // old balance
@@ -119,41 +148,15 @@ class StudentBalance extends Student
                 $value = $oldBalance;
         } else {
             if ($this->is_current_installed) {
-                $value = optional(Installment::where('student_id', $this->id)->where('type', 'new')->where('paid', '0')->first())->value;
+                $installment = $this->getReadyInstallment('new');
+                $value = optional($installment)->value;
             } else
                 $value = $currentBalance;
         }
         return $value;
     }
 
-    /**
-     * get paid value when student go to store
-     * 
-     * @return float
-     */
-    public function getPaidModel() {
-        // current term
-        $term = AccountSetting::getCurrentTerm();
-        // old balance
-        $oldBalance = $this->getOldBalance();
-        // current balance of year
-        $currentBalance = $this->getCurrentBalance($term->id);
-        // value should pay in store
-        $model = null;
-         
-        if ($oldBalance > 0) {
-            if ($this->is_old_installed) {
-                $model = Installment::where('student_id', $this->id)->where('type', 'old')->where('paid', '0')->first();
-            } else 
-                $model = null;
-        } else {
-            if ($this->is_current_installed) {
-                $model = Installment::where('student_id', $this->id)->where('type', 'new')->where('paid', '0')->first();
-            } else
-                $model = $this->getCurrentExpenses()->first();
-        }
-        return $model;
-    }
+ 
  
     
 }

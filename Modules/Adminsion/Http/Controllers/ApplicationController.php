@@ -22,7 +22,7 @@ class ApplicationController extends Controller {
      */
     public function index() { 
         $query = Application::with(['academicYear', 'qualification', 'level', 'studentRequiredDocument'])
-        ->where('status', '!=', 1)->orWhere('status', null);
+        ->where('is_application', 1);
 
         if (request()->search_key) {
             foreach ($fillable as $field)
@@ -59,8 +59,10 @@ class ApplicationController extends Controller {
         $data = $request->all();
 
         // assign code of application
-        $data['code'] = date("Y-m-d-H:i:s") . "-" . rand(11111, 99999);
+        $data['application_code'] = date("Y-m-d-H:i:s") . "-" . rand(11111, 99999);
         $data['writen_by'] = $request->user->id;
+        $data['is_application'] = true;
+        $data['case_constraint_id'] = 1;
 
         // application validator
         $applicationValidator = new ApplicationValidation();
@@ -161,10 +163,7 @@ class ApplicationController extends Controller {
     public function update(Request $request, $id) {
         $data = $request->all();
 
-        $application = Application::find($id);
-
-        // assign code of application
-        $data['code'] = date("Y-m-d-H:i:s") . "-" . rand(11111, 99999);
+        $application = Application::find($id); 
 
         // application validator
         $applicationValidator = new ApplicationValidation();
@@ -183,13 +182,7 @@ class ApplicationController extends Controller {
             if ($applicationValidator->validateOnApplicationRequired($request)['status'] == 0) {
                 return responseJson(0, $applicationValidator->validateOnApplicationRequired($request)['message']);
             }
-
-            // validate o on application required docuements
-//            if ($applicationValidator->validateOnRegisterationStatusDocument($request)['status'] == 0) {
-//                return responseJson(0, $applicationValidator->validateOnRegisterationStatusDocument($request)['message']);
-//            }
-            // store application data
-
+ 
             $application->update($data);
 
             // upload personal image 

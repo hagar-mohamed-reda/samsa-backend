@@ -35,6 +35,9 @@ Route::group(['middleware' => 'api_auth'], function () {
 
 
         // settings
+        Route::get('get_registeration_status_document', function(){
+            return DB::table('registeration_status_document')->get();
+        });
         Route::get('get_departments', function(){
             return DB::table('departments')->get();
         });

@@ -24,7 +24,8 @@ class StudentController extends Controller {
      */
     public function index() {
         $fillable = (new Student)->fillable;
-        $query = Student::with(['academicYear', 'qualification', 'level']);
+        $query = Student::with(['academicYear', 'qualification', 'level', 'registerationStatus'])
+        ->where('is_application', null)->orWhere('is_application', '0');
 
         if (request()->search_key) {
             foreach ($fillable as $field)

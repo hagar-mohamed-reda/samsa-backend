@@ -111,4 +111,5 @@ Route::group(['middleware' => 'api_auth'], function () {
     //
 
     Route::get("system-setting", "DashboardController@getSettings");
+    Route::get("notifications", "DashboardController@getNotifications");
 });

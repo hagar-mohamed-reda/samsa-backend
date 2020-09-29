@@ -13,13 +13,12 @@ class AcademicYearExpenseDetail extends Model
         'priorty',
         'value',
         'term_id',
+        'registeration_status_id',
         'store_id',
         'discount',
         'academic_year_expense_id'
     ];
-     
-  
-    
+      
     public function term() {
         return $this->belongsTo('Modules\Account\Entities\Term', 'term_id')->select(['id', 'name']);
     }

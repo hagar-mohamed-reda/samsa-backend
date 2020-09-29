@@ -11,6 +11,7 @@ use Modules\Account\Entities\StudentBalance;
 use Modules\Account\Entities\AccountSetting;
 use Modules\Account\Entities\Payment; 
 use Modules\Account\Entities\Store; 
+use Modules\Account\Entities\StudentPay; 
 use App\User;
 use DB;
 
@@ -51,74 +52,22 @@ class AccountController extends Controller
             if ($validator->failed()) {
                 return responseJson(0, __('fill all required data'));
             }
-            
-            $student = Student::find($request->student_id);
-            $resource = $this->performPayment($student, $request->value, $user);
+             
+            $student = Student::find($request->student_id);  
+            $resource = StudentPay::pay($request);
             
             $message = __('student {name} pay {value} in store');
             $message = str_replace("{name}", $student->name, $message);
             $message = str_replace("{value}", $request->value, $message);
             watch($message, "fa fa-money");
             return responseJson(1, $message, $resource);
-        } catch (\Exception $th) {
+        } catch (Exception $th) {
             return responseJson(0, $th->getMessage());
         }
         
         return responseJson(1, __('done'), $resource);
     }
     
-    /**
-     * pay the value of student
-     * 
-     * @param Student $student
-     * @param type $value
-     * @param User $user
-     * @return type
-     */
-    public function performPayment(Student $student, $value, User $user) { 
-        // old balance
-        $oldBalance = $student->getStudentBalance()->getOldBalance(); 
-        
-        // type of payment
-        $modelType = "";
-        
-        if ($oldBalance > 0) {
-            if ($student->is_old_installed)
-                $modelType = "installment";
-            else
-                $modelType = "academic_year_expense";
-        } else {
-            if ($student->is_current_installed)
-                $modelType = "installment";
-            else
-                $modelType = "academic_year_expense";
-        }
-        
-        $paidModel = $student->getStudentBalance()->getPaidModel();
-         
-        $payment = Payment::create([
-            "student_id" => $student->id,
-            "store_id" => 1,
-            "date" => date('Y-m-d'),
-            "value" => $value,
-            "user_id" => $user->id,
-            "model_type" => $modelType,
-            "model_id" => optional($paidModel)->id,
-        ]);
-        
-        if ($modelType == 'installment' && $paidModel) {
-            $paidModel->update([
-                "paid" => "1"
-            ]);
-        } 
-
-        // update store
-        $store = Store::find(1);
-        $store->updateStore($value);
-        
-        return $payment;
-    }
-
     
 
     public function searchStudent(Request $request) {

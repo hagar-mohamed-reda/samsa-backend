@@ -61,10 +61,7 @@ class ApplicationStoreController extends Controller {
                 //required_document_
                 uploadImg($request->file('required_document_' . $item->id), $path, function($filename) use ($application, $item, $path, $student) {
 
-                    if ($student->application_id) 
-                        $resource = StudentRequiredDocument::where('required_document_id', $item->id)->where('student_id', optional($application)->id)->first();
-                    else
-                        $resource = StudentRequiredDocument::where('required_document_id', $item->id)->where('student_id', $student->id)->first();
+                    $resource = StudentRequiredDocument::where('required_document_id', $item->id)->where('student_id', $application->id)->first();
 
                     if ($resource) {
                         $file = public_path($resource->path);

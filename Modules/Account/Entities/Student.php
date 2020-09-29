@@ -21,21 +21,53 @@ class Student extends StudentOrigin
         'paids',
         'gpa',
         'services',
-        'image'
+        'image',
+        'can_convert_to_student',
+        'payment_details'
     ];
-    
-    public function getOldBalanceAttribute() {
-        return $this->getStudentBalance()->getOldBalance();
+
+    public function getPaymentDetailsAttribute() {
+        $payments = [];
+        foreach($this->payments()->get() as $payment) {
+            if (!isset($payments[$payment->date]))
+                $payments[$payment->date] = [ 'total' => 0, "payments" => [] ];
+
+            
+            $payments[$payment->date]['date'] = $payment->date;
+            $payments[$payment->date]['total'] += $payment->value; 
+            $payments[$payment->date]['payments'][] = $payment; 
+        }
+        $arr = [];
+        foreach($payments as $key => $value) {
+            $arr[] = $value;
+        }
+
+        return $arr;
     }
     
-    public function getCurrentBalanceAttribute() {
-        return $this->getStudentBalance()->getCurrentBalance();
+    public function getCanConvertToStudentAttribute() {
+        $ids = DB::table("account_academic_year_expenses_details")->where('priorty', 1)->pluck('id')->toArray();
+        $paymentCounts = DB::table('account_payments')
+        ->where('model_type', 'academic_year_expense')
+        ->where('student_id', $this->id)
+        ->whereIn('model_id', $ids)->count();
+    
+        return $paymentCounts > 0? true : false;
+    }
+
+    public function getOldBalanceAttribute() {
+        return $this->getStudentBalance()->getOldBalance();
     }
     
     public function getPaidValueAttribute() {
         return $this->getStudentBalance()->getPaidValue();
     }
 
+    public function getCurrentBalanceAttribute() {
+        // $this->getStudentBalance()->getCurrentBalance();
+        return $this->getStudentBalance()->getPaidValue();
+    }
+    
     public function getPaidsAttribute() {
         return $this->payments()->sum("value");
     }
@@ -85,7 +117,7 @@ class Student extends StudentOrigin
     }
 
     public function payments() {
-        return $this->hasMany("Modules\Account\Entities\Payment", "student_id");
+        return $this->hasMany("Modules\Account\Entities\Payment", "student_id")->with(['store']);
     }
 
     public function level() {
@@ -111,6 +143,14 @@ class Student extends StudentOrigin
         }
 
         return Service::whereIn('id', $ids)->get(['id', 'name', 'value', 'additional_value']);
+    }
+
+    public function changeStudentCaseConstraint() { 
+        if ($this->case_constraint_id == 1 && $this->can_convert_to_student) {
+            $this->case_constraint_id = 2;
+            $this->is_application = 0;
+            $this->update();
+        }
     }
  
  

@@ -40,10 +40,10 @@ class InstallmentController extends Controller
      */
     public function validateOnInstallmentSum($data, Student $student) {
         // init installments sum
-        $installmentSum = 0;
+        $installmentSum = 0; 
         
         foreach ($data['data'] as $item) {
-            if ($item['paid'] != 1 && !isset($item['deleted']))
+            if (/*$item['paid'] != 1 && */!isset($item['deleted']))
                 $installmentSum += $item['value'];
         }
         

@@ -1,0 +1,53 @@
+
+
+    /**
+     * pay the value of student
+     * 
+     * @param Student $student
+     * @param type $value
+     * @param User $user
+     * @return type
+     */
+    public function performPayment(Student $student, $value, User $user) { 
+        // old balance
+        $oldBalance = $student->getStudentBalance()->getOldBalance(); 
+        
+        // type of payment
+        $modelType = "";
+        
+        if ($oldBalance > 0) {
+            if ($student->is_old_installed)
+                $modelType = "installment";
+            else
+                $modelType = "academic_year_expense";
+        } else {
+            if ($student->is_current_installed)
+                $modelType = "installment";
+            else
+                $modelType = "academic_year_expense";
+        }
+        
+        $paidModel = $student->getStudentBalance()->getPaidModel();
+         
+        $payment = Payment::create([
+            "student_id" => $student->id,
+            "store_id" => 1,
+            "date" => date('Y-m-d'),
+            "value" => $value,
+            "user_id" => $user->id,
+            "model_type" => $modelType,
+            "model_id" => optional($paidModel)->id,
+        ]);
+        
+        if ($modelType == 'installment' && $paidModel) {
+            $paidModel->update([
+                "paid" => "1"
+            ]);
+        } 
+
+        // update store
+        $store = Store::find(1);
+        $store->updateStore($value);
+        
+        return $payment;
+    }

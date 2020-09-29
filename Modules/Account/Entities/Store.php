@@ -27,9 +27,8 @@ class Store extends Model
     public function canDelete() {
         return !($this->transformations()->count() > 0 || $this->deposites()->count() > 0)? true : false;
     }
-
-
-    public function updteStore($value) {
+ 
+    public function updateStore($value) {
         $this->balance += $value;
         $this->update();
     }

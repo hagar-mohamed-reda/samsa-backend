@@ -15,8 +15,25 @@ class Payment extends Model
         'value',
         'user_id',
         'model_type', //[academic_year_expense, service, installment]
-        'model_id' 
+        'model_id', 
+        'installment_id', 
     ];
+
+    protected $appends = [
+        'model_object'
+    ];
+
+    public function getModelObjectAttribute() {
+        $object = null;
+        if ($this->model_type == "academic_year_expense") {
+            $object = AcademicYearExpenseDetail::find($this->model_id);
+        } 
+        else if ($this->model_type == "installment") {
+            $object = Installment::find($this->model_id);
+        }
+
+        return $object;
+    }
      
     
     public function store() {
@@ -36,5 +53,16 @@ class Payment extends Model
         }
         
         return null;
+    }
+
+    public static function addPayment($data) {
+        $payment = Payment::create($data);
+        $store = $payment->store()->first();
+
+        if ($store) {
+            $store->updateStore($data['value']);
+        }
+
+        return $payment;
     }
 }
