@@ -14,6 +14,7 @@ use Modules\Adminsion\Entities\Application;
 use Modules\Adminsion\Http\Controllers\validation\ApplicationValidation;
 use Modules\Adminsion\Http\Controllers\ApplicationStoreController;
 use Illuminate\Support\Facades\Auth;
+use Modules\Account\Entities\StudentOldBalance;
 use DB;
 
 class StudentController extends Controller {
@@ -58,11 +59,26 @@ class StudentController extends Controller {
         return $resource;
     }
     /**
-     * Show the form for creating a new resource.
-     * @return Response
+     * update old balance of student
+     *
      */
-    public function create() {
-        return view('student::students.create');
+    public function updateOldBalance(Student $student, $oldBalane, $notes) {
+        $resource = StudentOldBalance::query()
+        ->where('student_id', $student->id)
+        ->first();
+
+        if ($resource) {
+            $resource->update([
+                "value" => $oldBalane,
+                "notes" => $notes
+            ]);
+        } else {
+            StudentOldBalance::create([
+                "value" => $oldBalane,
+                "notes" => $notes,
+                "student_id" => $student->id
+            ]);
+        }
     }
 
     /**
@@ -83,22 +99,7 @@ class StudentController extends Controller {
         // application store
         $applicationStore = new ApplicationStoreController();
 
-
-
-        $student_code = StudentCodeSeries::
-                        where('academic_year_id', $request->academic_year_id)
-                        ->where('level_id', $request->level_id)->first();
-        $start_code = substr($student_code->code, 0, 5);
-        $student_last_code = Student::where('code', 'LIKE', $start_code . '%')->pluck('code')->toArray();
-        $data['code'] = max($student_last_code) + 1;
-
-
-
-        if ($student_last_code != null) {
-            $data['code'] = (string) (max($student_last_code) + 1);
-        } else {
-            $data['code'] = (string) $student_code->code;
-        }
+        //
 
 
         try {
@@ -121,7 +122,12 @@ class StudentController extends Controller {
             // store application data
             $student = Student::create($data);
 
-            // upload personal image 
+            // store old balance if exist
+            if ($request->old_balance) {
+                $this->updateOldBalance($student, $request->old_balance, $request->old_balance_notes);
+            }
+
+            // upload personal image
             uploadImg($request->file('personal_photo'), Student::$FOLDER_PREFIX . $student->id, function($filename) use ($student) {
                 $student->update([
                     'personal_photo' => Student::$FOLDER_PREFIX . $student->id . "/" . $filename
@@ -129,7 +135,7 @@ class StudentController extends Controller {
             });
 
             // upload files
-            $applicationStore->uploadStudentFiles($request, null, $student);
+            $applicationStore->uploadFiles($request, $student);
 
             notfy(__('new student'), __('new student') . $student->name, 'fa fa-user');
         } catch (\Exception $th) {
@@ -198,7 +204,11 @@ class StudentController extends Controller {
             // store application data
             $student->update($data);
 
-            // upload personal image 
+            // store old balance if exist
+            if ($request->old_balance) {
+                $this->updateOldBalance($student, $request->old_balance, $request->old_balance_notes);
+            }
+            // upload personal image
             uploadImg($request->file('personal_photo'), Student::$FOLDER_PREFIX . $student->id, function($filename) use ($student) {
                 $student->update([
                     'personal_photo' => Student::$FOLDER_PREFIX . $student->id . "/" . $filename
@@ -206,7 +216,7 @@ class StudentController extends Controller {
             });
 
             // upload files
-            $applicationStore->uploadStudentFiles($request, $application, $student);
+            $applicationStore->uploadFiles($request, $student);
 
             notfy(__('new Student'), __('new Student') . $student->name, 'fa fa-user');
         } catch (\Exception $th) {
@@ -240,14 +250,14 @@ class StudentController extends Controller {
             'qualification_id' => $application->qualification_id,
             'qualification_date' => $application->qualification_date,
             'password' => $application->password,
-        ]; 
+        ];
             $student_code = StudentCodeSeries::
                             where('academic_year_id', $application->academic_years_id)
                             ->where('level_id', $application->level_id)->first();
 
             $start_code = substr($student_code->code, 0, 5);
 
-            
+
             if ($application->language_1_id != null)
                 $data['language_1_id'] = $application->language_1_id;
 
@@ -328,16 +338,16 @@ class StudentController extends Controller {
 
             if ($application->acceptance_code != null)
                 $data['acceptance_date'] = $application->acceptance_date;
-            
+
             if ($application->email != null)
                 $data['email'] = $application->email;
-            
+
             if ($application->case_constraint_id != null)
                 $data['case_constraint_id '] = $application->case_constraint_id ;
-            
+
             if ($application->relative_relation_id != null)
                 $data['relative_relation_id '] = $application->relative_relation_id ;
- 
+
 
             $student_last_code = Student::where('code', 'LIKE', $start_code . '%')->pluck('code')->toArray();
             if ($student_last_code != null) {
@@ -345,12 +355,12 @@ class StudentController extends Controller {
             } else {
                 $data['code'] = (string) $student_code->code;
             }
- 
-         
+
+
         $data['application_id'] = $application->id;
         $student = Student::create($data);
         $application->status = 1;
-        $application->save(); 
+        $application->save();
 
         DB::table('student_required_documents')
         ->where('student_id', $application->id)

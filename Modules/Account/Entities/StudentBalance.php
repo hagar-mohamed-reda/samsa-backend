@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 class StudentBalance extends Student
 {
     protected $table = "students";
-    
-   
+
+
     /**
      * calculate old balance of the student
      * @return float
@@ -17,20 +17,20 @@ class StudentBalance extends Student
     public function getOldBalance() {
         // current academic year
         $academicYear = AccountSetting::getCurrentAcademicYear();
-        
+
         // caculated balance
         $balance = 0;
 
         $studentOldBalance = StudentOldBalance::where('student_id', $this->id)->first();
-        
+
         $balance += optional($studentOldBalance)->value;
-        
+
         // check on payment value
         $balance -= Payment::where('student_id', $this->id)->whereIn('model_type', ['old_academic_year_expense'])->sum('value');
- 
+
         // check if there is paid installment for old value
         $balance -= Installment::where('student_id', $this->id)->where('type', 'old')->where('paid', '1')->sum('value');
- 
+
 
         return $balance;
     }
@@ -42,13 +42,13 @@ class StudentBalance extends Student
         ->sum('value');
 
         $requiredValue = AcademicYearExpenseDetail::whereIn('id', $ids)->sum('value');
- 
+
         return  $paidValue >= $requiredValue? true : false;
     }
 
     public function getCurrrentAcademicYearExpenseDetail() {
         // current academic year
-        $academicYear = AccountSetting::getCurrentAcademicYear(); 
+        $academicYear = AccountSetting::getCurrentAcademicYear();
         // current date
         $date = date('Y-m-d');
         //
@@ -56,12 +56,12 @@ class StudentBalance extends Student
             ->where('academic_year_id', $academicYear->id)
             ->where('level_id', $this->level_id)
             ->first();
- 
+
         $priorties = $academicYearExpenses->details()
         ->orderBy('priorty')
         ->pluck('priorty')
         ->toArray();
-         
+
         $currentPriorty = null;
         $details = null;
         foreach($priorties as $priorty) {
@@ -83,17 +83,25 @@ class StudentBalance extends Student
 
             $expenses = AcademicYearExpenseDetail::whereIn('id', $ids)->get();
 
-            if (!$this->isAcademicYearExpenseDetailPaid($ids)) {
-                return $expenses;
+            if ($priorty == 1) {
+                if (!$this->isAcademicYearExpenseDetailPaid($ids) && $this->case_constraint_id == 1) {
+                    return $expenses;
+                }
+            } else {
+                if (!$this->isAcademicYearExpenseDetailPaid($ids)) {
+                    return $expenses;
+                }
             }
+
+
         }
 
         return null;
     }
 
-    public function getCurrentBalanceV2() { 
+    public function getCurrentBalanceV2() {
         // current academic year
-        $academicYear = AccountSetting::getCurrentAcademicYear(); 
+        $academicYear = AccountSetting::getCurrentAcademicYear();
         // current date
         $date = date('Y-m-d');
         //
@@ -101,16 +109,16 @@ class StudentBalance extends Student
         $balance = 0;
         if ($currentDetails)
             $balance = $currentDetails->sum('value');
-         
+
         return $balance;
     }
-     
+
     /**
      * calculate current balance of the student
      * @return float
      */
     public function getCurrentBalance($term = null) {
-        return $this->getCurrentBalanceV2(); 
+        return $this->getCurrentBalanceV2();
     }
 
 
@@ -124,13 +132,13 @@ class StudentBalance extends Student
 
         return $installment;
     }
-    
+
     /**
      * get paid value when student go to store
-     * 
+     *
      * @return float
      */
-    public function getPaidValue() { 
+    public function getPaidValue() {
         // current term
         $term = AccountSetting::getCurrentTerm();
         // old balance
@@ -139,12 +147,12 @@ class StudentBalance extends Student
         $currentBalance = $this->getCurrentBalance($term->id);
         // value should pay in store
         $value = 0;
-         
+
         if ($oldBalance > 0) {
             if ($this->is_old_installed) {
                 $installment = $this->getReadyInstallment('old');
                 $value = optional($installment)->value;
-            } else 
+            } else
                 $value = $oldBalance;
         } else {
             if ($this->is_current_installed) {
@@ -156,7 +164,7 @@ class StudentBalance extends Student
         return $value;
     }
 
- 
- 
-    
+
+
+
 }

@@ -21,33 +21,33 @@ use Illuminate\Http\Request;
 //    Route::post('/tree/update', 'TreeController@update')->name('tree.update');
 //});
 
-        
+
 Route::group(['middleware' => 'api_auth'], function () {
-    Route::prefix('account')->group(function() { 
+    Route::prefix('account')->group(function() {
         // servicecs routes
         Route::get('services', 'ServiceController@index');
         Route::post('services/store', 'ServiceController@store');
         Route::post('services/update/{service}', 'ServiceController@update');
         Route::post('services/delete/{service}', 'ServiceController@destroy');
-        
+
         // stores routes
         Route::get('stores', 'StoreController@index');
         Route::post('stores/store', 'StoreController@store');
         Route::post('stores/update/{store}', 'StoreController@update');
         Route::post('stores/delete/{store}', 'StoreController@destroy');
-        
+
         // academic_year_expense routes
         Route::get('academic_year_expenses', 'AcademicYearExpenseController@index');
         Route::post('academic_year_expenses/store', 'AcademicYearExpenseController@store');
         Route::post('academic_year_expenses/update', 'AcademicYearExpenseController@update');
         Route::post('academic_year_expenses/delete/{resource}', 'AcademicYearExpenseController@destroy');
-        
+
         // account routes
         Route::get('get_student_account', 'AccountController@getStudentAccounting');
         Route::get('get_available_services', 'AccountController@getStudentAvailableServices');
         Route::post('pay', 'AccountController@pay');
         Route::post('write_notes', 'AccountController@writeStudentNote');
-        
+
         // installment routes
         Route::get('installment/get', 'InstallmentController@index');
         Route::post('installment/update', 'InstallmentController@update');
@@ -58,6 +58,11 @@ Route::group(['middleware' => 'api_auth'], function () {
         // main
         Route::get('search_student', 'AccountController@searchStudent');
 
+        // account setting
+        Route::post('update_setting', 'AccountController@updateAccountSetting');
+        Route::get('get_settings', 'AccountController@getSettings');
+
+
         Route::get('levels', function(){
           return DB::table('levels')->get();
         });
@@ -65,7 +70,7 @@ Route::group(['middleware' => 'api_auth'], function () {
           return DB::table('divisions')
           ->join('departments', 'departments.id', '=', 'divisions.department_id')
           ->join('levels', 'levels.id', '=', 'departments.level_id')
-          ->get(['divisions.id as id ', 'divisions.name', 'levels.name as level', 'level_id']);
+          ->get(['divisions.id as id', 'divisions.name', 'levels.name as level', 'level_id', 'department_id']);
         });
         Route::get('terms', function(){
           return DB::table('terms')->get();

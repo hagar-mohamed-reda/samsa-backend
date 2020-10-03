@@ -1,39 +1,46 @@
 <?php
 
 namespace Modules\Account\Entities;
- 
+
+use Illuminate\Database\Eloquent\Model;
 use Modules\Settings\Entities\AcademicYear;
 
-class AccountSetting  
+class AccountSetting extends Model
 {
-    
+
+    protected $table = "account_settings";
+
+    protected $fillables = [
+        'id', 'name',	'value'
+    ];
+
     /**
      * return current academic year of system
-     * 
+     *
      * @return AcademicYear
      */
     public static function getCurrentAcademicYear() {
         // get current year
         $currentYear = date("Y");
-        
+
         // next year
         $nextYear = $currentYear + 1;
-        
+
         // academic year name
         $name = $currentYear."-".$nextYear;
-        
+
         return AcademicYear::where('name', $name)->first();
     }
-    
+
     /**
      * get current term
-     * 
+     *
      * @return Term
      */
     public static function getCurrentTerm() {
         // get current date
         $date = date('m-d');
-        
+
         return Term::where('id', 1)->first();
     }
 
@@ -74,5 +81,28 @@ class AccountSetting
         }
 
         return $valid;
+    }
+
+    public static function updateSetting($id, $name, $value) {
+        $accountSetting = AccountSetting::find($id);
+
+        if ($accountSetting) {
+            $accountSetting->update([
+                "name" => $name,
+                "value" => $value,
+            ]);
+        } else {
+            $accountSetting = AccountSetting::create([
+                "id" => $id,
+                "name" => $name,
+                "value" => $value,
+            ]);
+        }
+        return $accountSetting;
+    }
+
+
+    public static function getOldBalanceStore() {
+        return Store::find(optional(AccountSetting::find(1))->value);
     }
 }

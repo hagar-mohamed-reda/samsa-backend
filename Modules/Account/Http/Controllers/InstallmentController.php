@@ -23,41 +23,46 @@ class InstallmentController extends Controller
      */
     public function index() {
         $query = Installment::query();
-        
+
         if (request()->student_id) {
             $query->where('student_id', request()->student_id);
         }
-        
-        $resources = $query->paginate(Installment::$PAGE_LENGTH); 
-        
+
+        $resources = $query->paginate(Installment::$PAGE_LENGTH);
+
         return responseJson(1, "", $resources);
     }
 
     /**
      * validate if the sum of installment equel to student balance
-     * 
+     *
      * @param type $data
      */
     public function validateOnInstallmentSum($data, Student $student) {
         // init installments sum
-        $installmentSum = 0; 
-        
+        $installmentSum = 0;
+
         foreach ($data['data'] as $item) {
-            if (/*$item['paid'] != 1 && */!isset($item['deleted']))
-                $installmentSum += $item['value'];
+            if ($data['type'] == "new") {
+                if (/*$item['paid'] != 1 && */!isset($item['deleted']))
+                    $installmentSum += $item['value'];
+            } else {
+                if ($item['paid'] != 1 && !isset($item['deleted']))
+                    $installmentSum += $item['value'];
+            }
         }
-        
+
         if ($data['type'] == "old") {
-            if ($student->getStudentBalance()->getOldBalance() != $installmentSum) 
+            if ($student->getStudentBalance()->getOldBalance() != $installmentSum)
                 return false;
         }
-        
+
         if ($data['type'] == "new") {
-            if ($student->getStudentBalance()->getCurrentBalance() != $installmentSum) 
+            if ($student->getStudentBalance()->getCurrentBalance() != $installmentSum)
                 return false;
         }
-        
-        return true; 
+
+        return true;
     }
 
     /**
@@ -73,24 +78,24 @@ class InstallmentController extends Controller
 
             // get student object
             $student = Student::find($data['student_id']);
-            
+
             // balance of student
             $balance = ($data['type'] == 'old')? $student->getStudentBalance()->getOldBalance() : $student->getStudentBalance()->getCurrentBalance();
-                
+
             // check if balance >= 0
-            if ($balance <= 0) 
+            if ($balance <= 0)
                 return responseJson(0, __('cant install balance 0'));
-             
+
             // check on installment sum
             if (!$this->validateOnInstallmentSum($data, $student)) {
                 return responseJson(0, __('sum of installments must equal ') . $balance);
             }
-            
+
             // store or update installments in db
-            foreach ($data['data'] as $item) { 
+            foreach ($data['data'] as $item) {
                 $item['student_id'] = $student->id;
                 $item['type'] = $data['type'];
-                
+
                 $installment = null;
                 if (isset($item['id']) && $item['paid'] != 1 && isset($item['deleted'])) {
                     $installment = Installment::find($item['id']);
@@ -104,7 +109,7 @@ class InstallmentController extends Controller
                     $installment = Installment::create($newItem);
                 }
             }
-  
+
             watch(__('install the balance of student') . $student->name, "fa fa-calendar");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
@@ -112,5 +117,5 @@ class InstallmentController extends Controller
 
         return responseJson(1, __('done'));
     }
- 
+
 }

@@ -9,18 +9,19 @@ use Illuminate\Routing\Controller;
 use Modules\Account\Entities\Student;
 use Modules\Account\Entities\StudentBalance;
 use Modules\Account\Entities\AccountSetting;
-use Modules\Account\Entities\Payment; 
-use Modules\Account\Entities\Store; 
-use Modules\Account\Entities\StudentPay; 
+use Modules\Account\Entities\Payment;
+use Modules\Account\Entities\Store;
+use Modules\Account\Entities\StudentPay;
+
 use App\User;
 use DB;
 
 class AccountController extends Controller
 {
-    
+
     /**
      * return student info
-     * 
+     *
      * @return type
      */
     public function getStudentAccounting() {
@@ -30,32 +31,32 @@ class AccountController extends Controller
             ->with(['level', 'division', 'case_constraint', 'constraint_status', 'installments', 'payments'])
             ->find(request()->student_id);
         }
-        
-        $student->date = date("Y-m-d"); 
+
+        $student->date = date("Y-m-d");
         return $student;
     }
-    
+
     /**
      * pay money in store
-     * 
+     *
      */
     public function pay(Request $request)
     {
         $user = $request->user;
 
         $resource = null;
-        try {   
-            $validator = validator($request->all(), [ 
-                "value" =>  "required",    
-                "student_id" =>  "required"       
-            ]); 
+        try {
+            $validator = validator($request->all(), [
+                "value" =>  "required",
+                "student_id" =>  "required"
+            ]);
             if ($validator->failed()) {
                 return responseJson(0, __('fill all required data'));
             }
-             
-            $student = Student::find($request->student_id);  
+
+            $student = Student::find($request->student_id);
             $resource = StudentPay::pay($request);
-            
+
             $message = __('student {name} pay {value} in store');
             $message = str_replace("{name}", $student->name, $message);
             $message = str_replace("{value}", $request->value, $message);
@@ -64,11 +65,42 @@ class AccountController extends Controller
         } catch (Exception $th) {
             return responseJson(0, $th->getMessage());
         }
-        
+
         return responseJson(1, __('done'), $resource);
     }
-    
-    
+
+    /**
+     * pay money in store
+     *
+     */
+    public function updateAccountSetting(Request $request)
+    {
+        $user = $request->user;
+
+        $resource = null;
+        try {
+            $validator = validator($request->all(), [
+                "id" =>  "required",
+                "value" =>  "required",
+                "name" =>  "required"
+            ]);
+            if ($validator->failed()) {
+                return responseJson(0, __('fill all required data'));
+            }
+
+            $resource = AccountSetting::updateSetting($request->id, $request->name, $request->value);
+
+            watch(__('update old balance store settings '), "fa fa-cogs");
+        } catch (Exception $th) {
+            return responseJson(0, $th->getMessage());
+        }
+
+        return responseJson(1, __('done'), $resource);
+    }
+
+    public function getSettings() {
+        return AccountSetting::all();
+    }
 
     public function searchStudent(Request $request) {
         return Student::query()//DB::table('students')
@@ -76,34 +108,34 @@ class AccountController extends Controller
                 ->orWhere('code', 'like', '%'.$request->key.'%')
                 ->orWhere('national_id', 'like', '%'.$request->key.'%')
                 ->take(20)
-                ->get(["id", "name", "code"]); 
+                ->get(["id", "name", "code"]);
     }
 
 
     public function getStudentAvailableServices(Request $request) {
         $user = $request->user;
-        $validator = validator($request->all(), [  
-            "student_id" =>  "required"       
-        ]); 
+        $validator = validator($request->all(), [
+            "student_id" =>  "required"
+        ]);
         if ($validator->failed()) {
             return [];
         }
-            
-        $student = Student::find($request->student_id); 
+
+        $student = Student::find($request->student_id);
         return $student->getAvailableServices();
 
     }
 
     public function writeStudentNote(Request $request) {
-        $validator = validator($request->all(), [  
+        $validator = validator($request->all(), [
             "notes" =>  "required",
-            "student_id" =>  "required"       
-        ]); 
+            "student_id" =>  "required"
+        ]);
         if ($validator->failed()) {
             return responseJson(0, __('write some notes'));
         }
 
-        $student = Student::find($request->student_id); 
+        $student = Student::find($request->student_id);
 
         if ($student->notes)
             $student->notes .=  "\n" . $request->notes;
@@ -113,5 +145,5 @@ class AccountController extends Controller
         $student->update();
         return responseJson(1, __('done'));
     }
- 
+
 }

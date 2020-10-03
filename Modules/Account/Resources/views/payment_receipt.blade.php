@@ -20,18 +20,18 @@
                 </div>
             </td>
             <td style="width: 50%" >
-            <img src="{{ url('/logo.png') }}" width="80px" alt=""> 
+            <img src="{{ url('/logo.png') }}" width="80px" alt="">
             </td>
         </tr>
-    </table> 
+    </table>
     <div style="padding: 20px" >
             <div style="width: 100%;border-bottom: 2px dashed black;margin: auto" ></div>
             <br>
             <div style="width: 100%;text-align: center" >
                 <b style="font-size: 16px" >رقم القسيمة</b>
-             
+
               {{ $payment->id }}
-            </div> 
+            </div>
             <table  style="width: 100%;" >
                 <td style="width: 50%" >
                     <table  style="width: 100%;" >
@@ -50,7 +50,7 @@
                             <td style="width: 60%;padding: 5px" >
                                 {{ optional($payment->student)->name }}
                             </td>
-                        </tr> 
+                        </tr>
                         <tr>
                             <td style="width: 40%;padding: 5px" >
                                 <b>المستــــــوى :</b>
@@ -58,7 +58,7 @@
                             <td style="width: 60%;padding: 5px" >
                                 {{ optional(optional($payment->student)->level)->name }}
                             </td>
-                        </tr> 
+                        </tr>
                         <tr>
                             <td style="width: 40%;padding: 5px" >
                                <b>مبلـغ وقــدره :</b>
@@ -66,27 +66,31 @@
                             <td style="width: 60%;padding: 5px" >
                                {{ number_format($payment->value) }} جنيه
                             </td>
-                        </tr> 
+                        </tr>
                         <tr>
                             <td style="width: 40%;padding: 5px" >
                               <b>ســــــداد عن :</b>
                             </td>
                             <td style="width: 60%;padding: 5px" >
-                               {{ optional($payment->model_object)->name }}  
+                                @if ($payment->model_type == 'old_academic_year_expense')
+                                مديونية سابقة
+                                @else
+                                {{ optional($payment->model_object)->name }}
+                                @endif
                             </td>
-                        </tr> 
+                        </tr>
                         <tr>
                             <td style="width: 40%;padding: 5px" >
                                 <b>ملاحظــــات :</b>
                             </td>
                             <td style="width: 60%;padding: 5px" >
-                               {{ "" }}  
+                               {{ "" }}
                             </td>
-                        </tr> 
+                        </tr>
                     </table>
                 </td>
                 <td style="width: 50%" >
-                        <table  style="width: 100%;" > 
+                        <table  style="width: 100%;" >
                             <tr >
                                 <td colspan="2" style="width: 40%;padding: 5px" >
                                 <div style="text-align: center" >
@@ -94,8 +98,8 @@
                                     <br>
                                     {{ number_format($payment->value) }} جنيه
                                 </div>
-                                </td> 
-                            </tr> 
+                                </td>
+                            </tr>
                             <tr>
                                 <td style="width: 40%;padding: 5px" >
                                 <b>الكــود :</b>
@@ -103,7 +107,7 @@
                                 <td style="width: 60%;padding: 5px" >
                                  {{ optional($payment->student)->code }}
                                 </td>
-                            </tr> 
+                            </tr>
                             <tr>
                                 <td style="width: 40%;padding: 5px" >
                                     <b>الشعبه :</b>
@@ -111,11 +115,11 @@
                                 <td style="width: 60%;padding: 5px" >
                                    {{ optional(optional($payment->student)->division)->name }}
                                 </td>
-                            </tr> 
+                            </tr>
                         </table>
                 </td>
             </table>
-            <br> 
+            <br>
             <table  style="width: 100%;" >
                 <tr>
                     <td style="width: 50%" ></td>

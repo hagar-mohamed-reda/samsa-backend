@@ -2,15 +2,15 @@
 
 namespace Modules\Account\Entities;
 use Illuminate\Http\Request;
- 
 
-class StudentPay  
+
+class StudentPay
 {
     /**
-     * detect the payment type if 
+     * detect the payment type if
      * ['academic_year_expense','service','installment','old_academic_year_expense']
      */
-    public static function getPayType(Student $student, Request $request) { 
+    public static function getPayType(Student $student, Request $request) {
         if ($student->is_old_installed)
             return "installment";
         if ($student->old_balance > 0)
@@ -23,16 +23,16 @@ class StudentPay
             return "service";
     }
 
-    /** 
-     * pay value 
+    /**
+     * pay value
      */
     public static function pay(Request $request, $installment=null) {
         $student = Student::find($request->student_id);
         $details = $student->getStudentBalance()->getCurrrentAcademicYearExpenseDetail();
         $payments = [];
         $type = self::getPayType($student, $request);
- 
-        if ($type == "academic_year_expense") { 
+
+        if ($type == "academic_year_expense") {
             foreach($details as $detail) {
                 $payment = Payment::addPayment([
                     "date" => date('Y-m-d'),
@@ -43,7 +43,7 @@ class StudentPay
                     "store_id" => $detail->store_id,
                     "student_id" => $student->id
                 ]);
- 
+
                 $data = [
                     "date" => date('Y-m-d'),
                     "value" => $detail->value,
@@ -52,10 +52,25 @@ class StudentPay
                     "user_id" => $request->user->id,
                     "store_id" => $detail->store_id,
                     "student_id" => $student->id
-                ]; 
+                ];
                 $payments[] = $payment;
                 $student->changeStudentCaseConstraint();
             }
+        }
+
+        else if ($type == "old_academic_year_expense") {
+            // old balance store
+            $store = AccountSetting::getOldBalanceStore();
+            $payment = Payment::addPayment([
+                "date" => date('Y-m-d'),
+                "value" => $request->value,
+                "model_type" => "old_academic_year_expense",
+                //"model_id" => null,
+                "user_id" => $request->user->id,
+                "store_id" => $store->id,
+                //"installment_id" => optional($installment)->id,
+                "student_id" => $student->id
+            ]);
         }
 
         else if ($type == "installment") {
@@ -64,8 +79,8 @@ class StudentPay
                     $installment = $student->getStudentBalance()->getReadyInstallment('new');
                 foreach($details as $detail) {
                     $paidValue = Payment::query()
-                        ->where('model_type', 'academic_year_expense') 
-                        ->where('model_id', $detail->id) 
+                        ->where('model_type', 'academic_year_expense')
+                        ->where('model_id', $detail->id)
                         ->where('student_id', $student->id)
                         ->sum('value');
 
@@ -75,7 +90,7 @@ class StudentPay
                         //
                         if ($request->value > $detail->value)
                             $value = $detail->value;
-                        
+
                         $payment = Payment::addPayment([
                             "date" => date('Y-m-d'),
                             "value" => $value,
@@ -98,15 +113,32 @@ class StudentPay
 
                 }
             }
+            else {
+                $installment = $student->getStudentBalance()->getReadyInstallment('old');
+                // old balance store
+                $store = AccountSetting::getOldBalanceStore();
+                $payment = Payment::addPayment([
+                    "date" => date('Y-m-d'),
+                    "value" => $request->value,
+                    "model_type" => "installment",
+                    //"model_id" => null,
+                    "user_id" => $request->user->id,
+                    "store_id" => $store->id,
+                    "installment_id" => optional($installment)->id,
+                    "student_id" => $student->id
+                ]);
+                $installment->paid = 1;
+                $installment->update();
+            }
         }
-        $payments =  Payment::query()  
+        $payments =  Payment::query()
             ->where('date', date('Y-m-d'))
             ->where('student_id', $student->id)
             ->get();
 
         return $payments;
     }
- 
 
-    
+
+
 }
