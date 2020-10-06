@@ -4,14 +4,12 @@ namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laratrust\Traits\LaratrustUserTrait;
+use Illuminate\Notifications\Notifiable; 
 
 use DB;
 
 class User extends Authenticatable
-{
-    use LaratrustUserTrait;
+{ 
     use Notifiable;
 
     /**
@@ -20,29 +18,33 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'username', 'image', 'phone', 'api_token'
+        'name', 'email', 'password', 'username', 'image', 'phone', 'api_token', 'role_id'
     ];
 
     
     protected $appends = [
-        'role_id', 'image_url'
+         'image_url', 'permissions'
     ];
     
     public function getImageUrlAttribute() {
         return url("/") . "/". $this->image;
     }
 
-    public function getRoleIdAttribute() {
-        return optional(RoleUser::where('user_id', $this->id)->first())->role_id;
+    public function getPermissionsAttribute() {
+        $ids = RolePermission::where('role_id', $this->id)->pluck('permission_id')->toArray();
+
+        $permissions = Permission::whereIn('id', $ids)->pluck('id', 'name')->toArray();
+        return $permissions;
     }
 
+   
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token','created_at', 'updated_at', 'email_verified_at'
+          'remember_token','created_at', 'updated_at', 'email_verified_at'
     ];
 
     /**
@@ -72,6 +74,7 @@ class User extends Authenticatable
     public function notifications() {
         return $this->hasMany('App\Notification', 'user_id');
     }
+
     public function role(){
         return $this->belongsTo('App\Role', 'role_id');
     }

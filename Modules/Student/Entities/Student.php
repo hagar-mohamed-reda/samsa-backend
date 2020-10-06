@@ -29,6 +29,7 @@ class Student extends Model {
         'academic_years_id',
         'code',
         'level_id',
+        'department_id',
         'division_id',
         'nationality_id',
         'gender',

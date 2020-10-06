@@ -34,6 +34,8 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('applications/delete/{resourcc}', 'ApplicationController@destroy'); 
 
 
+        Route::get('get_settings', 'AdminsionController@getSettings');
+        Route::post('update_setting', 'AdminsionController@updateSetting');
         // settings
         Route::get('get_registeration_status_document', function(){
             return DB::table('registeration_status_document')->get();

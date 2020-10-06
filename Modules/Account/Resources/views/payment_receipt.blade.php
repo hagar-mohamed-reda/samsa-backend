@@ -73,7 +73,14 @@
                             </td>
                             <td style="width: 60%;padding: 5px" >
                                 @if ($payment->model_type == 'old_academic_year_expense')
-                                مديونية سابقة
+                                رسوم سابقة
+                                @elseif($payment->model_type == 'installment')
+                                @php
+                                    $installment = \Modules\Account\Entities\Installment::find($payment->installment_id);
+
+                                @endphp
+                                قسط
+                                 ({{ optional($installment)->type == "new"? 'رسوم حاليه' : 'رسوم سابقه' }})
                                 @else
                                 {{ optional($payment->model_object)->name }}
                                 @endif

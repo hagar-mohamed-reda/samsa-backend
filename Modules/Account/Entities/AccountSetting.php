@@ -10,8 +10,8 @@ class AccountSetting extends Model
 
     protected $table = "account_settings";
 
-    protected $fillables = [
-        'id', 'name',	'value'
+    protected $fillable = [
+        'id', 'name', 'value'
     ];
 
     /**

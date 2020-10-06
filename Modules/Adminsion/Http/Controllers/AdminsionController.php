@@ -5,6 +5,7 @@ namespace Modules\Adminsion\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use DB;
 
 class AdminsionController extends Controller
 {
@@ -12,68 +13,25 @@ class AdminsionController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function updateSetting(Request $request)
     {
-        return view('adminsion::adminsion.index');
+        $model = DB::table('globale_settings')->find($request->id);
+
+        if (!$model) {
+            $model = DB::table('globale_settings')->insert([
+                ["id" => $request->id, "name" => "Adminsion setting", "value" => $request->value]
+            ]);
+        } else {
+            $model->update([
+                "value" => $request->value
+            ]);
+        }
+
+        return responseJson(1, __('done'), $model);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Response
-     */
-    public function create()
-    {
-        return view('adminsion::create');
+    public function getSettings() {
+        return DB::table('globale_settings')->get();
     }
-
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        return view('adminsion::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        return view('adminsion::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+ 
 }

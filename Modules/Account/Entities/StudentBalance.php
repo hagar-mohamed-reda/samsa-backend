@@ -49,6 +49,7 @@ class StudentBalance extends Student
     public function getCurrrentAcademicYearExpenseDetail() {
         // current academic year
         $academicYear = AccountSetting::getCurrentAcademicYear();
+        $currentTerm = AccountSetting::getCurrentTerm();
         // current date
         $date = date('Y-m-d');
         //
@@ -85,6 +86,10 @@ class StudentBalance extends Student
 
             if ($priorty == 1) {
                 if (!$this->isAcademicYearExpenseDetailPaid($ids) && $this->case_constraint_id == 1) {
+                    return $expenses;
+                }
+            } else if ($priorty == 3) {
+                if (!$this->isAcademicYearExpenseDetailPaid($ids) && $currentTerm->id == 2) {
                     return $expenses;
                 }
             } else {

@@ -19,12 +19,19 @@ Route::middleware('auth:api')->get('/settings', function (Request $request) {
 
 Route::group(['middleware' => 'api_auth'], function () {
 
-    Route::get('users', 'UserController@index');
-    Route::get('users/{id}', 'UserController@show');
+    Route::get('users', 'UserController@index'); 
     Route::post('users', 'UserController@store');
     Route::delete('users/{id}', 'UserController@destroy');
-    Route::put('users/{id}', 'UserController@update');
-    Route::put('user-password/{id}', 'UserController@updateUserPassword');
+    Route::post('users/{id}', 'UserController@update');
+   /// Route::put('user-password/{id}', 'UserController@updateUserPassword');
+
+    Route::get('roles', 'RoleController@index'); 
+    Route::post('roles', 'RoleController@store');
+    Route::delete('roles/{id}', 'RoleController@destroy');
+    Route::post('roles/{id}', 'RoleController@update');
+    Route::post('roles/permission/{id}', 'RoleController@updatePermissions');
+    Route::get('permissions', 'RoleController@getPermissions');
+
 //academic years start
     Route::get('academic-years', 'AcademicYearController@index');
     Route::get('academic-years/{id}', 'AcademicYearController@show');
@@ -88,6 +95,14 @@ Route::put('constraint-status/{id}', 'ConstraintStatusController@update');
     Route::post('registration-methods', 'RegistrationMethodsController@store');
     Route::delete('registration-methods/{id}', 'RegistrationMethodsController@destroy');
     Route::put('registration-methods/{id}', 'RegistrationMethodsController@update');
+
+    //
+    Route::get('registration-status', 'RegisterationStatusController@index'); 
+    Route::post('registration-status', 'RegisterationStatusController@store'); 
+    Route::put('registration-status/{id}', 'RegisterationStatusController@update');
+    Route::delete('registration-status/{resource}', 'RegisterationStatusController@destroy');
+    Route::post('registration-status/document/{resource}', 'RegisterationStatusController@updateRequiredDocument');
+
     //
     // translation
     Route::get('translation', 'TranslationController@index');
