@@ -156,12 +156,16 @@ class Student extends StudentOrigin
         $services = Service::all();
 
         foreach ($services as $service) {
-            if (AccountSetting::canStudentGetService($service, $this)) {
-                $ids[] = $service->id;
-            }
+            $res = AccountSetting::canStudentGetService($service, $this);
+
+            $service->valid = $res['valid'];
+            $service->reason = $res['reason'];
+            //if ($res['valid']) {
+            //    $ids[] = $service->id;
+            //}
         }
 
-        return Service::whereIn('id', $ids)->get(['id', 'name', 'value', 'additional_value']);
+        return $services;//Service::whereIn('id', $ids)->get(['id', 'name', 'value', 'additional_value']);
     }
 
     public function changeStudentCaseConstraint() {

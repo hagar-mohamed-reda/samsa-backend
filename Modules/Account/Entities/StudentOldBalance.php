@@ -11,6 +11,7 @@ class StudentOldBalance extends Model
     protected $fillable = [
         'student_id',
         'value',
+        'notes'
     ];
      
     

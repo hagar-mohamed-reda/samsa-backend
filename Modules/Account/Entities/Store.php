@@ -3,6 +3,7 @@
 namespace Modules\Account\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Store extends Model
 {
@@ -12,6 +13,15 @@ class Store extends Model
         "id", "name", "address", "balance", "notes", "user_id", "init_balance"
     ];
     
+    protected $appends = [
+        'can_delete'
+    ];
+
+    public function getCanDeleteAttribute() {
+        $count = DB::table('account_payments')->where('store_id', $this->id)->count(); 
+        return $count > 0 ? false : true;
+    }
+
     public function user() {
         return $this->belongsTo('App\User', "user_id");
     }

@@ -17,6 +17,9 @@ class Payment extends Model
         'model_type', //[academic_year_expense, service, installment]
         'model_id', 
         'installment_id', 
+        'service_count',
+        'is_refund',
+        'refund_id'
     ];
 
     protected $appends = [
@@ -31,24 +34,30 @@ class Payment extends Model
         else if ($this->model_type == "installment") {
             $object = Installment::find($this->model_id);
         }
+        if ($this->model_type == 'service') {
+            return Service::find($this->model_id);
+        }
 
         return $object;
     }
      
+    public function user() {
+        return $this->belongsTo('App\User', 'user_id');
+    }
     
     public function store() {
         return $this->belongsTo('Modules\Account\Entities\Store', 'store_id');
     }
     
     public function student() {
-        return $this->belongsTo('Modules\Student\Entities\Student', 'student_id');
+        return $this->belongsTo('Modules\Account\Entities\Student', 'student_id');
     }
     
     public function model() {
-        if ($this->type == 'academic_year_expense') {
+        if ($this->model_type == 'academic_year_expense') {
             return $this->belongsTo('Modules\Account\Entities\AcademicYearExpenseDetail', 'model_id');
         }
-        if ($this->type == 'service') {
+        if ($this->model_type == 'service') {
             return $this->belongsTo('Modules\Account\Entities\Service', 'model_id');
         }
         
@@ -61,6 +70,18 @@ class Payment extends Model
 
         if ($store) {
             $store->updateStore($data['value']);
+        }
+
+        return $payment;
+    }
+
+    public static function addRefund($data) {
+        $data['is_refund'] = 1;
+        $payment = Payment::create($data);
+        $store = $payment->store()->first();
+
+        if ($store) {
+            $store->updateStore($data['value'] * -1);
         }
 
         return $payment;

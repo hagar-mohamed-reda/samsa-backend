@@ -3,6 +3,7 @@
 namespace Modules\Account\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Service extends Model
 {
@@ -21,7 +22,15 @@ class Service extends Model
         'from_installment_id', 
         'type' // 
     ];
-      
+
+    protected $appends = [
+        'can_delete'
+    ];
+
+    public function getCanDeleteAttribute() {
+        $count = DB::table('account_student_services')->where('service_id', $this->id)->count(); 
+        return $count > 0 ? false : true;
+    } 
     
     public function store() {
         return $this->belongsTo('Modules\Account\Entities\Store', 'store_id')->select(['id', 'name']);

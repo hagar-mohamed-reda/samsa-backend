@@ -73,6 +73,103 @@ class AccountController extends Controller
      * pay money in store
      *
      */
+    public function refund(Request $request)
+    {
+        $user = $request->user;
+
+        $resource = null;
+        try {
+            $validator = validator($request->all(), [
+                "payment_id" =>  "required"  
+            ]);
+            if ($validator->failed()) {
+                return responseJson(0, __('fill all required data'));
+            }
+ 
+            $resource = StudentPay::payRefund($request);
+
+            $message = __('student {name} refund {value} in store');
+            $message = str_replace("{name}", optional($resource->student)->name, $message);
+            $message = str_replace("{value}", $resource->value, $message);
+            watch($message, "fa fa-money");
+            return responseJson(1, $message, array($resource));
+        } catch (Exception $th) {
+            return responseJson(0, $th->getMessage());
+        }
+
+        return responseJson(1, __('done'), $resource);
+    }
+
+    /**
+     * pay money in store
+     *
+     */
+    public function removePayment(Request $request)
+    {
+        $user = $request->user;
+
+        $resource = null;
+        try {
+            $validator = validator($request->all(), [
+                "payment_id" =>  "required"  
+            ]);
+            if ($validator->failed()) {
+                return responseJson(0, __('fill all required data'));
+            }
+ 
+            $resource = StudentPay::removePayment($request);
+
+            $message = __('payment value removed from store ') . optional($resource->store)->name;
+            watch($message, "fa fa-money");
+            return responseJson(1, $message);
+        } catch (Exception $th) {
+            return responseJson(0, $th->getMessage());
+        }
+
+        return responseJson(1, __('done'), $resource);
+    }
+
+    /**
+     * edit payment info
+     *
+     */
+    public function editPayment(Request $request)
+    {
+        $user = $request->user;
+
+        $resource = null;
+        try {
+            $validator = validator($request->all(), [
+                "id" =>  "required"  
+            ]);
+            if ($validator->failed()) {
+                return responseJson(0, __('fill all required data'));
+            }
+            $data = $request->all();
+            $payment = Payment::find($request->id);
+
+            if ($payment) {
+                $request->payment_id = $request->id;
+                // remove old
+                StudentPay::removePayment($request);
+
+                // add new 
+                $payment = Payment::addPayment($data);
+ 
+            }
+ 
+            watch(__('edit payment info of number ') . $payment->id, "fa fa-money"); 
+        } catch (Exception $th) {
+            return responseJson(0, $th->getMessage());
+        }
+
+        return responseJson(1, __('done'), $resource);
+    }
+
+    /**
+     * pay money in store
+     *
+     */
     public function updateAccountSetting(Request $request)
     {
         $user = $request->user;

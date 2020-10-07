@@ -6,34 +6,45 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>ايصال رقم {{ $payment->id }}</title>
 </head>
-<body>
-    <div style="width: 100%;direction: rtl!important;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"  >
-    <table  style="width: 100%;text-align: center" >
-        <tr>
-            <td style="width: 50%" >
-                <div style="text-align: center;font-size: 18px" >
-                    <b>وزارة التعليم العالى</b>
-                    <br>
-                    <b>المعهد العالى للعلوم الادراية</b>
-                    <br>
-                    <b>ببنى سويف</b>
-                </div>
-            </td>
-            <td style="width: 50%" >
-            <img src="{{ url('/logo.png') }}" width="80px" alt="">
-            </td>
-        </tr>
-    </table>
-    <div style="padding: 20px" >
-            <div style="width: 100%;border-bottom: 2px dashed black;margin: auto" ></div>
-            <br>
-            <div style="width: 100%;text-align: center" >
-                <b style="font-size: 16px" >رقم القسيمة</b>
+<body> 
+    @php
+        $copies = 1;
+        $service = null;
+        if ($payment->model_type == 'service')
+            $service = \Modules\Account\Entities\Service::find($payment->model_id);
 
-              {{ $payment->id }}
-            </div>
-            <table  style="width: 100%;" >
+        if ($service) {
+            if ($service->type == 'in')
+                $copies = 2;
+        }     @endphp
+    @for($count = 0; $count < $copies; $count ++)
+    <div style="width: 100%;direction: rtl!important;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;border: 1px dashed gray"  >
+        <table  style="width: 100%;text-align: center" >
+            <tr>
                 <td style="width: 50%" >
+                    <div style="text-align: center;font-size: 18px" >
+                        <b>وزارة التعليم العالى</b>
+                        <br>
+                        <b>المعهد العالى للعلوم الادراية</b>
+                        <br>
+                        <b>ببنى سويف</b>
+                    </div>
+                </td>
+                <td style="width: 50%" >
+                <img src="{{ url('/logo.png') }}" width="80px" alt="">
+                </td>
+            </tr>
+        </table> 
+        <div style="padding: 20px" >
+                <div style="width: 100%;border-bottom: 2px dashed black;margin: auto" ></div>
+                <br>
+                <div style="width: 100%;text-align: center" >
+                    <b style="font-size: 16px" >رقم القسيمة</b>
+
+                  {{ $payment->id }}
+                </div>
+                <table  style="width: 100%;" >
+                    <td style="width: 50%" >
                     <table  style="width: 100%;" >
                         <tr>
                             <td style="width: 40%;padding: 5px" >
@@ -73,7 +84,13 @@
                             </td>
                             <td style="width: 60%;padding: 5px" >
                                 @if ($payment->model_type == 'old_academic_year_expense')
-                                رسوم سابقة
+                                رسوم سابقة . {{ optional($payment->student)->old_balance_notes }}
+                                @elseif($payment->model_type == 'service')
+                                @php
+                                    $service = \Modules\Account\Entities\Service::find($payment->model_id);
+
+                                @endphp
+                                خدمة ({{ optional($service)->name }})
                                 @elseif($payment->model_type == 'installment')
                                 @php
                                     $installment = \Modules\Account\Entities\Installment::find($payment->installment_id);
@@ -81,6 +98,12 @@
                                 @endphp
                                 قسط
                                  ({{ optional($installment)->type == "new"? 'رسوم حاليه' : 'رسوم سابقه' }})
+                                @elseif($payment->model_type == 'refund')
+                                @php
+                                    $payment = \Modules\Account\Entities\Payment::find($payment->model_id);
+
+                                @endphp
+                                رد رسوم عن قسيمة رقم ({{ optional($payment)->id }})
                                 @else
                                 {{ optional($payment->model_object)->name }}
                                 @endif
@@ -134,12 +157,14 @@
                             <div style="text-align: center" >
                                 <b>الخزنية</b>
                                 <br>
-                                {{ optional($payment->store)->name }}
+                                {{ optional($payment->user)->name }}
                             </div>
                     </td>
                 </tr>
             </table>
     </div>
 </div>
+    <br>  
+    @endfor
 </body>
 </html>

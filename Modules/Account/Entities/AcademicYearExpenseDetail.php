@@ -16,7 +16,8 @@ class AcademicYearExpenseDetail extends Model
         'registeration_status_id',
         'store_id',
         'discount',
-        'academic_year_expense_id'
+        'academic_year_expense_id',
+        'wz_value'
     ];
       
     public function term() {
