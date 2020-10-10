@@ -20,7 +20,8 @@ class Service extends Model
         'additional_value', 
         'installment_percent',
         'from_installment_id', 
-        'type' // 
+        'type', //
+        'is_refund' 
     ];
 
     protected $appends = [

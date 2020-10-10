@@ -154,12 +154,15 @@ class Student extends StudentOrigin
     public function getAvailableServices() {
         $ids = [];
         $services = Service::all();
+        $availableServices = [];
 
         foreach ($services as $service) {
             $res = AccountSetting::canStudentGetService($service, $this);
 
             $service->valid = $res['valid'];
             $service->reason = $res['reason'];
+
+            //$availableServices[] = $service;
             //if ($res['valid']) {
             //    $ids[] = $service->id;
             //}

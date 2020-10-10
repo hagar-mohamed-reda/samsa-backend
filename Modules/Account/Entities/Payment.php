@@ -19,12 +19,25 @@ class Payment extends Model
         'installment_id', 
         'service_count',
         'is_refund',
-        'refund_id'
+        'refund_id',
+        'academic_year_id',
+        'installment_type'
     ];
 
     protected $appends = [
-        'model_object'
+        'model_object',
+        'level',
+        'division'
     ];
+
+    public function getLevelAttribute() {
+        return $this->student()->first()->level()->first();
+    }
+
+    public function getDivisionAttribute() {
+
+        return $this->student()->first()->division()->first();
+    }
 
     public function getModelObjectAttribute() {
         $object = null;
@@ -34,8 +47,14 @@ class Payment extends Model
         else if ($this->model_type == "installment") {
             $object = Installment::find($this->model_id);
         }
-        if ($this->model_type == 'service') {
+        else if ($this->model_type == 'service') {
             return Service::find($this->model_id);
+        }
+        else if ($this->model_type == 'old_academic_year_expense') {
+            $modelType = [
+                "name" => __('old_balance')
+            ];
+            $object = $modelType;
         }
 
         return $object;
@@ -65,6 +84,8 @@ class Payment extends Model
     }
 
     public static function addPayment($data) {
+        $currentAcademicYear = AccountSetting::getCurrentAcademicYear();
+        $data['academic_year_id'] = $currentAcademicYear->id;
         $payment = Payment::create($data);
         $store = $payment->store()->first();
 
@@ -76,6 +97,8 @@ class Payment extends Model
     }
 
     public static function addRefund($data) {
+        $currentAcademicYear = AccountSetting::getCurrentAcademicYear();
+        $data['academic_year_id'] = $currentAcademicYear->id;
         $data['is_refund'] = 1;
         $payment = Payment::create($data);
         $store = $payment->store()->first();

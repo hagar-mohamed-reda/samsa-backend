@@ -42,6 +42,9 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('academic_year_expenses/update', 'AcademicYearExpenseController@update');
         Route::post('academic_year_expenses/delete/{resource}', 'AcademicYearExpenseController@destroy');
 
+        // report 
+        Route::get('report/payment-details', 'ReportController@paymentDetails');
+
         // account routes
         Route::get('get_student_account', 'AccountController@getStudentAccounting');
         Route::get('get_available_services', 'AccountController@getStudentAvailableServices');

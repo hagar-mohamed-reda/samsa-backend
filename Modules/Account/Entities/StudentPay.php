@@ -124,6 +124,7 @@ class StudentPay
                             "user_id" => $request->user->id,
                             "store_id" => $detail->store_id,
                             "installment_id" => optional($installment)->id,
+                            "installment_type" => "new",
                             "student_id" => $student->id
                         ]);
                         $payments[] = $payment;
@@ -153,6 +154,7 @@ class StudentPay
                     "user_id" => $request->user->id,
                     "store_id" => $store->id,
                     "installment_id" => optional($installment)->id,
+                    "installment_type" => "old",
                     "student_id" => $student->id
                 ]);
                 $payments[] = $payment;
