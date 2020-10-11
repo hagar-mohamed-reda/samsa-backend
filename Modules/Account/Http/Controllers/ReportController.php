@@ -9,8 +9,10 @@ use Illuminate\Routing\Controller;
 use Modules\Account\Entities\Student;
 use Modules\Account\Entities\StudentBalance;
 use Modules\Account\Entities\AcademicYearExpenseDetail;
+use Modules\Account\Entities\AcademicYearExpense;
 use Modules\Account\Entities\AccountSetting;
 use Modules\Account\Entities\Payment;
+use Modules\Account\Entities\Service;
 use Modules\Account\Entities\Store;
 use Modules\Account\Entities\StudentPay;
 
@@ -89,8 +91,36 @@ class ReportController extends Controller
             $query->where('model_type', "refund");
         }
 
+        $totalQuery = clone $query;
+        $query2 = clone $query;
+        $query3 = clone $query;
+        $query4 = clone $query;
 
-        return $query->get();//["*", "id as account_payments.id"]
+        $serviceTotals = [];
+        $academicYearExpensesTotal = [];
+
+        foreach(Service::all() as $item) {
+            $serviceQuery = clone $query; 
+            $sum = $serviceQuery->where('model_type', 'service')->where('model_id', $item->id)->sum('value'); 
+            $serviceTotals[$item->id] = $sum;
+        }
+
+        foreach(AcademicYearExpense::where('level_id', 1)->first()->details()->get() as $item) {
+            $expenseQuery = clone $query; 
+            $sum = $expenseQuery->where('model_type', 'academic_year_expense')->where('model_id', $item->id)->sum('value'); 
+            $academicYearExpensesTotal[$item->id] = $sum;
+        }
+ 
+        return [
+            "details" => $query->get(),
+            "services" => $serviceTotals,
+            "academic_year_expense" => $academicYearExpensesTotal,
+            "total" => $totalQuery->sum('value'),
+            "payments_incomes" => $query2->where('model_type', "!=", "refund")->sum('value'),
+            "payments_returns" => $query3->where('model_type', "refund")->sum('value'),
+            "student_services" => $query4->where('model_type', "service")->sum('value'),
+        ];
+        //return ;//["*", "id as account_payments.id"]
 
     }
 
