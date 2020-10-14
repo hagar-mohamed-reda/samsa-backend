@@ -118,6 +118,39 @@ class StudentBalance extends Student
         return $balance;
     }
 
+
+    public function getCurrentBalanceTotal() {
+        // current academic year
+        $academicYear = AccountSetting::getCurrentAcademicYear();
+
+        $academicYearExpenses = AcademicYearExpense::query()
+            ->where('academic_year_id', $academicYear->id)
+            ->where('level_id', $this->level_id)
+            ->first();
+
+        $ids = $academicYearExpenses->details()->where('service_id', '12')->pluck('id')->toArray();
+        $total = $academicYearExpenses->details()->where('service_id', '12')->sum('value');
+        //$details = $academicYearExpenses->details()->where('service_id', '12')->get();
+        /*foreach($details as $detail) {
+            if ($detail->priorty == 1) {
+                if ($this->case_constraint_id == 1) { 
+                    if ($detail->registeration_status_id) {
+                        if ($detail->registeration_status_id == $this->registration_status_id)
+                            $total += $detail->value;
+                    } else
+                        $total += $detail->value;
+                }
+            } else {
+                $total += $detail->value;
+            }
+        }*/
+        //
+        $paid = Payment::whereIn('model_id', $ids)->where('student_id', $this->id)->sum('value');
+        // 
+        $remind = $total - $paid;
+        $remind += $this->getOldBalance();
+        return $remind;
+    }
     /**
      * calculate current balance of the student
      * @return float

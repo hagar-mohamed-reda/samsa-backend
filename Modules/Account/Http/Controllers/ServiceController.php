@@ -20,6 +20,7 @@ class ServiceController extends Controller
      * @return json
      */
     public function index() {
+        //->where('is_academic_year_expense', '!=', '1')
         $resources = Service::with(['level', 'division', 'store'])->latest()->get();
         return $resources;
     }

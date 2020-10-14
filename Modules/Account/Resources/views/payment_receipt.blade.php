@@ -38,11 +38,15 @@
         <div style="padding: 20px" >
                 <div style="width: 100%;border-bottom: 2px dashed black;margin: auto" ></div>
                 <br>
+                    @if ($count == 0)
                 <div style="width: 100%;text-align: center" >
                     <b style="font-size: 16px" >رقم القسيمة</b>
 
-                  {{ $payment->id }}
+                        <span id="paymentId" >{{ $payment->id }}</span>
                 </div>
+                @else
+                <br>
+                    @endif
                 <table  style="width: 100%;" >
                     <td style="width: 50%" >
                     <table  style="width: 100%;" >
@@ -75,7 +79,7 @@
                                <b>مبلـغ وقــدره :</b>
                             </td>
                             <td style="width: 60%;padding: 5px" >
-                               {{ number_format($payment->value) }} جنيه
+                               <span class="payment-value" >{{ number_format($payment->value) }}</span> جنيه
                             </td>
                         </tr>
                         <tr>
@@ -83,6 +87,10 @@
                               <b>ســــــداد عن :</b>
                             </td>
                             <td style="width: 60%;padding: 5px" >
+                                @if ($payment->about)
+                                    {{ $payment->about }}
+                                @endif 
+
                                 @if ($payment->model_type == 'old_academic_year_expense')
                                 رسوم سابقة . {{ optional($payment->student)->old_balance_notes }}
                                 @elseif($payment->model_type == 'service')
@@ -90,22 +98,24 @@
                                     $service = \Modules\Account\Entities\Service::find($payment->model_id);
 
                                 @endphp
-                                خدمة ({{ optional($service)->name }})
+                                خدمة {{ optional($service)->name }} - عدد النسخ {{ $payment->service_count }}
                                 @elseif($payment->model_type == 'installment')
                                 @php
                                     $installment = \Modules\Account\Entities\Installment::find($payment->installment_id);
 
                                 @endphp
                                 قسط
-                                 ({{ optional($installment)->type == "new"? 'رسوم حاليه' : 'رسوم سابقه' }})
+                                 ({{ optional($installment)->type == "new"? 'رسوم حاليه' : 'رسوم سابقه' . ' - ' . optional($payment->student)->old_balance_notes }})
                                 @elseif($payment->model_type == 'refund')
                                 @php
                                     $payment = \Modules\Account\Entities\Payment::find($payment->model_id);
 
                                 @endphp
-                                رد رسوم عن قسيمة رقم ({{ optional($payment)->id }})
-                                @else
-                                {{ optional($payment->model_object)->name }}
+                                رد رسوم عن قسيمة رقم ({{ optional($payment)->id }}) 
+                                @else 
+                                 @if (!$payment->is_pr)
+                                    {{ optional($payment->model_object)->name }}
+                                @endif
                                 @endif
                             </td>
                         </tr>
@@ -126,7 +136,7 @@
                                 <div style="text-align: center" >
                                     <b>المبلغ</b>
                                     <br>
-                                    {{ number_format($payment->value) }} جنيه
+                                    <span class="payment-value" >{{ number_format($payment->value) }}</span>
                                 </div>
                                 </td>
                             </tr>
@@ -166,5 +176,27 @@
 </div>
     <br>  
     @endfor
+
+    <script type="text/javascript" src="{{ url('/js/jquery-3.2.1.min.js') }}" ></script>
+    <script type="text/javascript" src="{{ url('/js/tafgeetjs.min.js') }}" ></script>
+
+    <script type="text/javascript"> 
+
+        $('.payment-value').each(function(){
+            $(this).html(new Tafgeet($(this).text(), 'EGP').parse());
+        });  
+        if (confirm('يتم طباعة الوصل برقم ' + {{ $payment->id }})) {
+            window.print();
+        } else {
+            var id = prompt('اعد ادخال رقم القسيمة');
+
+            if (!id)
+                id = prompt('اعد ادخال رقم القسيمة');
+            
+            document.getElementById('paymentId').innerHTML = id;
+            window.print();
+        }
+        
+    </script>
 </body>
 </html>

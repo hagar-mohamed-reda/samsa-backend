@@ -68,10 +68,9 @@ class ReportController extends Controller
             $query->whereIn("academic_year_id", $request->academic_year_id);
         }
 
-        if ($request->priorty) {
-            $ids = AcademicYearExpenseDetail::whereIn('priorty', $request->priorty)->pluck('id')->toArray(); 
-
-            $query->where(function ($q) use ($request){
+        if ($request->academic_year_expenses) {
+            $ids = AcademicYearExpenseDetail::whereIn('service_id', $request->academic_year_expenses)->pluck('id')->toArray();  
+            $query->where(function ($q) use ($request, $ids){
                 $q->whereIn("model_id", $ids);
                 $q->where("model_type", "academic_year_expense");
             });
@@ -105,21 +104,34 @@ class ReportController extends Controller
             $serviceTotals[$item->id] = $sum;
         }
 
-        foreach(AcademicYearExpense::where('level_id', 1)->first()->details()->get() as $item) {
-            $expenseQuery = clone $query; 
-            $sum = $expenseQuery->where('model_type', 'academic_year_expense')->where('model_id', $item->id)->sum('value'); 
+        foreach(Service::where('is_academic_year_expense', '1')->get() as $item) {
+            $expenseQuery = clone $query;  
+            $ids = AcademicYearExpenseDetail::where('service_id', $item->id)->pluck('id')->toArray(); 
+            $sum = $expenseQuery->where('model_type', 'academic_year_expense')->whereIn('model_id', $ids)->sum('value'); 
             $academicYearExpensesTotal[$item->id] = $sum;
+        }
+
+        $resources = $query->get();
+        $totalWzValue = 0;
+
+        foreach($resources as $resource) {
+            $resource->wz_value = optional($resource->model_object)->wz_value;
+            if (optional($resource->model_object)->wz_value) {
+                $resource->value = $resource->value - optional($resource->model_object)->wz_value;
+                $totalWzValue += optional($resource->model_object)->wz_value;
+            } 
         }
  
         return [
-            "details" => $query->get(),
+            "details" => $resources,
             "services" => $serviceTotals,
             "academic_year_expense" => $academicYearExpensesTotal,
             "total" => $totalQuery->sum('value'),
             "payments_incomes" => $query2->where('model_type', "!=", "refund")->sum('value'),
             "payments_returns" => $query3->where('model_type', "refund")->sum('value'),
             "student_services" => $query4->where('model_type', "service")->sum('value'),
-        ];
+            "additional_value" => $totalWzValue
+        ]; 
         //return ;//["*", "id as account_payments.id"]
 
     }

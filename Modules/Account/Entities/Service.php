@@ -21,7 +21,10 @@ class Service extends Model
         'installment_percent',
         'from_installment_id', 
         'type', //
-        'is_refund' 
+        'is_refund',
+        'is_in_store',
+        'active',
+        'is_academic_year_expense'
     ];
 
     protected $appends = [

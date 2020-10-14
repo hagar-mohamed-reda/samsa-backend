@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Modules\Account\Entities\AccountSetting;
 use App\Notification;
+use DB;
 
 class DashboardController extends Controller
 {

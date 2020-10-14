@@ -38,6 +38,7 @@ Route::group(['middleware' => 'api_auth'], function () {
 
         // academic_year_expense routes
         Route::get('academic_year_expenses', 'AcademicYearExpenseController@index');
+        Route::get('academic_year_expenses_details', 'AcademicYearExpenseController@details');
         Route::post('academic_year_expenses/store', 'AcademicYearExpenseController@store');
         Route::post('academic_year_expenses/update', 'AcademicYearExpenseController@update');
         Route::post('academic_year_expenses/delete/{resource}', 'AcademicYearExpenseController@destroy');
@@ -53,6 +54,7 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('pay-remove', 'AccountController@removePayment');
         Route::post('edit-payment', 'AccountController@editPayment');
         Route::post('write_notes', 'AccountController@writeStudentNote');
+        Route::post('update_student_info', 'AccountController@updateStudentInfo');
 
         // installment routes
         Route::get('installment/get', 'InstallmentController@index');
@@ -74,9 +76,7 @@ Route::group(['middleware' => 'api_auth'], function () {
         });
         Route::get('divisions', function(){
           return DB::table('divisions')
-          ->join('departments', 'departments.id', '=', 'divisions.department_id')
-          ->join('levels', 'levels.id', '=', 'departments.level_id')
-          ->get(['divisions.id as id', 'divisions.name', 'levels.name as level', 'level_id', 'department_id']);
+          ->get();
         });
         Route::get('terms', function(){
           return DB::table('terms')->get();

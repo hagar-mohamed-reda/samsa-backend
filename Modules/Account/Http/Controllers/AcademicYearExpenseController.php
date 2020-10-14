@@ -39,6 +39,26 @@ class AcademicYearExpenseController extends Controller
     }
  
     /**
+     * return all data in json format
+     * @return json
+     */
+    public function details(Request $request) {
+        $academicYear = AccountSetting::getCurrentAcademicYear();
+        $ids = AcademicYearExpense::with(['academic_year', 'level', 'division', 'details'])
+                ->where('academic_year_id', $academicYear->id) 
+                ->where(function($q) use ($request) {
+                    if ($request->levels)
+                        $q->whereIn('level_id', $request->levels);
+                })
+                //->where('division_id', $request->division_id)
+                ->pluck('id')->toArray();
+
+        $details = AcademicYearExpenseDetail::whereIn('academic_year_expense_id', $ids)->get();
+ 
+        return $details;
+    }
+
+    /**
      * AcademicYearExpense a newly created resource in storage.
      * @param Request $request
      * @return Response

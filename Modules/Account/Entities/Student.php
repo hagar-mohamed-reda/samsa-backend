@@ -25,8 +25,13 @@ class Student extends StudentOrigin
         'can_convert_to_student',
         'payment_details',
         'old_balance_notes',
-        'can_edit_old_balance'
+        'can_edit_old_balance',
+        'current_balance_total'
     ];
+
+    public function getCodeAttribute() {
+        return $this->id;
+    }
 
     public function getCanEditOldBalanceAttribute() {
         $can = true;
@@ -82,13 +87,17 @@ class Student extends StudentOrigin
         return $this->getStudentBalance()->getPaidValue();
     }
 
+    public function getCurrentBalanceTotalAttribute() {
+        return $this->getStudentBalance()->getCurrentBalanceTotal();
+    }
+
     public function getCurrentBalanceAttribute() {
         // $this->getStudentBalance()->getCurrentBalance();
         return $this->getStudentBalance()->getPaidValue();
     }
 
     public function getPaidsAttribute() {
-        return $this->payments()->sum("value");
+        return $this->payments()->where('model_type','!=', 'refund')->sum("value");
     }
 
     public function getGpaAttribute() {
@@ -153,7 +162,7 @@ class Student extends StudentOrigin
 
     public function getAvailableServices() {
         $ids = [];
-        $services = Service::all();
+        $services = Service::where('active', '1')->where('is_academic_year_expense', '!=', '1')->get();
         $availableServices = [];
 
         foreach ($services as $service) {

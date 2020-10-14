@@ -4,6 +4,7 @@ namespace Modules\Account\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Settings\Entities\AcademicYear;
+use DB;
 
 class AccountSetting extends Model
 {
@@ -40,8 +41,7 @@ class AccountSetting extends Model
     public static function getCurrentTerm() {
         // get current date
         $date = date('m-d');
-
-        return Term::where('id', 1)->first();
+        return Term::find(optional(DB::table('globale_settings')->find(6))->value);
     }
 
 
@@ -85,7 +85,7 @@ class AccountSetting extends Model
                 ->where('academic_year_id', $currentYear->id)
                 ->where('level_id', $student->level_id)
                 ->first()->details()
-                //->where('priorty', ($service->from_installment_id + 1))
+                ->where('priorty', ($service->from_installment_id + 1))
                 ->sum('value');
 
             $ids = AcademicYearExpense::query()
@@ -95,22 +95,50 @@ class AccountSetting extends Model
                 ->where('priorty', ($service->from_installment_id + 1))
                 ->pluck('id')->toArray();
 
-            $sum = Payment::where('student_id', $student->id)
+            $sum = 0;
+            if ($student->is_current_installed || $student->is_old_installed) {
+                $total = 0;
+
+                $rows = installment::where('student_id', $student->id)->get();
+
+                for($i = 0; $i < count($rows); $i ++) {
+                    $row = $rows[$i];
+                    if (($i + 1) == $service->from_installment_id) 
+                        $total = $row->value;
+                }
+ 
+                $sum = 0;
+                for($i = 0; $i < count($rows); $i ++) {
+                    $row = $rows[$i];
+                    if (($i + 1) == $service->from_installment_id && $row->paid == 1) 
+                        $sum = $row->value;
+                } 
+
+            } else {
+                $sum += Payment::where('student_id', $student->id)
                             ->where(function($q)  use ($ids) {
-                                $q->whereIn('model_type', ['installment', 'academic_year_expense'])
-                                ->orWhereIn("model_id", $ids);
+                                $q->where('model_type', 'academic_year_expense')
+                                ->whereIn("model_id", $ids);
                             })
                             ->sum('value');
+            }
 
             $percent = ($sum / $total) * 100; 
 
             $service->percent = $percent;
             $service->installment_count = $count;
 
-            if ($count <= $service->from_installment_id && $percent <= $service->installment_percent && $service->installment_percent > 0) {
-                $valid = false;
-                $reason = __("The student did not pay the required percentage of the installment number ") . $service->from_installment_id;
+            $condition = ($count < $service->from_installment_id) || $percent < $service->installment_percent;
+
+            if ($service->installment_percent > 0) {
+                if ($condition) {
+                    $valid = false;
+                    $reason = __("The student did not pay the required percentage of the installment number ") . $service->from_installment_id;
+                }
             }
+
+            //$valid = false;
+            //$reason =$total;
         }
 
         // check on student level

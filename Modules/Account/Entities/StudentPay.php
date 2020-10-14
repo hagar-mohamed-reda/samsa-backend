@@ -53,9 +53,31 @@ class StudentPay
                     "store_id" => $detail->store_id,
                     "student_id" => $student->id
                 ];
-                $payments[] = $payment;
+                if ($detail->priorty == 1 &&  $detail->service_id != 8) {
+                    $item = null;
+                    if (isset($payments['pr_1'])) {
+                        $item = $payments['pr_1'];
+                        //
+                        $item->value += $payment->value;
+                    } else {
+                        $item = $payment;
+                    }
+
+                    $payment->paper_id = $student->id . '-1';
+                    $payment->update();
+                    
+                    $item->about = "رسوم تحويل - رسوم مقصه";
+                    $payments['pr_1'] = $item;
+                } else { 
+                    $payments[] = $payment;
+                }
                 $student->changeStudentCaseConstraint();
             }
+
+            $payarr = [];
+            foreach($payments as $element)
+                $payarr[] = $element; 
+            $payments = $payarr;
         }
 
         else if ($type == 'service') {

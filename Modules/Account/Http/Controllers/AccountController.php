@@ -243,4 +243,18 @@ class AccountController extends Controller
         return responseJson(1, __('done'));
     }
 
+    public function updateStudentInfo(Request $request) {
+        $validator = validator($request->all(), [ 
+            "student_id" =>  "required"
+        ]);
+        if ($validator->failed()) {
+            return responseJson(0, __('write some notes'));
+        }
+
+        $student = Student::find($request->student_id);
+
+        $student->update($request->all()); 
+        return responseJson(1, __('done'));
+    }
+
 }

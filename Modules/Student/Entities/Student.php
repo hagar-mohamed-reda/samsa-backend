@@ -79,7 +79,8 @@ class Student extends Model {
         'qualification_id',
         'acceptance_code',
         'acceptance_date',
-        'accepted_by'
+        'accepted_by',
+        'is_refund'
     ];
 
     protected $appends = [

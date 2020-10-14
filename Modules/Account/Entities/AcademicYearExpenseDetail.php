@@ -17,8 +17,17 @@ class AcademicYearExpenseDetail extends Model
         'store_id',
         'discount',
         'academic_year_expense_id',
-        'wz_value'
+        'wz_value',
+        'service_id'
     ];
+
+    protected $appends = [
+        'level'
+    ];
+
+    public function getLevelAttribute() {
+        return optional(optional($this->academicYearExpense)->level)->name;
+    }
       
     public function term() {
         return $this->belongsTo('Modules\Account\Entities\Term', 'term_id')->select(['id', 'name']);
@@ -28,6 +37,9 @@ class AcademicYearExpenseDetail extends Model
         return $this->belongsTo('Modules\Account\Entities\Store', 'store_id')->select(['id', 'name']);
     }
      
+    public function academicYearExpense() {
+        return $this->belongsTo('Modules\Account\Entities\AcademicYearExpense', 'academic_year_expense_id');
+    }
     
     public function canDelete() {
         $academicYear = AccountSetting::getCurrentAcademicYear();

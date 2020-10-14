@@ -21,7 +21,8 @@ class Payment extends Model
         'is_refund',
         'refund_id',
         'academic_year_id',
-        'installment_type'
+        'installment_type',
+        'paper_id'
     ];
 
     protected $appends = [
