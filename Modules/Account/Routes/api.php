@@ -43,7 +43,7 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('academic_year_expenses/update', 'AcademicYearExpenseController@update');
         Route::post('academic_year_expenses/delete/{resource}', 'AcademicYearExpenseController@destroy');
 
-        // report 
+        // report
         Route::get('report/payment-details', 'ReportController@paymentDetails');
 
         // account routes
@@ -81,6 +81,18 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::get('terms', function(){
           return DB::table('terms')->get();
         });
+
+        //
+
+        // discount types routes
+        Route::get('discount_types', 'DiscountTypeController@index');
+        Route::post('discount_types/store', 'DiscountTypeController@store');
+        Route::post('discount_types/update/{discountType}', 'DiscountTypeController@update');
+        Route::post('discount_types/delete/{discountType}', 'DiscountTypeController@destroy');
+
+        // discount request
+        Route::post('create_discount_request', 'AccountController@createDiscountRequest');
+        Route::get('discount_requests/receipt/{resource}', 'ReceiptController@getDiscountRequestReceipt');
 
     });
 });

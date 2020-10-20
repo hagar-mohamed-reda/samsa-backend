@@ -12,6 +12,7 @@ use Modules\Account\Entities\AccountSetting;
 use Modules\Account\Entities\Payment;
 use Modules\Account\Entities\Store;
 use Modules\Account\Entities\StudentPay;
+use Modules\Account\Entities\DiscountRequest;
 
 use App\User;
 use DB;
@@ -62,7 +63,7 @@ class AccountController extends Controller
             $message = str_replace("{value}", $request->value, $message);
             watch($message, "fa fa-money");
             return responseJson(1, $message, $resource);
-        } catch (Exception $th) {
+        } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
 
@@ -80,12 +81,12 @@ class AccountController extends Controller
         $resource = null;
         try {
             $validator = validator($request->all(), [
-                "payment_id" =>  "required"  
+                "payment_id" =>  "required"
             ]);
             if ($validator->failed()) {
                 return responseJson(0, __('fill all required data'));
             }
- 
+
             $resource = StudentPay::payRefund($request);
 
             $message = __('student {name} refund {value} in store');
@@ -93,7 +94,7 @@ class AccountController extends Controller
             $message = str_replace("{value}", $resource->value, $message);
             watch($message, "fa fa-money");
             return responseJson(1, $message, array($resource));
-        } catch (Exception $th) {
+        } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
 
@@ -111,18 +112,18 @@ class AccountController extends Controller
         $resource = null;
         try {
             $validator = validator($request->all(), [
-                "payment_id" =>  "required"  
+                "payment_id" =>  "required"
             ]);
             if ($validator->failed()) {
                 return responseJson(0, __('fill all required data'));
             }
- 
+
             $resource = StudentPay::removePayment($request);
 
             $message = __('payment value removed from store ') . optional($resource->store)->name;
             watch($message, "fa fa-money");
             return responseJson(1, $message);
-        } catch (Exception $th) {
+        } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
 
@@ -140,7 +141,7 @@ class AccountController extends Controller
         $resource = null;
         try {
             $validator = validator($request->all(), [
-                "id" =>  "required"  
+                "id" =>  "required"
             ]);
             if ($validator->failed()) {
                 return responseJson(0, __('fill all required data'));
@@ -153,13 +154,13 @@ class AccountController extends Controller
                 // remove old
                 StudentPay::removePayment($request);
 
-                // add new 
+                // add new
                 $payment = Payment::addPayment($data);
- 
+
             }
- 
-            watch(__('edit payment info of number ') . $payment->id, "fa fa-money"); 
-        } catch (Exception $th) {
+
+            watch(__('edit payment info of number ') . $payment->id, "fa fa-money");
+        } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
 
@@ -188,7 +189,7 @@ class AccountController extends Controller
             $resource = AccountSetting::updateSetting($request->id, $request->name, $request->value);
 
             watch(__('update old balance store settings '), "fa fa-cogs");
-        } catch (Exception $th) {
+        } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
 
@@ -244,7 +245,7 @@ class AccountController extends Controller
     }
 
     public function updateStudentInfo(Request $request) {
-        $validator = validator($request->all(), [ 
+        $validator = validator($request->all(), [
             "student_id" =>  "required"
         ]);
         if ($validator->failed()) {
@@ -253,8 +254,28 @@ class AccountController extends Controller
 
         $student = Student::find($request->student_id);
 
-        $student->update($request->all()); 
+        $student->update($request->all());
         return responseJson(1, __('done'));
     }
 
+    /**
+     * create discount request for student
+     *
+     */
+    public function createDiscountRequest(Request $request) {
+        $validator = validator($request->all(), [
+            "student_id" =>  "required",
+            "discount_type_id" =>  "required",
+            "reason" =>  "required",
+            "student_affairs_notes" =>  "required",
+        ]);
+        if ($validator->failed()) {
+            return responseJson(0, __('write some notes'));
+        }
+        $data = $request->all();
+        $data['user_id'] = $request->user->id;
+        DiscountRequest::create($data);
+
+        return responseJson(1, __('done'));
+    }
 }

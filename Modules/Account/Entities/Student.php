@@ -26,11 +26,22 @@ class Student extends StudentOrigin
         'payment_details',
         'old_balance_notes',
         'can_edit_old_balance',
-        'current_balance_total'
+        'current_balance_total',
+        'discount_total',
+        'student_balance'
     ];
 
     public function getCodeAttribute() {
         return $this->id;
+    }
+
+    public function getStudentBalanceAttribute() {
+        $balance = $this->current_balance_total - $this->discount_total;
+        return $balance;
+    }
+
+    public function getDiscountTotalAttribute() {
+        return 0;
     }
 
     public function getCanEditOldBalanceAttribute() {
