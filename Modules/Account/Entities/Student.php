@@ -28,8 +28,18 @@ class Student extends StudentOrigin
         'can_edit_old_balance',
         'current_balance_total',
         'discount_total',
-        'student_balance'
+        'student_balance',
+        'can_create_discount_request',
+        'last_discount_request'
     ];
+
+    public function getLastDiscountRequestAttribute() {
+        return DB::table('account_discount_requests')->where('student_id', $this->id)->where('paid', '!=', '1')->latest()->first();
+    }
+
+    public function getCanCreateDiscountRequestAttribute() {
+        return (DB::table('account_discount_requests')->where('student_id', $this->id)->where('paid', '!=', '1')->exists())? false : true;
+    }
 
     public function getCodeAttribute() {
         return $this->id;

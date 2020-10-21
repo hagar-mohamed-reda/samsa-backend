@@ -29,7 +29,7 @@ class AccountController extends Controller
         $student = null;
         if (request()->student_id) {
             $student = Student::query()
-            ->with(['level', 'division', 'case_constraint', 'constraint_status', 'installments', 'payments'])
+            ->with(['level', 'division', 'case_constraint', 'constraint_status', 'installments', 'payments', 'registerationStatus', 'nationality'])
             ->find(request()->student_id);
         }
 
@@ -257,25 +257,5 @@ class AccountController extends Controller
         $student->update($request->all());
         return responseJson(1, __('done'));
     }
-
-    /**
-     * create discount request for student
-     *
-     */
-    public function createDiscountRequest(Request $request) {
-        $validator = validator($request->all(), [
-            "student_id" =>  "required",
-            "discount_type_id" =>  "required",
-            "reason" =>  "required",
-            "student_affairs_notes" =>  "required",
-        ]);
-        if ($validator->failed()) {
-            return responseJson(0, __('write some notes'));
-        }
-        $data = $request->all();
-        $data['user_id'] = $request->user->id;
-        DiscountRequest::create($data);
-
-        return responseJson(1, __('done'));
-    }
+ 
 }

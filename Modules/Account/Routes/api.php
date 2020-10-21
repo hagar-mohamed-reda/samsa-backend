@@ -91,8 +91,13 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('discount_types/delete/{discountType}', 'DiscountTypeController@destroy');
 
         // discount request
-        Route::post('create_discount_request', 'AccountController@createDiscountRequest');
+        Route::get('discount_requests', 'DiscountRequestController@index');
+        Route::post('discount_requests/store', 'DiscountRequestController@store');
         Route::get('discount_requests/receipt/{resource}', 'ReceiptController@getDiscountRequestReceipt');
+
+        // discount  routes
+        Route::get('discounts', 'DiscountController@index');
+        Route::post('discounts/store', 'DiscountController@store');
 
     });
 });
