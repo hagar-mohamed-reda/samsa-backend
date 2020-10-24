@@ -18,6 +18,14 @@ class DiscountRequest extends Model
         'paid'
     ];
 
+    protected $appends = [
+        'value'
+    ];
+
+    public function getValueAttribute() {
+        return optional(Discount::where('discount_request_id', $this->id)->first())->value;
+    }
+
     public function student() {
         return $this->belongsTo("Modules\Account\Entities\Student", "student_id");
     }
@@ -27,7 +35,7 @@ class DiscountRequest extends Model
     }
 
     public function user() {
-        return $this->belongsTo("App\User", "user_id");
+        return $this->belongsTo("App\User", "user_id")->select(['id', 'name']);
     }
 
 

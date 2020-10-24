@@ -27,11 +27,29 @@ class Student extends StudentOrigin
         'old_balance_notes',
         'can_edit_old_balance',
         'current_balance_total',
+        'refund_total',
         'discount_total',
-        'student_balance',
         'can_create_discount_request',
-        'last_discount_request'
+        'last_discount_request',
+        'services_total',
+        'academic_year_expense_total',
+        'graduation_service_total',
+        'student_balance'
     ];
+
+    public function getGraduationServiceTotalAttribute() {
+        return Payment::where('student_id', $this->id)->where('model_type', 'service')->where('model_id', 2)->sum('value');
+    }
+
+    public function getServicesTotalAttribute() {
+        return Payment::where('student_id', $this->id)->where('model_type', 'service')->sum('value');
+    }
+
+    public function getAcademicYearExpenseTotalAttribute() {
+        return Payment::where('student_id', $this->id)
+        ->whereIn('model_type', ['academic_year_expense', 'old_academic_year_expense'])
+        ->sum('value');
+    }
 
     public function getLastDiscountRequestAttribute() {
         return DB::table('account_discount_requests')->where('student_id', $this->id)->where('paid', '!=', '1')->latest()->first();
@@ -46,12 +64,12 @@ class Student extends StudentOrigin
     }
 
     public function getStudentBalanceAttribute() {
-        $balance = $this->current_balance_total - $this->discount_total;
+        $balance = $this->current_balance_total - ($this->refund_total + $this->discount_total);
         return $balance;
     }
 
     public function getDiscountTotalAttribute() {
-        return 0;
+        return DB::table('account_discounts')->where('student_id', $this->id)->sum('value');
     }
 
     public function getCanEditOldBalanceAttribute() {
@@ -90,6 +108,7 @@ class Student extends StudentOrigin
         return $arr;
     }
 
+
     public function getCanConvertToStudentAttribute() {
         $ids = DB::table("account_academic_year_expenses_details")->where('priorty', 1)->pluck('id')->toArray();
         $paymentCounts = DB::table('account_payments')
@@ -117,8 +136,17 @@ class Student extends StudentOrigin
         return $this->getStudentBalance()->getPaidValue();
     }
 
+    public function getRefundTotalAttribute() {
+        return $this->payments()->where('model_type', 'refund')->sum("value");
+    }
+
     public function getPaidsAttribute() {
-        return $this->payments()->where('model_type','!=', 'refund')->sum("value");
+        return $this->payments()->where('model_type','!=', 'refund')->where(function($q) {
+            if (request()->academic_year_expenses) {
+                $ids = AcademicYearExpenseDetail::whereIn('service_id', request()->academic_year_expenses)->pluck('id')->toArray();
+                $q->whereIn('model_id', $ids);
+            }
+        })->sum("value");
     }
 
     public function getGpaAttribute() {

@@ -20,7 +20,7 @@ class DiscountRequestController extends Controller
      * @return json
      */
     public function index() {
-        $query = DiscountRequest::query();
+        $query = DiscountRequest::with(['discountType', 'user']);
 
         if (request()->student_id > 0)
             $query->where('student_id', request()->student_id);

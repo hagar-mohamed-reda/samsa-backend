@@ -15,6 +15,8 @@ use Modules\Account\Entities\Payment;
 use Modules\Account\Entities\Service;
 use Modules\Account\Entities\Store;
 use Modules\Account\Entities\StudentPay;
+use Modules\Divisions\Entities\Level;
+use Modules\Divisions\Entities\Division;
 
 use App\User;
 use DB;
@@ -136,4 +138,132 @@ class ReportController extends Controller
 
     }
 
+
+    public function studentBalances(Request $request) {
+        $response = [];
+        $students = [];
+
+        $query = Student::query()->with(['level', 'division', 'case_constraint', 'academicYear']);
+
+        if ($request->levels) {
+            $query->whereIn('level_id', $request->levels);
+        }
+
+        if ($request->divisions) {
+            $query->whereIn('division_id', $request->divisions);
+        }
+
+        if ($request->case_constraints) {
+            $query->whereIn('case_constraint_id', $request->case_constraints);
+        }
+
+        if ($request->student_id > 0) {
+            $query->where('id', $request->student_id);
+        }
+        // prepare students
+        $servicesTotal = 0;
+        $academicYearExpensesTotal = 0;
+        $graduationServiceTotal = 0;
+
+        $levels = Level::all();
+        foreach($levels as $level) { 
+            $levelChartQuery = clone $query;
+            $level->count = $levelChartQuery->where('level_id', $level->id)->count();
+        }
+
+        $divisions = Division::all();
+        foreach($divisions as $item) { 
+            $levelChartQuery = clone $query;
+            $item->count = $levelChartQuery->where('division_id', $item->id)->count(); 
+        }
+
+        $caseConstraints = DB::table('case_constraints')->get();
+        foreach($caseConstraints as $item) { 
+            $levelChartQuery = clone $query;
+            $item->count = $levelChartQuery->where('case_constraint_id', $item->id)->count(); 
+        }
+
+        foreach($query->latest()->get() as $student) {
+            $servicesTotal += $student->services_total;
+            $academicYearExpensesTotal += $student->academic_year_expense_total;
+            $graduationServiceTotal += $student->graduation_service_total;
+        }
+
+        return [
+            "details" => $query->latest()->get(),
+            "services_total" => $servicesTotal, 
+            "academic_year_expense_total" => $academicYearExpensesTotal,
+            "graduation_service_total" => $graduationServiceTotal,
+            "level_chart" => $levels, 
+            "divisions_chart" => $divisions, 
+            "case_constraints" => $caseConstraints, 
+
+        ];
+    }
+
+
+    public function reportCreator(Request $request) {
+        $response = [];
+        $students = [];
+
+        $query = Student::with(['level', 'division', 'case_constraint', 'academicYear'])
+        ->select(
+            '*',
+            DB::raw('current_balance')
+        );
+
+        if ($request->levels) {
+            $query->whereIn('level_id', $request->levels);
+        }
+
+        if ($request->divisions) {
+            $query->whereIn('division_id', $request->divisions);
+        }
+
+        if ($request->case_constraints) {
+            $query->whereIn('case_constraint_id', $request->case_constraints);
+        }
+
+        if ($request->student_id > 0) {
+            $query->where('id', $request->student_id);
+        }
+        // prepare students
+        $servicesTotal = 0;
+        $academicYearExpensesTotal = 0;
+        $graduationServiceTotal = 0;
+
+        $levels = Level::all();
+        foreach($levels as $level) { 
+            $levelChartQuery = clone $query;
+            $level->count = $levelChartQuery->where('level_id', $level->id)->count();
+        }
+
+        $divisions = Division::all();
+        foreach($divisions as $item) { 
+            $levelChartQuery = clone $query;
+            $item->count = $levelChartQuery->where('division_id', $item->id)->count(); 
+        }
+
+        $caseConstraints = DB::table('case_constraints')->get();
+        foreach($caseConstraints as $item) { 
+            $levelChartQuery = clone $query;
+            $item->count = $levelChartQuery->where('case_constraint_id', $item->id)->count(); 
+        }
+
+        foreach($query->latest()->get() as $student) {
+            $servicesTotal += $student->services_total;
+            $academicYearExpensesTotal += $student->academic_year_expense_total;
+            $graduationServiceTotal += $student->graduation_service_total;
+        }
+
+        return [
+            "details" => $query->latest()->get(),
+            "services_total" => $servicesTotal, 
+            "academic_year_expense_total" => $academicYearExpensesTotal,
+            "graduation_service_total" => $graduationServiceTotal,
+            "level_chart" => $levels, 
+            "divisions_chart" => $divisions 
+
+        ];
+    }
 }

@@ -13,6 +13,7 @@ class Discount extends Model
         'student_id',
         'attachment',
         'value',
+        'discount_request_id',
         'user_id',
     ];
 

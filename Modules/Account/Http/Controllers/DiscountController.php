@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Account\Entities\Discount;
+use Modules\Account\Entities\DiscountRequest;
 
 class DiscountController extends Controller
 {
@@ -45,7 +46,11 @@ class DiscountController extends Controller
             }
             $data = $request->all();
             $data['user_id'] = $request->user->id;
+            $data['discount_request_id'] = $request->id;
             $resource = Discount::create($data);
+            //
+            $discountRequest = DiscountRequest::find($request->id);
+            $discountRequest->update([ "paid" => '1' ]);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
