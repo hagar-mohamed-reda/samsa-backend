@@ -123,7 +123,10 @@ class AccountSetting extends Model
                             ->sum('value');
             }
 
-            $percent = ($sum / $total) * 100; 
+            $percent = 0;
+
+            if ($total > 0)
+                $percent = ($sum / $total) * 100; 
 
             $service->percent = $percent;
             $service->installment_count = $count;

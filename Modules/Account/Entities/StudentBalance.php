@@ -31,6 +31,11 @@ class StudentBalance extends Student
         // check if there is paid installment for old value
         $balance -= Installment::where('student_id', $this->id)->where('type', 'old')->where('paid', '1')->sum('value');
 
+        // sum balance reset
+        $balanceResets = BalanceReset::where('student_id', $this->id)->where('type', 'old')->sum('value');
+
+        // decreate reset balance
+        $balance -= $balanceResets;
 
         return $balance;
     }
@@ -114,6 +119,12 @@ class StudentBalance extends Student
         $balance = 0;
         if ($currentDetails)
             $balance = $currentDetails->sum('value');
+
+        // sum balance reset
+        $balanceResets = BalanceReset::where('student_id', $this->id)->where('type', 'new')->sum('value');
+
+        // decreate reset balance
+        $balance -= $balanceResets;
 
         return $balance;
     }

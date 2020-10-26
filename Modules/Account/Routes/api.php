@@ -46,6 +46,8 @@ Route::group(['middleware' => 'api_auth'], function () {
         // report
         Route::get('report/payment-details', 'ReportController@paymentDetails');
         Route::get('report/student-balances', 'ReportController@studentBalances');
+        Route::get('report/get-report-creator-info', 'ReportController@reportCreator');
+        Route::get('report/get-student-installment', 'ReportController@studentInstallment');
 
         // account routes
         Route::get('get_student_account', 'AccountController@getStudentAccounting');
@@ -56,6 +58,7 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('edit-payment', 'AccountController@editPayment');
         Route::post('write_notes', 'AccountController@writeStudentNote');
         Route::post('update_student_info', 'AccountController@updateStudentInfo');
+        Route::post('create_balance_reset', 'AccountController@createBalanceReset');
 
         // installment routes
         Route::get('installment/get', 'InstallmentController@index');
@@ -94,6 +97,7 @@ Route::group(['middleware' => 'api_auth'], function () {
         // discount request
         Route::get('discount_requests', 'DiscountRequestController@index');
         Route::post('discount_requests/store', 'DiscountRequestController@store');
+        Route::post('discount_requests/delete/{resource}', 'DiscountRequestController@destroy');
         Route::get('discount_requests/receipt/{resource}', 'ReceiptController@getDiscountRequestReceipt');
 
         // discount  routes

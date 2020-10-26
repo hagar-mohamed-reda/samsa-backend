@@ -64,7 +64,7 @@ class Student extends StudentOrigin
     }
 
     public function getStudentBalanceAttribute() {
-        $balance = $this->current_balance_total - ($this->refund_total + $this->discount_total);
+        $balance = $this->current_balance_total;
         return $balance;
     }
 
@@ -195,6 +195,14 @@ class Student extends StudentOrigin
 
     public function payments() {
         return $this->hasMany("Modules\Account\Entities\Payment", "student_id")->with(['store']);
+    }
+
+    public function balanceResets() {
+        return $this->hasMany("Modules\Account\Entities\BalanceReset", "student_id")->with(['user']);
+    }
+
+    public function discount_requests() {
+        return $this->hasMany("Modules\Account\Entities\DiscountRequest", "student_id")->with(['discountType', 'user']);
     }
 
     public function level() {

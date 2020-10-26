@@ -13,6 +13,7 @@ use Modules\Account\Entities\Payment;
 use Modules\Account\Entities\Store;
 use Modules\Account\Entities\StudentPay;
 use Modules\Account\Entities\DiscountRequest;
+use Modules\Account\Entities\BalanceReset;
 
 use App\User;
 use DB;
@@ -29,7 +30,7 @@ class AccountController extends Controller
         $student = null;
         if (request()->student_id) {
             $student = Student::query()
-            ->with(['level', 'division', 'case_constraint', 'constraint_status', 'installments', 'payments', 'registerationStatus', 'nationality'])
+            ->with(['level', 'division', 'case_constraint', 'constraint_status', 'installments', 'payments', 'registerationStatus', 'nationality', 'discount_requests', 'balanceResets'])
             ->find(request()->student_id);
         }
 
@@ -258,4 +259,32 @@ class AccountController extends Controller
         return responseJson(1, __('done'));
     }
  
+    public function createBalanceReset(Request $request) {
+        $validator = validator($request->all(), [
+            "student_id" =>  "required",
+            "value" =>  "required" 
+        ]);
+        if ($validator->failed()) {
+            return responseJson(0, __('fill all required data'));
+        }
+
+        try {
+            $data = $request->all();
+            $data['user_id'] = $request->user->id;
+            $data['date'] = date('Y-m-d');
+
+            $student = Student::find($request->student_id);
+
+            if ($student->old_balance > 0)
+                $data['type'] = 'old';
+            else
+                $data['type'] = 'new';
+
+            $resource = BalanceReset::create($data);
+
+            return responseJson(1, __('done'), $resource);
+        } catch (\Exception $e) {
+            return responseJson(0, $e->getMessage());
+        }
+    }
 }

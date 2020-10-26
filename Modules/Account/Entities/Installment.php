@@ -25,6 +25,12 @@ class Installment extends Model
         'model_id'
     ];
      
+    protected $appends = ['valid'];
+
+    public function getValidAttribute() {
+        return strtotime($this->date) > strtotime(date('Y-m-d'))? true : false;
+    }
+
     public function student() {
         return $this->belongsTo('Modules\Student\Entities\Student', 'student_id');
     }

@@ -71,7 +71,10 @@ class DiscountRequestController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy(DiscountRequest $discountType) {
-         
+    public function destroy(DiscountRequest $resource) {
+        if ($resource->paid != 1) {
+            $resource->delete();
+        }
+        return responseJson(1, __('done'), $resource);
     }
 }

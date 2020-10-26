@@ -208,9 +208,12 @@ class ReportController extends Controller
 
         $query = Student::with(['level', 'division', 'case_constraint', 'academicYear'])
         ->select(
-            '*',
-            DB::raw('current_balance')
+            '*'
         );
+
+        if ($request->academic_years) {
+            $query->whereIn('academic_years_id', $request->academic_years);
+        }
 
         if ($request->levels) {
             $query->whereIn('level_id', $request->levels);
@@ -224,13 +227,79 @@ class ReportController extends Controller
             $query->whereIn('case_constraint_id', $request->case_constraints);
         }
 
+        if ($request->registeration_status) {
+            $query->whereIn('registration_status_id', $request->registeration_status);
+        }
+
+        if (count($request->acceptance) == 1) {
+            if ($request->acceptance[0] == 'has_acceptance')
+                $query->whereIn('acceptance_code', '!=', null);
+            else
+                $query->whereIn('acceptance_code', null);
+        }
+
+        if (count($request->acceptance) == 2) {
+            //$query->whereIn('acceptance_code', '!=', null);
+        }
+
         if ($request->student_id > 0) {
             $query->where('id', $request->student_id);
         }
+
+
         // prepare students
-        $servicesTotal = 0;
-        $academicYearExpensesTotal = 0;
-        $graduationServiceTotal = 0;
+        $oldBalance = 0;
+        $currentBalance = 0;
+        $paids = 0;
+        $refund = 0;
+        $discount = 0;
+        $remind = 0;
+
+
+        foreach($query->get() as $item) {
+
+            $valid = true;
+            if ($request->is_current_balance == 'true') {
+                if (!($item->current_balance >= $request->current_balance_from && $item->current_balance <= $request->current_balance_to)) {
+                    $valid = false;
+                }
+            }
+            if ($request->is_old_balance == 'true') {
+                if (!($item->old_balance >= $request->old_balance_from && $item->old_balance <= $request->old_balance_to)) {
+                    $valid = false;
+                }
+            }
+            if ($request->is_paids == 'true') {
+                if (!($item->paids >= $request->paids_from && $item->paids <= $request->paids_to)) {
+                    $valid = false;
+                }
+            }
+            if ($request->is_discount == 'true') {
+                if (!($item->discount_total >= $request->discount_from && $item->discount_total <= $request->discount_to)) {
+                    $valid = false;
+                }
+            }
+            if ($request->is_refund == 'true') {
+                if (!($item->refund_total >= $request->refund_from && $item->refund_total <= $request->refund_to)) {
+                    $valid = false;
+                }
+            }
+            if ($request->is_balance == 'true') {
+                if (!($item->student_balance >= $request->balance_from && $item->student_balance <= $request->balance_to)) {
+                    $valid = false;
+                }
+            }
+            if ($valid)
+                $students[] = $item;
+
+            if ($valid) {
+                $oldBalance += $item->old_balance;
+                $currentBalance += $item->current_balance;
+                $paids += $item->paids;
+                $refund += $item->refund_total;
+                $discount += $item->discount_total;
+            }
+        }
 
         $levels = Level::all();
         foreach($levels as $level) { 
@@ -243,27 +312,84 @@ class ReportController extends Controller
             $levelChartQuery = clone $query;
             $item->count = $levelChartQuery->where('division_id', $item->id)->count(); 
         }
+ 
 
-        $caseConstraints = DB::table('case_constraints')->get();
-        foreach($caseConstraints as $item) { 
-            $levelChartQuery = clone $query;
-            $item->count = $levelChartQuery->where('case_constraint_id', $item->id)->count(); 
+        $remind = ($paids - $discount);
+
+        return [
+            "details" => $students,
+            "old_balance" => $oldBalance, 
+            "current_balance" => $currentBalance,
+            "paids" => $paids,
+            "refund" => $refund,
+            "discount" => $discount,
+            "remind" => $remind,
+            "old_balance_percent" => $currentBalance>0 ? ($oldBalance / $currentBalance) * 100 : 0,
+            "current_balance_percent" => $currentBalance > 0?($oldBalance / $currentBalance) * 100 : 0,
+            "level_chart" => $levels, 
+            "divisions_chart" => $divisions 
+        ];
+    }
+
+
+    public function studentInstallment(Request $request) {
+        $response = [];
+        $students = [];
+
+        $query = Student::query()->with(['level', 'division', 'case_constraint', 'academicYear', 'installments'])
+        ->select(
+            '*',
+            DB::raw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and date <= CURRENT_DATE and paid != 1) as required_installment_count'),
+            DB::raw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and paid = 1) as paid_installment_count'),
+            DB::raw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id) as installment_count'),
+            DB::raw('(select sum(account_installments.value) from account_installments where account_installments.student_id = students.id) as installment_total')
+        );
+
+        $query->whereRaw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id) > 0');
+
+        $type = $request->type;
+ 
+        if ($type == 'all_required_installment') {
+            $query->whereRaw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and date <= CURRENT_DATE and paid != 1) = 0');
+        }
+ 
+        if ($type == 'has_required_installment') {
+            $query->whereRaw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and date <= CURRENT_DATE and paid != 1) > 0');
         }
 
-        foreach($query->latest()->get() as $student) {
-            $servicesTotal += $student->services_total;
-            $academicYearExpensesTotal += $student->academic_year_expense_total;
-            $graduationServiceTotal += $student->graduation_service_total;
+        if ($type == 'has_no_required_installment') {
+            $query->whereRaw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and paid != 1) = 0');
+        }
+
+        if ($type == 'has_installment') {
+            $query->whereRaw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and paid != 1) > 0');
+        }
+ 
+        if ($type == 'all_installment') {
+            $query->whereRaw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id) > 0');
         }
 
         return [
-            "details" => $query->latest()->get(),
-            "services_total" => $servicesTotal, 
-            "academic_year_expense_total" => $academicYearExpensesTotal,
-            "graduation_service_total" => $graduationServiceTotal,
-            "level_chart" => $levels, 
-            "divisions_chart" => $divisions 
+            "details" => $query->latest()->get()   
+        ];
+    }
 
+    public function studentDiscounts(Request $request) {
+        $response = [];
+        $students = [];
+
+        $query = Student::query()->with(['level', 'division', 'case_constraint', 'academicYear', 'installments'])
+        ->select(
+            '*',
+            DB::raw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and date <= CURRENT_DATE and paid != 1) as required_installment_count'),
+            DB::raw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and paid = 1) as paid_installment_count'),
+            DB::raw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id) as installment_count'),
+            DB::raw('(select sum(account_installments.value) from account_installments where account_installments.student_id = students.id) as installment_total')
+        );
+ 
+
+        return [
+            "details" => $query->latest()->get()   
         ];
     }
 }
