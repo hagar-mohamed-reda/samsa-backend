@@ -374,18 +374,18 @@ class ReportController extends Controller
         ];
     }
 
+
     public function studentDiscounts(Request $request) {
         $response = [];
         $students = [];
 
-        $query = Student::query()->with(['level', 'division', 'case_constraint', 'academicYear', 'installments'])
+        $query = Student::query()->with(['level', 'division', 'case_constraint', 'academicYear', 'discount_requests'])
         ->select(
             '*',
-            DB::raw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and date <= CURRENT_DATE and paid != 1) as required_installment_count'),
-            DB::raw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id and paid = 1) as paid_installment_count'),
-            DB::raw('(select count(account_installments.id) from account_installments where account_installments.student_id = students.id) as installment_count'),
-            DB::raw('(select sum(account_installments.value) from account_installments where account_installments.student_id = students.id) as installment_total')
+            DB::raw('(select count(account_discounts.id) from account_discounts where account_discounts.student_id = students.id) as discount_count'), 
         );
+
+        $query->whereRaw('(select count(account_discounts.id) from account_discounts where account_discounts.student_id = students.id) > 0');
  
 
         return [

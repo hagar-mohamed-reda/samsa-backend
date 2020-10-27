@@ -48,6 +48,7 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::get('report/student-balances', 'ReportController@studentBalances');
         Route::get('report/get-report-creator-info', 'ReportController@reportCreator');
         Route::get('report/get-student-installment', 'ReportController@studentInstallment');
+        Route::get('report/get-student-discount', 'ReportController@studentDiscounts');
 
         // account routes
         Route::get('get_student_account', 'AccountController@getStudentAccounting');
