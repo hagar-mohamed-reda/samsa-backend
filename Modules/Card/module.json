@@ -1,0 +1,13 @@
+{
+    "name": "Card",
+    "alias": "card",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Modules\\Card\\Providers\\CardServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

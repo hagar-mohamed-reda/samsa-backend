@@ -178,4 +178,8 @@ class Student extends Model {
         return $this->belongsTo('Modules\Settings\Entities\ConstraintStatus', 'constraint_status_id');
     }
 
+    public function card_exports() {
+        return $this->belongsTo('Modules\Card\Entities\CardExport', 'student_id');
+    }
+
 }

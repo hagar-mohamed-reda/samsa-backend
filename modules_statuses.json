@@ -6,5 +6,6 @@
     "Qualifications": true,
     "Divisions": true,
     "Reports": true,
-    "Account": true
+    "Account": true,
+    "Card": true
 }
