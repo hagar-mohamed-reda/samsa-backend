@@ -26,7 +26,7 @@ class CardTypeController extends Controller
      */
     public function show(CardType $resource)
     {
-        $student = Student::find(3);
+        $student = Student::find(request()->student_id);
         return view("card::card." . $resource->id, compact("student"));
     }
 

@@ -19,7 +19,8 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::prefix('card')->group(function() {
 
         // 
-        Route::get('get_student_card_info', 'CardController@index');
+        Route::get('get_student_card_info', 'CardController@index'); 
+        Route::post('export_card', 'CardController@exportCard');
 
 
         // servicecs routes
@@ -30,6 +31,10 @@ Route::group(['middleware' => 'api_auth'], function () {
 
         // servicecs routes
         Route::get('card_types/show/{resource}', 'CardTypeController@show');
+
+        // report
+        Route::get('report/card_export', 'CardReportController@index');
+
 
     });
 });

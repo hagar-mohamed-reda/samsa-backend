@@ -12,5 +12,5 @@
 */
 
 Route::prefix('card')->group(function() {
-    Route::get('/', 'CardController@index');
+    Route::get('/reader', 'CardController@getCardReaderView');
 });

@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use Modules\Account\Entities\Student;
 use Modules\Card\Entities\CardReason;
 use Modules\Card\Entities\CardType;
+use Modules\Card\Entities\CardExport;
+use Modules\Account\Entities\Payment;
 
 class CardController extends Controller
 {
@@ -32,59 +34,53 @@ class CardController extends Controller
      * Show the form for creating a new resource.
      * @return Response
      */
-    public function create()
+    public function exportCard(Request $request)
     {
-        return view('card::create');
+        try { 
+             $validator = validator($request->all(), [
+                "card_id" =>  "required",
+                "payment_id" =>  "required",
+                "student_id" =>  "required"
+            ]);
+            if ($validator->failed()) {
+                return responseJson(0, __('fill all required data'));
+            }
+            $student = Student::with(['card_exports'])->find(request()->student_id);
+            $card = CardType::find(request()->card_id);
+            $payment = Payment::where('id', $request->payment_id)->where('model_id', optional($card->service)->id)->where('student_id', $request->student_id)->first();
+            $cardExport = CardExport::where('payment_id', $request->payment_id)->first();
+ 
+            $errors = CardReason::getReasons($student, $card);
+
+            // check on the reason of card
+            if (!CardReason::canTakeCard($student, $card))
+                return responseJson(0, implode("<br>", $errors));
+
+            // check on the payment id 
+            if (!$payment) {
+                return responseJson(0, __('payment id not correct'));
+            }
+
+            // check if he got the card
+            if ($cardExport)
+                return responseJson(0, __('you got the card for this payment id'));
+
+
+            $data = $request->all();
+            $data['date'] = date('Y-m-d');
+
+            $resource = CardExport::create($data);
+
+            watch(__('add card for student'), "fa fa-picture-o");
+            return responseJson(1, __('done'), $resource);
+        } catch (\Exception $e) {
+            return responseJson(0, $e->getMessage());
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        return view('card::show');
+    public function getCardReaderView() {
+        return view('card::card_reader');
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        return view('card::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+   
 }

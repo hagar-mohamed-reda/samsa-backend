@@ -11,8 +11,17 @@ class CardType extends Model
 
     protected $fillable = [
         'name', 
-        'service_id'
+        'service_id',
+        'image'
     ];
+
+    protected $appends = [
+    	'image_url'
+    ];
+
+    public function getImageUrlAttribute() {
+    	return url($this->image);
+    }
 
     public function service() {
         return $this->belongsTo("Modules\Account\Entities\Service", "service_id");

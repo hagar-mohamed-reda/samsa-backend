@@ -48,7 +48,7 @@ class AccountSetting extends Model
     /**
      * check if the student can take service
      */
-    public static function canStudentGetService(Service $service, Student $student) {
+    public static function canStudentGetService(Service $service, Student $student, $ignoreRepeat=false) {
         $currentYear = self::getCurrentAcademicYear();
         $valid = true;
         $reason = "";
@@ -67,7 +67,7 @@ class AccountSetting extends Model
         }
 
         // check if student take this service
-        if (!$service->repeat && $valid) {
+        if (!$service->repeat && $valid && $ignoreRepeat==false) {
             if (StudentService::where('student_id', $student->id)->where('service_id', $service->id)->exists()) {
                 $valid = false;
                 $reason = __("The student got the service before");
