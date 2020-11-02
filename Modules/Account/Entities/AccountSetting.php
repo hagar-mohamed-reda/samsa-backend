@@ -97,7 +97,7 @@ class AccountSetting extends Model
 
             $sum = 0;
             if ($student->is_current_installed || $student->is_old_installed) {
-                $total = 0;
+                //$total = 0;
 
                 $rows = installment::where('student_id', $student->id)->get();
 

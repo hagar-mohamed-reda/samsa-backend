@@ -22,7 +22,7 @@ class PaymentController extends Controller
         if ($payment->model_type == 'academic_year_expense') {
         	$service = optional(AcademicYearExpenseDetail::find($payment->model_id))->service_id;
 
-        	if ($service == 9 || $service == 10 || $service == 11 || $service == 12) {
+        	if ($service == 9 || $service == 10 || $service == 11) {
         		$payment->about = 'رسوم تحويل - رسوم مقصه';
         		$value = Payment::where('student_id', $payment->student_id)->where('paper_id', $payment->student_id . "-1")->sum('value');
         		$payment->value = $value;

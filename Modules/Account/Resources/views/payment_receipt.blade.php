@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+  <link rel="stylesheet" href="{{ url('/css/w3.css') }}">
 <title>ايصال رقم {{ $payment->id }}</title>
 </head>
 <body> 
@@ -177,25 +178,42 @@
     <br>  
     @endfor
 
+    <div class="w3-modal" style="display: block" id="printModal" >
+        <div class="w3-modal-content w3-white w3-round w3-card w3-padding" style="direction: rlt" >
+            <div class="w3-center"  style="direction: rtl" >
+               <b> يتم طباعة الوصل برقم  : </b>
+               <input type="number" class="w3-input" id="paymentIdInput" value="{{ $payment->id }}" >
+            </div>
+            <br>
+            <div class="w3-center" >
+                <button class="w3-button w3-indigo" onclick="printPage()" >طباعة</button>
+            </div>
+        </div>
+    </div>
+
     <script type="text/javascript" src="{{ url('/js/jquery-3.2.1.min.js') }}" ></script>
     <script type="text/javascript" src="{{ url('/js/tafgeetjs.min.js') }}" ></script>
 
     <script type="text/javascript"> 
 
+
         $('.payment-value').each(function(){
             $(this).html(new Tafgeet($(this).text(), 'EGP').parse());
         });  
-        if (confirm('يتم طباعة الوصل برقم ' + {{ $payment->id }})) {
-            window.print();
-        } else {
-            var id = prompt('اعد ادخال رقم القسيمة');
 
-            if (!id)
-                id = prompt('اعد ادخال رقم القسيمة');
-            
+        function toggleModal(action) {
+            var modal = document.getElementById('printModal');
+
+            modal.style.display = action=='show'? 'block' : 'none'; 
+        }
+
+        function printPage() {
+            var id = document.getElementById('paymentIdInput').value;
             document.getElementById('paymentId').innerHTML = id;
+            toggleModal('hide');
             window.print();
         }
+ 
         
     </script>
 </body>

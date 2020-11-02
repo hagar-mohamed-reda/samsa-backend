@@ -5,6 +5,7 @@ namespace Modules\Student\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Adminsion\Entities\Application;
 use Modules\Adminsion\Entities\studentRequiredDocument;
+use DB;
 
 class Student extends Model {
 
@@ -84,8 +85,20 @@ class Student extends Model {
     ];
 
     protected $appends = [
-        'personal_photo_url' 
+        'personal_photo_url', 'availabe_cards'
     ];
+
+    public function getAvailableCardsAttribute() {
+        $cardTypes = DB::table('card_types')->pluck('id')->toArray();
+        $cardExports = DB::table('card_exports')->where('student_id', $this->id)->pluck('payment_id')->toArray();
+        $cardServices = DB::table('card_types')->pluck('service_id')->toArray();
+
+        $payments = DB::table('account_payments')->where('student_id', $this->id)->where('model_type', 'service')->whereIn('model_id', $cardServices)->whereNotIn('id', $cardExports)->pluck('model_id')->toArray();
+
+        $availableCards = DB::table('card_types')->whereIn('service_id', $payments)->pluck('id')->toArray();
+
+        return $availableCards;
+    }
   
  
     public function getPersonalPhotoUrlAttribute() {

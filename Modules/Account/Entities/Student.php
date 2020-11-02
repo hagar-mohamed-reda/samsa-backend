@@ -4,6 +4,7 @@ namespace Modules\Account\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Student\Entities\Student as StudentOrigin;
+use Modules\Card\Entities\CardType;
 
 use DB;
 
@@ -34,8 +35,21 @@ class Student extends StudentOrigin
         'services_total',
         'academic_year_expense_total',
         'graduation_service_total',
-        'student_balance'
+        'student_balance', 
+        'available_cards'
     ];
+
+    public function getAvailableCardsAttribute() {
+        $cardTypes = DB::table('card_types')->pluck('id')->toArray();
+        $cardExports = DB::table('card_exports')->where('student_id', $this->id)->pluck('payment_id')->toArray();
+        $cardServices = DB::table('card_types')->pluck('service_id')->toArray();
+
+        $payments = DB::table('account_payments')->where('student_id', $this->id)->where('model_type', 'service')->whereIn('model_id', $cardServices)->whereNotIn('id', $cardExports)->pluck('model_id')->toArray();
+
+        $availableCards = CardType::whereIn('service_id', $payments)->get();
+
+        return $availableCards;
+    }
 
     public function getGraduationServiceTotalAttribute() {
         return Payment::where('student_id', $this->id)->where('model_type', 'service')->where('model_id', 2)->sum('value');

@@ -105,6 +105,9 @@
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
         });
+
+        
+        window.print();
     </script>
 </body>
 </html>

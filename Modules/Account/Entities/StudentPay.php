@@ -217,6 +217,13 @@ class StudentPay
     public static function removePayment(Request $request) {
         $payment = Payment::find($request->payment_id);
         $pay = $payment;
+
+        if ($payment->installment_id > 0) {
+            $installment = installment::find($payment->installment_id);
+            if ($installment)
+            $installment->update([ "paid" => 0 ]);
+        }
+
         if ($payment) {
             $payment->store->updateStore($payment->value * -1);
             $payment->delete();

@@ -47,27 +47,18 @@ class CardController extends Controller
             }
             $student = Student::with(['card_exports'])->find(request()->student_id);
             $card = CardType::find(request()->card_id);
-            $payment = Payment::where('id', $request->payment_id)->where('model_id', optional($card->service)->id)->where('student_id', $request->student_id)->first();
-            $cardExport = CardExport::where('payment_id', $request->payment_id)->first();
+            $payment = Payment::where('model_id', optional($card->service)->id)->where('model_type', 'service')->where('student_id', $request->student_id)->latest()->first(); 
  
             $errors = CardReason::getReasons($student, $card);
 
             // check on the reason of card
             if (!CardReason::canTakeCard($student, $card))
                 return responseJson(0, implode("<br>", $errors));
-
-            // check on the payment id 
-            if (!$payment) {
-                return responseJson(0, __('payment id not correct'));
-            }
-
-            // check if he got the card
-            if ($cardExport)
-                return responseJson(0, __('you got the card for this payment id'));
-
-
+ 
+  
             $data = $request->all();
             $data['date'] = date('Y-m-d');
+            $data['payment_id'] = optional($payment)->id;
 
             $resource = CardExport::create($data);
 
