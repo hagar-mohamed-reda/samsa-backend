@@ -7,5 +7,6 @@
     "Divisions": true,
     "Reports": true,
     "Account": true,
-    "Card": true
+    "Card": true,
+    "Academic": true
 }
