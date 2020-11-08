@@ -20,8 +20,7 @@ class CourseController extends Controller
     {
         return Course::latest()->get();
     }
-     
-
+      
     /**
      * Store a newly created resource in storage.
      * @param Request $request
@@ -101,8 +100,7 @@ class CourseController extends Controller
             $resource->update($data);
 
             $resource->prequsitesCourse()->delete();
-            foreach($request->prerequsites as $item) {
-                if ($item > 0)
+            foreach($request->prerequsites as $item) { 
                 CoursePrerequsite::create([
                     "course_id" => $resource->id,
                     "related_course_id" => $item

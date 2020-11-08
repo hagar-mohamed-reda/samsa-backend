@@ -34,6 +34,16 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('degree_maps/store', 'DegreeMapController@store');
         Route::post('degree_maps/update/{resource}', 'DegreeMapController@update');
         Route::post('degree_maps/delete/{resource}', 'DegreeMapController@destroy');
+
+
+        // settings routes
+        Route::get('settings', 'SettingController@get');
+        Route::post('settings/update', 'SettingController@update');
+
+
+        // settings routes
+        Route::get('open_courses', 'OpenCourseController@get');
+        Route::post('open_courses/update', 'OpenCourseController@update');
     });
 });
 

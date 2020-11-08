@@ -10,7 +10,7 @@ class AcademicSetting extends Model
     protected $table = "academic_advising_settings";
     
     protected $fillable = [
-  		'name',	'value'
+  	 	'id', 'name',	'value'
     ];
       
      

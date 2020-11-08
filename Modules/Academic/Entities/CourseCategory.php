@@ -30,7 +30,7 @@ class CourseCategory extends Model
 
 
     public function courses() {
-        return $this->hasMany("Modules\Academic\Entities\Course", "subject_category_id")->with(['division', 'category']);
+        return $this->hasMany("Modules\Academic\Entities\Course", "subject_category_id")->with(['division', 'category', 'level']);
     }
    
     

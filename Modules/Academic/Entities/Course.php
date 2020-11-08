@@ -24,6 +24,7 @@ class Course extends Model
         'subject_category_id', 
         'is_required', 
         'book_price',  
+        'level_id',
         'failed_degree'
     ];
 
@@ -33,7 +34,7 @@ class Course extends Model
  
 
     public function getPrerequsitesAttribute() {
-        return implode(", ", $this->prequsites()->pluck('id')->toArray());
+        return implode(", ", $this->prequsitesCourse()->pluck('related_course_id')->toArray());
     }
 
     public function getPrerequsitesNamesAttribute() {
@@ -58,12 +59,16 @@ class Course extends Model
         return $this->belongsTo("Modules\Divisions\Entities\Division", "division_id");
     }
 
+    public function level() {
+        return $this->belongsTo("Modules\Divisions\Entities\Level", "level_id");
+    }
+
     public function registerStudents() {
         return $this->hasMany("Modules\Academic\Entities\StudentRegisterCourse", "course_id");
     }
 
     public function prequsites() {
-        $ids = CoursePrerequsite::where('course_id', $this->id)->pluck('id')->toArray();
+        $ids = $this->prequsitesCourse()->pluck('related_course_id')->toArray();
 
         return Course::whereIn('id', $ids); 
     }
