@@ -21,11 +21,10 @@ class OpenCourse extends Model
         return OpenCourse::where('term_id', $term->id)->where('academic_year_id', $year->id);
     }
        
-    public static function currentCourses() {
-        $year = AccountSetting::getCurrentAcademicYear();
-        $term = AccountSetting::getCurrentTerm();
+    public static function currentCourses() { 
+        $ids = self::currentOpenCourses()->pluck('course_id')->toArray();
 
-        return self::currentOpenCourses()->join('academic_courses', 'academic_courses.id', '=', 'academic_open_courses.course_id')->get();
+        return Course::whereIn('id', $ids)->get();
     }
 
 }

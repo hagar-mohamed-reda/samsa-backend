@@ -9,17 +9,17 @@ use Illuminate\Routing\Controller;
 use Modules\Academic\Entities\OpenCourse; 
 use Modules\Academic\Entities\Course; 
 use Modules\Account\Entities\AccountSetting;
+use Modules\Academic\Entities\StudentAvailableCourse;
 
 
-class OpenCourseController extends Controller
+class StudentRegisterController extends Controller
 {
-    /**
-     * return list of courses
-     * @return Response
-     */
-    public function get()
+    
+    public function getCourses(Request $request)
     {
-        return OpenCourse::currentCourses();
+        $student = Student::find($request->student_id); 
+        $avaibleCourse = new StudentAvailableCourse($student);
+        return $avaibleCourse->getCourses();
     }
       
      

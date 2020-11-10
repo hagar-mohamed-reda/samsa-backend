@@ -71,11 +71,18 @@ class Course extends Model
         $ids = $this->prequsitesCourse()->pluck('related_course_id')->toArray();
 
         return Course::whereIn('id', $ids); 
-    }
-
+    } 
 
     public function prequsitesCourse() {
         return $this->hasMany("Modules\Academic\Entities\CoursePrerequsite", "course_id");
+    }
+    
+    public function isRegistered($student) {
+        return StudentRegisterCourse::where('course_id', $this->id)->where('student_id', $student)->exists()? true : false;
+    }
+    
+    public function isOpen() {
+        return OpenCourse::currentOpenCourses()->where('course_id', $this->id)->exists()? true : false;
     }
      
 }
