@@ -5,6 +5,7 @@ namespace Modules\Account\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Student\Entities\Student as StudentOrigin;
 use Modules\Card\Entities\CardType;
+use Modules\Academic\Entities\Student as StudentAcademic;
 
 use DB;
 
@@ -164,7 +165,8 @@ class Student extends StudentOrigin
     }
 
     public function getGpaAttribute() {
-        return 1.5;
+        $student = new StudentAcademic();
+        return $student->getGpa();
     }
 
     public function getServicesAttribute() {

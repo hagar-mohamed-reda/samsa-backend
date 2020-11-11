@@ -38,7 +38,7 @@ class StudentAvailableCourse {
     }
 
     public function levelFilter() {
-        if (optional($this->settings->find(6))->value == 1) {
+        if (optional($this->settings->find(6))->value != 1) {
             $newCourses = [];
             foreach ($this->courses as $course) {
                 if ($course->level_id == $this->student->level_id)
@@ -49,7 +49,7 @@ class StudentAvailableCourse {
     }
 
     public function prequsitesFilter() {
-        if (optional($this->settings->find(7))->value == 1) {
+        if (optional($this->settings->find(7))->value != 1) {
             $newCourses = [];
             foreach ($this->courses as $course) {
                 if ($course->prequsitesCourse()->count() > 0) {
@@ -63,6 +63,8 @@ class StudentAvailableCourse {
                     if ($valid) {
                         $newCourses[] = $course;
                     }
+                } else {
+                    $newCourses[] = $course;
                 }
             }
             $this->courses = $newCourses;

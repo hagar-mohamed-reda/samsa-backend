@@ -29,9 +29,7 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         $resource = null;
-
-        $relatedCourses = explode(",", $request->prequsites);
-
+ 
         try {
             $validator = validator($request->all(), [
                 'name' => "required",   
@@ -53,7 +51,7 @@ class CourseController extends Controller
 
             $resource = Course::create($data);
 
-            foreach($relatedCourses as $item) {
+            foreach($request->prerequsites as $item) {
                 if ($item > 0)
                 CoursePrerequsite::create([
                     "course_id" => $resource->id,

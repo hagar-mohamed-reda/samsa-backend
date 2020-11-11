@@ -44,6 +44,10 @@ Route::group(['middleware' => 'api_auth'], function () {
         // settings routes
         Route::get('open_courses', 'OpenCourseController@get');
         Route::post('open_courses/update', 'OpenCourseController@update');
+         
+        // student register routes
+        Route::get('available_courses', 'StudentRegisterController@getCourses');
+        Route::post('open_courses/update', 'OpenCourseController@update');
     });
 });
 
