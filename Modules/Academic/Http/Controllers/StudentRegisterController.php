@@ -25,7 +25,7 @@ class StudentRegisterController extends Controller
     }
     
     public function registerCourses(Request $request) {
-        return StudentRegisterCourse::add($request);
+        return StudentRegisterCourse::updateRegisterCourses($request);
     }
        
 }

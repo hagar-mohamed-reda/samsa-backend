@@ -4,6 +4,7 @@ namespace Modules\Academic\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\Account\Entities\AccountSetting;
+use Illuminate\Http\Request;
 
 class StudentRegisterCourse extends Model {
 
@@ -19,7 +20,7 @@ class StudentRegisterCourse extends Model {
         'division_id',
         'degree_map_id'
     ];
-
+    
     public function course() {
         return $this->belongsTo("Modules\Academic\Entities\Course", "course_id");
     }
@@ -48,7 +49,7 @@ class StudentRegisterCourse extends Model {
         return optional($this->course)->credit_hour * optional($this->course)->gpa;
     }
 
-    public static function add(Request $request) {
+    public static function updateRegisterCourses(Request $request) {
         $student = Student::find($request->student_id);
         $courses = $request->courses;
         $year = AccountSetting::getCurrentAcademicYear();
@@ -68,13 +69,15 @@ class StudentRegisterCourse extends Model {
                     "student_id" => $student->id,
                     "academic_year_id" => $year->id,
                     "term_id" => $term->id,
+                    "level_id" => $student->level_id,
+                    "division_id" => $student->division_id,
                     "course_id" => $course['id'],
                 ]);
             }
             
-            responseJson(1, __('done'));
+            return responseJson(1, __('done'));
         } catch (\Exception $exc) {
-            responseJson(0, $exc->getMessage());
+            return responseJson(0, $exc->getMessage());
         }
     }
 
