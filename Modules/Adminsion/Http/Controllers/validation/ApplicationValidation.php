@@ -23,6 +23,9 @@ class ApplicationValidation   {
             'grade' => 'required', 
             'qualification_date' => 'required', 
             'qualification_types_id' => 'required',
+            'national_id' => 'unique:students,national_id,'. request()->id,
+            'qualification_set_number' => 'unique:students,qualification_set_number,'. request()->id,
+            'set_number' => 'unique:students,set_number,'. request()->id,
         ], [
             "name.required" => __('name is required'),
             "qualification_id.required" => __('qualification is required'),
@@ -32,6 +35,7 @@ class ApplicationValidation   {
             "grade.required" => __('grade is required'),
             "qualification_date.required" => __('qualification_date is required'),
             "qualification_types_id.required" => __('qualification_types is required'),
+            "national_id.required" => __('national_id is unique')
         ]);
         
         if ($validator->fails()) {

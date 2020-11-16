@@ -14,3 +14,10 @@
 Route::prefix('academic')->group(function() {
     Route::get('/', 'AcademicController@index');
 });
+
+Route::group(['middleware' => 'api_auth'], function () {
+    Route::prefix('academic')->group(function() {
+        
+        Route::get('/register-course-print/{student}', 'AcademicController@getRegisterCoursePrintPreview');
+    });
+});

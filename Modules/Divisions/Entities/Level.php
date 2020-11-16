@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Level extends Model {
 
     protected $table = "levels";
-    protected $fillable = ['name', 'notes'];
+    protected $fillable = ['name', 'notes', 'required_hour', 'required_course'];
     protected $hidden = ['created_at', 'updated_at'];
 
     public function department() {

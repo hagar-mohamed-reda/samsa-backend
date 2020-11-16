@@ -45,6 +45,10 @@ class StudentRegisterCourse extends Model {
         return $this->belongsTo("App\Term", "term_id");
     }
 
+    public function user() {
+        return $this->belongsTo("App\User", "user_id");
+    }
+
     public function getGP() {
         return optional($this->course)->credit_hour * optional($this->course)->gpa;
     }
@@ -72,6 +76,7 @@ class StudentRegisterCourse extends Model {
                     "level_id" => $student->level_id,
                     "division_id" => $student->division_id,
                     "course_id" => $course['id'],
+                    "user_id" => optional($request->user)->id,
                 ]);
             }
             
@@ -80,5 +85,6 @@ class StudentRegisterCourse extends Model {
             return responseJson(0, $exc->getMessage());
         }
     }
+    
 
 }

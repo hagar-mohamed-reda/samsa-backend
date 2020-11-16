@@ -16,8 +16,18 @@ class Student extends StudentOrigin
         'gpa',
         'image',
         'current_register_courses', 
-        'academic_document'
+        'academic_document',
+        'warning'
     ];
+    
+    public function getWarningAttribute() {
+        $requiredGpa = optional(AcademicSetting::find(2))->value;
+        $times = StudentGpa::where('student_id', $this->id)->where('gpa', '<', $requiredGpa)->count();
+        
+        $warning = "الطالب حصل على معدل تراكمى اقل من " . $requiredGpa .  " لعدد " . $times . " مرات ";
+        
+        return $times > 0? $warning : null;
+    }
     
     public function getAcademicDocumentAttribute() {
         $levelIds = $this->registerCourses()->pluck('level_id')->toArray();

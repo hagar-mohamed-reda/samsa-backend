@@ -63,6 +63,10 @@ class ApplicationController extends Controller {
         $data['writen_by'] = $request->user->id;
         $data['is_application'] = true;
         $data['case_constraint_id'] = 1;
+        
+        // set the defualt devision
+        $data['division_id'] = 1;
+        $data['deparment_id'] = 1;
 
         // application validator
         $applicationValidator = new ApplicationValidation();

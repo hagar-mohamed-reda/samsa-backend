@@ -37,9 +37,9 @@ class AcademicController extends Controller
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
-    {
-        return view('academic::index');
+    public function getRegisterCoursePrintPreview(Student $student)
+    {    
+        return view('academic::register_course_print', compact('student'));
     }
  
 }

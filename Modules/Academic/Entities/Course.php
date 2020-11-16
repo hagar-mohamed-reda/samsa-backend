@@ -25,6 +25,8 @@ class Course extends Model
         'is_required', 
         'book_price',  
         'level_id',
+        'service_id',
+        'required_for_graduation',
         'failed_degree'
     ];
 
@@ -50,6 +52,9 @@ class Course extends Model
     }
 
      
+    public function service() {
+        return $this->belongsTo("Modules\Account\Entities\Service", "service_id");
+    }
    
     public function category() {
         return $this->belongsTo("Modules\Academic\Entities\CourseCategory", "subject_category_id");
