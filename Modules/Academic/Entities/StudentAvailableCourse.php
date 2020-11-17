@@ -3,6 +3,8 @@
 namespace Modules\Academic\Entities;
 
 use Modules\Account\Entities\Student;
+use Modules\Account\Entities\Payment;
+use Modules\Account\Entities\AccountSetting;
 
 class StudentAvailableCourse {
 
@@ -30,10 +32,17 @@ class StudentAvailableCourse {
      */
     private $courses = [];
 
+    /**
+     * current academic year
+     * @var Array
+     */
+    private $year = [];
+	
     public function __construct(Student $student) {
         $this->student = $student;
-        $this->course = Course::query();
+        $this->course = Course::with(['prequsitesCourse']);
         $this->settings = AcademicSetting::query();
+		$this->year = AccountSetting::getCurrentAcademicYear();
         $this->courses = Course::all();
     }
 
@@ -74,16 +83,37 @@ class StudentAvailableCourse {
     public function openCourseFilter() {
         $newCourses = [];
         foreach ($this->courses as $course) {
-             if ($course->isOpen()) {
+             if ($course->isOpen() || $course->is_not_credit_hour) {
                  $newCourses[] = $course;
              }
         }
         $this->courses = $newCourses;
     }
+	
+	public function filterPaidService() { 
+        $newCourses = [];
+		foreach($this->courses as $course) {
+			// check if paid
+			if ($course->service_id) { 
+				$paid = Payment::where('model_type', 'service')
+				->where('student_id', $this->student->id)
+				->where('model_id', $course->service_id)
+				->where('academic_year_id', $this->year->id)
+				->exists();
+				if ($paid) {
+					$newCourses[] = $course;
+				}
+			} else {
+				$newCourses[] = $course;
+			}
+		}
+        $this->courses = $newCourses;
+	}
 
     public function getCourses() {
         $this->levelFilter();
         $this->openCourseFilter();
+		$this->filterPaidService();
         $this->prequsitesFilter();
 
         return $this->courses;

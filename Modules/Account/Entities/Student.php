@@ -235,7 +235,8 @@ class Student extends StudentOrigin
 
     public function getAvailableServices() {
         $ids = [];
-        $services = Service::where('active', '1')->where('is_academic_year_expense', '!=', '1')->get();
+        $services = Service::where('active', '1')->get();
+		
         $availableServices = [];
 
         foreach ($services as $service) {

@@ -326,24 +326,27 @@
         <br>
         <br>
         <div class="w3-row" >
-            <div class="w3-col l3 m3 s3 w3-center" style="font-family: Arabic Typesetting" >
+            <div class="w3-col l3 m3 s3 w3-center" style="" >
                 <b>توقيع الطالب</b> <br>
                 <b>--------------</b>
             </div>
-            <div class="w3-col l3 m3 s3 w3-center" style="font-family: Arabic Typesetting" >
+            <div class="w3-col l3 m3 s3 w3-center" style="" >
                 <b>توقيع المرشد الاكاديمى</b> <br>
                 <b>--------------</b>
             </div>
-            <div class="w3-col l3 m3 s3 w3-center" style="font-family: Arabic Typesetting" >
+            <div class="w3-col l3 m3 s3 w3-center" style="" >
                 <b>اسم المستخدم</b> <br>
                 <b>{{ optional(optional($student->registerCourses()->first())->user)->name }}</b>
             </div>
-            <div class="w3-col l3 m3 s3 w3-center" style="font-family: Arabic Typesetting" >
-                <b>اسم الدكتور التابع له</b> <br>
-                <b>--------------</b>
+            <div class="w3-col l3 m3 s3 w3-center" style="" >
+                <b>اسم الدكتور التابع له</b> <br> 
+				{{ optional(optional($student->group())->doctor)->name }}
             </div>
         </div>
         <br>
         <br>
+		<script>
+			window.print();
+		</script>
     </body>
 </html>

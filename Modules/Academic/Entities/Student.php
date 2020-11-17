@@ -40,6 +40,7 @@ class Student extends StudentOrigin
                 $courseids =  $this->registerCourses()->where('level_id', $level->id)
                         ->where('term_id', $term->id)->pluck('course_id')->toArray();
                 $term->courses = $this->registerCourses()
+						->with(['division'])
 						->join('academic_courses', 'academic_courses.id', '=', 'course_id')
 						->where('academic_student_register_courses.level_id', $level->id)
                         ->where('term_id', $term->id)
@@ -83,6 +84,14 @@ class Student extends StudentOrigin
     public function courses() {
         return $this->hasManyThrough("Modules\Academic\Entities\Course", 'Modules\Academic\Entities\StudentRegisterCourse', 'student_id', 'id', 'id', 'course_id');
     }
+    
+    public function doctorGroup() {
+        return DoctorLevel::where('level_id', $this->level_id)->first();
+    }
+	
+	public function group() {
+		return StudentGroup::where('student_id', $this->id)->latest()->first();
+	}
 
 
     /**

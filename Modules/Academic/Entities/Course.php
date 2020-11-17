@@ -26,15 +26,22 @@ class Course extends Model
         'book_price',  
         'level_id',
         'service_id',
-        'required_for_graduation',
+        'is_not_credit_hour',
         'failed_degree'
     ];
 
     protected $appends = [
-        'can_delete', 'prerequsites', 'prerequsites_names'
+        'can_delete', 'prerequsites', 'prerequsites_names', 'prerequsite_length', 'times'
     ];
  
+    public function getTimesAttribute() {
+        return StudentRegisterCourse::where('student_id', request()->student_id)->where('course_id', $this->id)->count();
+    }
 
+    public function getPrerequsiteLengthAttribute() {
+        return $this->prequsitesCourse()->count();
+    }
+	
     public function getPrerequsitesAttribute() {
         return implode(", ", $this->prequsitesCourse()->pluck('related_course_id')->toArray());
     }
@@ -83,7 +90,9 @@ class Course extends Model
     }
     
     public function isRegistered($student) {
-        return StudentRegisterCourse::where('course_id', $this->id)->where('student_id', $student)->exists()? true : false;
+		$requiredGpa = optional(AcademicSetting::find(2))->value;
+        return StudentRegisterCourse::where('course_id', $this->id)->where('gpa', '>=', $requiredGpa)
+		->where('student_id', $student)->exists()? true : false;
     }
     
     public function isOpen() {

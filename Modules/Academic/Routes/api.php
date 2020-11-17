@@ -35,6 +35,12 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('degree_maps/update/{resource}', 'DegreeMapController@update');
         Route::post('degree_maps/delete/{resource}', 'DegreeMapController@destroy');
 
+        // doctor routes
+        Route::get('doctors', 'DoctorController@get');
+        Route::post('doctors/store', 'DoctorController@store');
+        Route::post('doctors/update/{resource}', 'DoctorController@update');
+        Route::post('doctors/delete/{resource}', 'DoctorController@destroy');
+        
 
         // settings routes
         Route::get('settings', 'SettingController@get');

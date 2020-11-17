@@ -18,7 +18,8 @@ class StudentRegisterCourse extends Model {
         'student_id',
         'level_id',
         'division_id',
-        'degree_map_id'
+        'degree_map_id',
+		'user_id'
     ];
     
     public function course() {
@@ -76,8 +77,28 @@ class StudentRegisterCourse extends Model {
                     "level_id" => $student->level_id,
                     "division_id" => $student->division_id,
                     "course_id" => $course['id'],
-                    "user_id" => optional($request->user)->id,
+                    "user_id" => $request->user->id,
                 ]);
+            }
+            
+            // add student to group
+            $group = StudentGroup::where('student_id', $student->id)
+                    ->where('academic_year_id', $year->id)
+                    ->where('term_id', $term->id)
+                    ->first();
+            if ($group) {
+               $group->update([
+                   "doctor_id" => optional($student->doctorGroup())->doctor_id
+               ]);
+            } else { 
+                if (optional($student->doctorGroup())->doctor_id) {
+                    StudentGroup::create([
+                        "doctor_id" => optional($student->doctorGroup())->doctor_id,
+                        "student_id" => $student->id,
+                        "academic_year_id" => $year->id,
+                        "term_id" => $term->id
+                    ]);
+                }
             }
             
             return responseJson(1, __('done'));

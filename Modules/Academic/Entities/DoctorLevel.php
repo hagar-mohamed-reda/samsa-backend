@@ -12,4 +12,7 @@ class DoctorLevel extends Model {
         'doctor_id', 'level_id', 'academic_year_id'
     ];
 
+    public function doctor() {
+        return $this->belongsTo("Modules\Academic\Entities\Doctor", 'doctor_id');
+    }
 }
