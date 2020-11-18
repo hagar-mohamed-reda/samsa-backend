@@ -45,6 +45,7 @@ Route::group(['middleware' => 'api_auth'], function () {
         // settings routes
         Route::get('settings', 'SettingController@get');
         Route::post('settings/update', 'SettingController@update');
+        Route::post('settings/update-publish-result', 'SettingController@updatePublishResult');
 
 
         // settings routes
@@ -57,6 +58,9 @@ Route::group(['middleware' => 'api_auth'], function () {
         
         //
         Route::get('get_student_academic', 'AcademicController@getStudentInfo');
+        
+        Route::get('result/get', 'StudentResultController@get');
+        Route::post('result/update', 'StudentResultController@update');
         
     });
 });

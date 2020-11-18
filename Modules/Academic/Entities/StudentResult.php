@@ -18,6 +18,7 @@ class StudentResult extends Model
         'academic_year_id',
         'level_id',
         'date',
+        'user_id',
         'gpa'
     ];
     
