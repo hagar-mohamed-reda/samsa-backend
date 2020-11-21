@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers;
-
-use App\Http\Requests\CountryRequest;
+namespace Modules\Settings\Http\Controllers;
+ 
 use Illuminate\Http\Request;
 use App\Country;
 
@@ -52,7 +51,7 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CountryRequest $request, Country $resource)
+    public function update(Request $request, Country $resource)
     {
         $validator = validator($request->all(), [
             "name" => "required|unique:countries,name,".$request->id,

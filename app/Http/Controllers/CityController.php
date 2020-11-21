@@ -10,151 +10,80 @@ use Illuminate\Http\Response;
 
 class CityController extends Controller
 {
-    public function __construct()
-    {
-//        $this->middleware(['permission:cities_read'])->only('index');
-//        $this->middleware(['permission:cities_create'])->only('create');
-//        $this->middleware(['permission:cities_update'])->only('edit');
-//        $this->middleware(['permission:cities_delete'])->only('destroy');
-
-    }
-
+    
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $cities = City::with(['governments'])->OrderBy('created_at', 'desc')->get();
-
-        return responseJson(1, "ok", $cities);
+        $query = City::latest()->get();
+        
+        return $query;
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('main_settings.cities.create');
-
-    }
+ 
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required",
-            "government_id" => 'required|exists:governments,id'
-        ]);
-
+            "name" => "required|unique:cities,name,".$request->id,
+        ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->getMessages(), "");
         }
         try {
-            $city = City::create($request->all());
-            if ($city) {
-                return responseJson(1, __('data created successfully'), $city);
-            } else {
-            }
-
-        } catch (Exception $ex) {
-            return responseJson(0, $ex->getMessage(), "" );
+            $resource = City::create($request->all()); 
+            return responseJson(1, __('done'), $resource);
+        } catch (\Exception $th) {
+            return responseJson(0, $th->getMessage()); 
         }
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        $city = City::find($id);
-        $city->government;
-        $city->government->country;
-        if (!$city) {
-            return responseJson(0, __('data not found'), '');
-        }
-        return responseJson(1, "ok", $city);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id)
-    {
-        $city = City::find($id);
-        if (!$city) {
-            return responseJson(0, __('data not found'), '');
-
-        }
-        return view('main_settings.cities.edit', compact('city'));
-    }
+  
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param int $id
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CityRequest $request, City $resource)
     {
         $validator = validator($request->all(), [
-            "name" => "required",
-            "government_id" => 'required|exists:governments,id'
-        ]);
-
+            "name" => "required|unique:cities,name,".$request->id,
+        ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->getMessages(), "");
         }
         try {
-            $city = City::find($id);
-            if (!$city) {
-                return responseJson(0, __('data not found'), '');
-            } else {
-                $city->update($request->all());
-                return responseJson(1, __('data updated successfully'), $city);
-            }
-        } catch (Exception $ex) {
-            return responseJson(0, $ex->getMessage(), "");
+            $resource->update($request->all()); 
+            return responseJson(1, __('done'), $resource);
+        } catch (\Exception $th) {
+            return responseJson(0, $th->getMessage()); 
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return Response
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        try {
-            $city = City::find($id);
-            if (!$city) {
-                return responseJson(0, __('data not found'), '');
-            }
-
-            if ($city->applications->count() > 0 || $city->students->count()  > 0 ) {
-                return responseJson(0, __('this item can not be deleted'), $city->fresh());
-            }
-            $city->delete();
-            return responseJson(1, __('deleted successfully'), '');
-
-        } catch (Exception $ex) {
-            return responseJson(0,  $ex->getMessage(), "");
+    public function destroy(City $resource)
+    { 
+        try { 
+                $resource->delete();
+            return responseJson(1, __('done'));
+        } catch (\Exception $th) {
+            return responseJson(0, $th->getMessage()); 
         }
+
     }
 }

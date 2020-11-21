@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Settings\Http\Controllers;
 
-use App\Http\Requests\CountryRequest;
-use Illuminate\Http\Request;
-use App\Country;
+use App\Government;
+use Illuminate\Http\Request; 
 
-class CountryController extends Controller
-{ 
-    
+class GovernmentController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +14,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $query = Country::latest()->get();
+        $query = Government::latest()->get();
         
         return $query;
     }
@@ -37,7 +35,7 @@ class CountryController extends Controller
             return responseJson(0, $validator->errors()->getMessages(), "");
         }
         try {
-            $resource = Country::create($request->all()); 
+            $resource = Government::create($request->all()); 
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -52,7 +50,7 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CountryRequest $request, Country $resource)
+    public function update(Request $request, Government $resource)
     {
         $validator = validator($request->all(), [
             "name" => "required|unique:countries,name,".$request->id,
@@ -74,7 +72,7 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Country $resource)
+    public function destroy(Government $resource)
     { 
         try { 
                 $resource->delete();

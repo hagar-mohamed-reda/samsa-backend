@@ -5,114 +5,86 @@ namespace Modules\Settings\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Settings\Entities\StudentCodeSeries;
-use Modules\Settings\Http\Requests\StudentCodeSeriesRequest;
+use Modules\Settings\Entities\StudentCodeSeries; 
 
 class StudentCodeSeriesController extends Controller
 {
 
-    public function __construct() {
-        $this->middleware(['permission:student-code-series_read'])->only('index');
-        $this->middleware(['permission:student-code-series_create'])->only('create');
-        $this->middleware(['permission:student-code-series_update'])->only('edit');
-        $this->middleware(['permission:student-code-series_delete'])->only('destroy'); 
-    }
-
     /**
      * Display a listing of the resource.
-     * @return Response
+     *
+     * @return \Illuminate\Http\Response
      */
-    public function index() {
-        $query = StudentCodeSeries::query();
-
-        if (request()->level_id > 0)
-            $query->where('level_id', request()->level_id);
-
-        if (request()->academic_year_id > 0)
-            $query->where('academic_year_id', request()->academic_year_id);
-
-        $resources = $query->OrderBy('created_at', 'desc')->get();
-        return view('settings::student_code_series.index', compact('resources'));
+    public function index()
+    {
+        $query = StudentCodeSeries::latest()->get(); 
+        return $query;
     }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Response
-     */
-    public function create() {
-        return view('settings::student_code_series.create');
-    }
+ 
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Response
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
-    public function store(StudentCodeSeriesRequest $request) {
-        try {
-            $resource = StudentCodeSeries::create($request->all());
-            notify()->success(__('process has been success'), "", "bottomLeft", "");
-            notfy(__('add student code series'), __('add student code series') . $resource->code, "fa fa-barcode");
-        } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft", ""); 
+    public function store(Request $request)
+    {
+        $validator = validator($request->all(), [
+            "name" => "required|unique:student_code_series,name,".$request->id,
+        ]); 
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->first(), "");
         }
-        
-        return redirect()->route('student-code-series.index');
+        try {
+            $resource = StudentCodeSeries::create($request->all()); 
+            watch("add student_code_series " . $resource->name, "fa fa-barcode");
+            return responseJson(1, __('done'), $resource);
+        } catch (\Exception $th) {
+            return responseJson(0, $th->getMessage()); 
+        }
     }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function show($id) {
-        return view('settings::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Response
-     */
-    public function edit($id) {
-        $resource = StudentCodeSeries::find($id);
-        return view('settings::student_code_series.edit', compact('resource'));
-    }
+  
 
     /**
      * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Response
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function update(StudentCodeSeriesRequest $request, $id) {
-        try {
-            $resource = StudentCodeSeries::find($id);
-            $resource->update($request->all());
-            notify()->success(__('process has been success'), "", "bottomLeft", "");
-            notfy(__('edit student code series'), __('edit student code series') . $resource->code, "fa fa-barcode");
-        } catch (\Exception $th) {
-            notify()->error($th->getMessage(), "", "bottomLeft", ""); 
+    public function update(Request $request, StudentCodeSeries $resource)
+    {
+        $validator = validator($request->all(), [
+            "name" => "required|unique:student_code_series,name,".$request->id,
+        ]); 
+        if ($validator->fails()) {
+            return responseJson(0, $validator->errors()->first(), "");
         }
-        
-        return redirect()->route('student-code-series.index');
+        try {
+            $resource->update($request->all()); 
+            watch("edit student_code_series " . $resource->name, "fa fa-barcode");
+            return responseJson(1, __('done'), $resource);
+        } catch (\Exception $th) {
+            return responseJson(0, $th->getMessage()); 
+        }
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param int $id
-     * @return Response
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        try {
-            $resource = StudentCodeSeries::find($id);
-            notify()->success(__('process has been success'), "", "bottomLeft", "");
-            notfy(__('remove student code series'), __('remove student code series of id ') . $resource->id, "fa fa-barcode");
-            
+    public function destroy(StudentCodeSeries $resource)
+    { 
+        try { 
+            watch("remove student_code_series " . $resource->name, "fa fa-barcode");
             $resource->delete();
-        } catch (\Exception $ex) {
-            notify()->error($ex->getMessage(), "", "bottomLeft"); 
+            return responseJson(1, __('done'));
+        } catch (\Exception $th) {
+            return responseJson(0, $th->getMessage()); 
         }
-        return redirect()->route('student-code-series.index');
+
     }
 }

@@ -62,6 +62,9 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::get('result/get', 'StudentResultController@get');
         Route::post('result/update', 'StudentResultController@update');
         
+        // reports
+        Route::get('report/get-result', 'ReportController@getResult');
+        
     });
 });
 

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Settings\Http\Controllers;
 
-use App\Http\Requests\CountryRequest;
 use Illuminate\Http\Request;
-use App\Country;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Modules\Settings\Entities\RegistrationMethod; 
 
-class CountryController extends Controller
-{ 
-    
+class RegistrationMethodsController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
@@ -16,8 +16,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $query = Country::latest()->get();
-        
+        $query = RegistrationMethod::latest()->get(); 
         return $query;
     }
  
@@ -31,13 +30,14 @@ class CountryController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:countries,name,".$request->id,
+            "name" => "required|unique:registration_methods,name,".$request->id,
         ]); 
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first(), "");
         }
         try {
-            $resource = Country::create($request->all()); 
+            $resource = RegistrationMethod::create($request->all()); 
+            watch("add registration_method " . $resource->name, "fa fa-bullhorn");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -52,16 +52,17 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CountryRequest $request, Country $resource)
+    public function update(Request $request, RegistrationMethod $resource)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:countries,name,".$request->id,
+            "name" => "required|unique:registration_methods,name,".$request->id,
         ]); 
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first(), "");
         }
         try {
             $resource->update($request->all()); 
+            watch("edit registration_method " . $resource->name, "fa fa-bullhorn");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -74,10 +75,11 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Country $resource)
+    public function destroy(RegistrationMethod $resource)
     { 
         try { 
-                $resource->delete();
+            watch("remove registration_method " . $resource->name, "fa fa-bullhorn");
+            $resource->delete();
             return responseJson(1, __('done'));
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 

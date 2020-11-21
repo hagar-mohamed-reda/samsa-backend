@@ -87,7 +87,7 @@ Route::group(['middleware' => 'api_auth'], function () {
         	return DB::table('parent_jobs')->get();
         });
         Route::get('get_relative_relations', function(){
-        	return DB::table('relative_relation')->get();
+        	return DB::table('parent_relation_type')->get();
         });
         /*Route::get('get_student_requird_documents', function(){
         	return DB::table('nationalities')->get();

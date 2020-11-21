@@ -18,84 +18,116 @@ Route::middleware('auth:api')->get('/settings', function (Request $request) {
 });
 
 Route::group(['middleware' => 'api_auth'], function () {
-
-    Route::get('users', 'UserController@index'); 
-    Route::post('users', 'UserController@store');
-    Route::delete('users/{id}', 'UserController@destroy');
-    Route::post('users/{id}', 'UserController@update');
-   /// Route::put('user-password/{id}', 'UserController@updateUserPassword');
-
-    Route::get('roles', 'RoleController@index'); 
-    Route::post('roles', 'RoleController@store');
-    Route::delete('roles/{id}', 'RoleController@destroy');
-    Route::post('roles/{id}', 'RoleController@update');
-    Route::post('roles/permission/{id}', 'RoleController@updatePermissions');
-    Route::get('permissions', 'RoleController@getPermissions');
-
-//academic years start
-    Route::get('academic-years', 'AcademicYearController@index');
-    Route::get('academic-years/{id}', 'AcademicYearController@show');
-    Route::post('academic-years', 'AcademicYearController@store');
-    Route::delete('academic-years/{id}', 'AcademicYearController@destroy');
-    Route::put('academic-years/{id}', 'AcademicYearController@update');
-
-//Route::resource('academic-years', 'AcademicYearController');
-//academic years end
-
-//qualifications start
-    Route::get('qualifications', 'QualilificationController@index');
-    Route::get('qualifications/{id}', 'QualilificationController@show');
-    Route::post('qualifications', 'QualilificationController@store');
-    Route::delete('qualifications/{id}', 'QualilificationController@destroy');
-    Route::put('qualifications/{id}', 'QualilificationController@update');
-//    Route::resource('qualifications', 'QualilificationController');
-//qualifications end
-
-//qualifications start
-    Route::get('qualification-types', 'QualilificationTypesController@index');
-    Route::get('qualification-types/{id}', 'QualilificationTypesController@show');
-    Route::post('qualification-types', 'QualilificationTypesController@store');
-    Route::delete('qualification-types/{id}', 'QualilificationTypesController@destroy');
-    Route::put('qualification-types/{id}', 'QualilificationTypesController@update');
-//    Route::resource('qualification-types', 'QualilificationTypesController');
-//qualifications end
-
-//parent-jobs start
-    Route::get('parent-jobs', 'ParentJobsController@index');
-    Route::get('parent-jobs/{id}', 'ParentJobsController@show');
-    Route::post('parent-jobs', 'ParentJobsController@store');
-    Route::delete('parent-jobs/{id}', 'ParentJobsController@destroy');
-    Route::put('parent-jobs/{id}', 'ParentJobsController@update');
-//    Route::resource('parent-jobs', 'ParentJobsController');
-//parent-jobs end
-
-//case-constraint start
-    Route::get('case-constraint', 'CaseConstraintController@index');
-    Route::get('case-constraint/{id}', 'CaseConstraintController@show');
-    Route::post('case-constraint', 'CaseConstraintController@store');
-    Route::delete('case-constraint/{id}', 'CaseConstraintController@destroy');
-    Route::put('case-constraint/{id}', 'CaseConstraintController@update');
-//    Route::resource('case-constraint', 'CaseConstraintController');
-//case-constraint end
-
-//case-constraint start
-Route::get('constraint-status', 'ConstraintStatusController@index');
-Route::get('constraint-status/{id}', 'ConstraintStatusController@show');
-Route::post('constraint-status', 'ConstraintStatusController@store');
-Route::delete('constraint-status/{id}', 'ConstraintStatusController@destroy');
-Route::put('constraint-status/{id}', 'ConstraintStatusController@update');
-//    Route::resource('case-constraint', 'CaseConstraintController');
-//case-constraint end
-
-    Route::resource('registration-methods', 'RegistrationMethodsController');
-
-    //
-    Route::get('registration-methods', 'RegistrationMethodsController@index');
-    Route::get('registration-methods/{id}', 'RegistrationMethodsController@show');
-    Route::post('registration-methods', 'RegistrationMethodsController@store');
-    Route::delete('registration-methods/{id}', 'RegistrationMethodsController@destroy');
-    Route::put('registration-methods/{id}', 'RegistrationMethodsController@update');
-
+    
+    //countries start
+    Route::get('countries', 'CountryController@index'); 
+    Route::post('countries/store', 'CountryController@store');
+    Route::post('countries/update/{resource}', 'CountryController@update');
+    Route::post('countries/delete/{resource}', 'CountryController@destroy');
+ 
+    //governments start
+    Route::get('governments', 'GovernmentController@index'); 
+    Route::post('governments/store', 'GovernmentController@store');
+    Route::post('governments/update/{resource}', 'GovernmentController@update');
+    Route::post('governments/delete/{resource}', 'GovernmentController@destroy');
+    
+    //cities start
+    Route::get('cities', 'CityController@index'); 
+    Route::post('cities/store', 'CityController@store');
+    Route::post('cities/update/{resource}', 'CityController@update');
+    Route::post('cities/delete/{resource}', 'CityController@destroy');
+    
+    //academic_years start
+    Route::get('academic_years', 'AcademicYearController@index'); 
+    Route::post('academic_years/store', 'AcademicYearController@store');
+    Route::post('academic_years/update/{resource}', 'AcademicYearController@update');
+    Route::post('academic_years/delete/{resource}', 'AcademicYearController@destroy');
+    
+    //levels
+    Route::get('levels', 'LevelController@index'); 
+    Route::post('levels/store', 'LevelController@store');
+    Route::post('levels/update/{resource}', 'LevelController@update');
+    Route::post('levels/delete/{resource}', 'LevelController@destroy');
+    
+    //divisions
+    Route::get('divisions', 'DivisionController@index'); 
+    Route::post('divisions/store', 'DivisionController@store');
+    Route::post('divisions/update/{resource}', 'DivisionController@update');
+    Route::post('divisions/delete/{resource}', 'DivisionController@destroy');
+    
+    //departments
+    Route::get('departments', 'DepartmentController@index'); 
+    Route::post('departments/store', 'DepartmentController@store');
+    Route::post('departments/update/{resource}', 'DepartmentController@update');
+    Route::post('departments/delete/{resource}', 'DepartmentController@destroy');
+    
+    //qualifications
+    Route::get('qualifications', 'QualificationController@index'); 
+    Route::post('qualifications/store', 'QualificationController@store');
+    Route::post('qualifications/update/{resource}', 'QualificationController@update');
+    Route::post('qualifications/delete/{resource}', 'QualificationController@destroy');
+      
+    //qualification_types
+    Route::get('qualification_types', 'QualificationTypeController@index'); 
+    Route::post('qualification_types/store', 'QualificationTypeController@store');
+    Route::post('qualification_types/update/{resource}', 'QualificationTypeController@update');
+    Route::post('qualification_types/delete/{resource}', 'QualificationTypeController@destroy');
+      
+    //registration_methods
+    Route::get('registration_methods', 'RegistrationMethodController@index'); 
+    Route::post('registration_methods/store', 'RegistrationMethodController@store');
+    Route::post('registration_methods/update/{resource}', 'RegistrationMethodController@update');
+    Route::post('registration_methods/delete/{resource}', 'RegistrationMethodController@destroy');
+      
+    //required_documents
+    Route::get('required_documents', 'RequiredDocumentController@index'); 
+    Route::post('required_documents/store', 'RequiredDocumentController@store');
+    Route::post('required_documents/update/{resource}', 'RequiredDocumentController@update');
+    Route::post('required_documents/delete/{resource}', 'RequiredDocumentController@destroy');
+     
+      
+    //case_contraint
+    Route::get('case_contraints', 'CaseContraintController@index'); 
+    Route::post('case_contraints/store', 'CaseContraintController@store');
+    Route::post('case_contraints/update/{resource}', 'CaseContraintController@update');
+    Route::post('case_contraints/delete/{resource}', 'CaseContraintController@destroy');
+     
+      
+    //nationalities
+    Route::get('nationalities', 'NationalityController@index'); 
+    Route::post('nationalities/store', 'NationalityController@store');
+    Route::post('nationalities/update/{resource}', 'NationalityController@update');
+    Route::post('nationalities/delete/{resource}', 'NationalityController@destroy');
+      
+      
+    //languages
+    Route::get('languages', 'LanguageController@index'); 
+    Route::post('languages/store', 'LanguageController@store');
+    Route::post('languages/update/{resource}', 'LanguageController@update');
+    Route::post('languages/delete/{resource}', 'LanguageController@destroy');
+      
+    
+    //parent_jobs
+    Route::get('parent_jobs', 'ParentJobController@index'); 
+    Route::post('parent_jobs/store', 'ParentJobController@store');
+    Route::post('parent_jobs/update/{resource}', 'ParentJobController@update');
+    Route::post('parent_jobs/delete/{resource}', 'ParentJobController@destroy');
+     
+    
+    //student_code_series
+    Route::get('student_code_series', 'StudentCodeSeriesController@index'); 
+    Route::post('student_code_series/store', 'StudentCodeSeriesController@store');
+    Route::post('student_code_series/update/{resource}', 'StudentCodeSeriesController@update');
+    Route::post('student_code_series/delete/{resource}', 'StudentCodeSeriesController@destroy');
+     
+    
+    //relations
+    Route::get('relations', 'RelationController@index'); 
+    Route::post('relations/store', 'RelationController@store');
+    Route::post('relations/update/{resource}', 'RelationController@update');
+    Route::post('relations/delete/{resource}', 'RelationController@destroy');
+     
+ 
     //
     Route::get('registration-status', 'RegisterationStatusController@index'); 
     Route::post('registration-status', 'RegisterationStatusController@store'); 

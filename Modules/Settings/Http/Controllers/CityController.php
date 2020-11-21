@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Settings\Http\Controllers;
 
-use App\Http\Requests\CountryRequest;
+use App\City;
 use Illuminate\Http\Request;
-use App\Country;
+use Exception; 
+use Illuminate\Http\Response;
 
-class CountryController extends Controller
-{ 
+class CityController extends Controller
+{
     
     /**
      * Display a listing of the resource.
@@ -16,7 +17,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $query = Country::latest()->get();
+        $query = City::latest()->get();
         
         return $query;
     }
@@ -31,13 +32,13 @@ class CountryController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:countries,name,".$request->id,
+            "name" => "required|unique:cities,name,".$request->id,
         ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->getMessages(), "");
         }
         try {
-            $resource = Country::create($request->all()); 
+            $resource = City::create($request->all()); 
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -52,10 +53,10 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CountryRequest $request, Country $resource)
+    public function update(Request $request, City $resource)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:countries,name,".$request->id,
+            "name" => "required|unique:cities,name,".$request->id,
         ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->getMessages(), "");
@@ -74,7 +75,7 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Country $resource)
+    public function destroy(City $resource)
     { 
         try { 
                 $resource->delete();

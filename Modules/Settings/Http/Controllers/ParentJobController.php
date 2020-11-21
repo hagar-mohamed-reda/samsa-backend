@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Settings\Http\Controllers;
 
-use App\Http\Requests\CountryRequest;
 use Illuminate\Http\Request;
-use App\Country;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Modules\Settings\Entities\ParentJobs;
 
-class CountryController extends Controller
-{ 
-    
+class ParentJobsController extends Controller
+{
+
     /**
      * Display a listing of the resource.
      *
@@ -16,8 +17,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $query = Country::latest()->get();
-        
+        $query = ParentJob::latest()->get(); 
         return $query;
     }
  
@@ -31,13 +31,14 @@ class CountryController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:countries,name,".$request->id,
+            "name" => "required|unique:parent_jobs,name,".$request->id,
         ]); 
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first(), "");
         }
         try {
-            $resource = Country::create($request->all()); 
+            $resource = ParentJob::create($request->all()); 
+            watch("add parent_job " . $resource->name, "fa fa-id-card");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -52,16 +53,17 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CountryRequest $request, Country $resource)
+    public function update(Request $request, ParentJob $resource)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:countries,name,".$request->id,
+            "name" => "required|unique:parent_jobs,name,".$request->id,
         ]); 
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first(), "");
         }
         try {
             $resource->update($request->all()); 
+            watch("edit parent_job " . $resource->name, "fa fa-id-card");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -74,10 +76,11 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Country $resource)
+    public function destroy(ParentJob $resource)
     { 
         try { 
-                $resource->delete();
+            watch("remove parent_job " . $resource->name, "fa fa-id-card");
+            $resource->delete();
             return responseJson(1, __('done'));
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 

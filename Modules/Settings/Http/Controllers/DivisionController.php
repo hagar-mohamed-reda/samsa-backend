@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
-
-use App\Http\Requests\CountryRequest;
+namespace Modules\Settings\Http\Controllers;
+ 
+use Exception;
 use Illuminate\Http\Request;
-use App\Country;
+use Illuminate\Http\Response;
+use Modules\Settings\Entities\Division;
 
-class CountryController extends Controller
-{ 
+class DivisionController extends Controller
+{
     
     /**
      * Display a listing of the resource.
@@ -16,8 +17,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $query = Country::latest()->get();
-        
+        $query = Division::latest()->get(); 
         return $query;
     }
  
@@ -31,13 +31,14 @@ class CountryController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:countries,name,".$request->id,
+            "name" => "required|unique:divisions,name,".$request->id,
         ]); 
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first(), "");
         }
         try {
-            $resource = Country::create($request->all()); 
+            $resource = Division::create($request->all()); 
+            watch("add division " . $resource->name, "fa fa-bank");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -52,16 +53,17 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CountryRequest $request, Country $resource)
+    public function update(Request $request, Division $resource)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:countries,name,".$request->id,
+            "name" => "required|unique:divisions,name,".$request->id,
         ]); 
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first(), "");
         }
         try {
             $resource->update($request->all()); 
+            watch("edit division " . $resource->name, "fa fa-bank");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -74,10 +76,11 @@ class CountryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Country $resource)
+    public function destroy(Division $resource)
     { 
         try { 
-                $resource->delete();
+            watch("remove division " . $resource->name, "fa fa-bank");
+            $resource->delete();
             return responseJson(1, __('done'));
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 

@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Settings\Entities\RegisterationStatus;
-use Modules\Settings\Http\Requests\RegisterationStatusRequest;
-use Modules\Adminsion\Entities\RegisterationStatusDocument;
+use Modules\Settings\Http\Requests\Request; 
 
 class RegisterationStatusController extends Controller {
 
@@ -64,7 +63,7 @@ class RegisterationStatusController extends Controller {
      * @param Request $request
      * @return Response
      */
-    public function store(RegisterationStatusRequest $request) {
+    public function store(Request $request) {
         try {
             $registerationStatus = RegisterationStatus::create($request->all());
              
@@ -81,7 +80,7 @@ class RegisterationStatusController extends Controller {
      * @param int $id
      * @return Response
      */
-    public function update(RegisterationStatusRequest $request, $id) {
+    public function update(Request $request, $id) {
         try {
             $registerationStatus = RegisterationStatus::find($id);
             $registerationStatus->update($request->all()); 
