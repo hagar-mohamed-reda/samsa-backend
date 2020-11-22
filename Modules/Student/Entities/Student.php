@@ -108,43 +108,43 @@ class Student extends Model {
     }
 
     public function division() {
-        return $this->belongsTo('Modules\Divisions\Entities\Division', 'division_id');
+        return $this->belongsTo('Modules\Settings\Entities\Division', 'division_id');
     }
 
     public function department() {
-        return $this->belongsTo('Modules\Divisions\Entities\Department', 'department_id');
+        return $this->belongsTo('Modules\Settings\Entities\Department', 'department_id');
     }
 
     public function parentJob() {
-        return $this->belongsTo('Modules\Settings\Entities\ParentJobs', 'parent_job_id');
+        return $this->belongsTo('Modules\Settings\Entities\ParentJob', 'parent_job_id');
     }
 
     public function language2() {
-        return $this->belongsTo('App\Language', 'language_2_id');
+        return $this->belongsTo('Modules\Settings\Entities\Language', 'language_2_id');
     }
 
     public function language1() {
-        return $this->belongsTo('App\Language', 'language_1_id');
+        return $this->belongsTo('Modules\Settings\Entities\Language', 'language_1_id');
     }
 
     public function city() {
-        return $this->belongsTo('App\City', 'city_id');
+        return $this->belongsTo('Modules\Settings\Entities\City', 'city_id');
     }
 
     public function government() {
-        return $this->belongsTo('App\Government', 'government_id');
+        return $this->belongsTo('Modules\Settings\Entities\Government', 'government_id');
     }
 
     public function country() {
-        return $this->belongsTo('App\Country', 'country_id');
+        return $this->belongsTo('Modules\Settings\Entities\Country', 'country_id');
     }
 
     public function nationality() {
-        return $this->belongsTo('App\Nationality', 'nationality_id');
+        return $this->belongsTo('Modules\Settings\Entities\Nationality', 'nationality_id');
     }
 
     public function nationalIdPlace() {
-        return $this->belongsTo('App\Government', 'national_id_place');
+        return $this->belongsTo('Modules\Settings\Entities\Government', 'national_id_place');
     }
 
     public function militaryArea() {
@@ -168,11 +168,11 @@ class Student extends Model {
     }
 
     public function QualificationTypes() {
-        return $this->belongsTo('Modules\Settings\Entities\QualificationTypes', 'qualification_types_id');
+        return $this->belongsTo('Modules\Settings\Entities\QualificationType', 'qualification_types_id');
     }
 
     public function level() {
-        return $this->belongsTo('Modules\Divisions\Entities\Level', 'level_id');
+        return $this->belongsTo('Modules\Settings\Entities\Level', 'level_id');
     }
 
     public function studentRequiredDocument() {
@@ -188,7 +188,7 @@ class Student extends Model {
     }
 
     public function constraint_status() {
-        return $this->belongsTo('Modules\Settings\Entities\ConstraintStatus', 'constraint_status_id');
+        return $this->belongsTo('Modules\Settings\Entities\RegisterationStatus', 'registration_status_id');
     }
 
     public function card_exports() {

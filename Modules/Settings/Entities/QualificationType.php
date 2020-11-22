@@ -4,7 +4,7 @@ namespace Modules\Settings\Entities;
 use Modules\Settings\Entities\Qualification;
 use Illuminate\Database\Eloquent\Model;
 
-class QualificationTypes extends Model
+class QualificationType extends Model
 {
     protected $table = 'qualification_types';
     protected $fillable = ['qualification_id', 'name', 'grade', 'level_id', 'academic_year_id', 'percentage', 'notes'];

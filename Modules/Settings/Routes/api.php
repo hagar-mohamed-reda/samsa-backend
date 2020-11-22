@@ -87,10 +87,10 @@ Route::group(['middleware' => 'api_auth'], function () {
      
       
     //case_contraint
-    Route::get('case_contraints', 'CaseContraintController@index'); 
-    Route::post('case_contraints/store', 'CaseContraintController@store');
-    Route::post('case_contraints/update/{resource}', 'CaseContraintController@update');
-    Route::post('case_contraints/delete/{resource}', 'CaseContraintController@destroy');
+    Route::get('case_contraints', 'CaseConstraintController@index'); 
+    Route::post('case_contraints/store', 'CaseConstraintController@store');
+    Route::post('case_contraints/update/{resource}', 'CaseConstraintController@update');
+    Route::post('case_contraints/delete/{resource}', 'CaseConstraintController@destroy');
      
       
     //nationalities

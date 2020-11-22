@@ -31,14 +31,14 @@ class StudentCodeSeriesController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:student_code_series,name,".$request->id,
+            "code" => "required|unique:student_code_series,code,".$request->id,
         ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->first(), "");
         }
         try {
             $resource = StudentCodeSeries::create($request->all()); 
-            watch("add student_code_series " . $resource->name, "fa fa-barcode");
+            watch("add student_code_series " . $resource->code, "fa fa-barcode");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -56,14 +56,14 @@ class StudentCodeSeriesController extends Controller
     public function update(Request $request, StudentCodeSeries $resource)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:student_code_series,name,".$request->id,
+            "code" => "required|unique:student_code_series,code,".$request->id,
         ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->first(), "");
         }
         try {
             $resource->update($request->all()); 
-            watch("edit student_code_series " . $resource->name, "fa fa-barcode");
+            watch("edit student_code_series " . $resource->code, "fa fa-barcode");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -79,7 +79,7 @@ class StudentCodeSeriesController extends Controller
     public function destroy(StudentCodeSeries $resource)
     { 
         try { 
-            watch("remove student_code_series " . $resource->name, "fa fa-barcode");
+            watch("remove student_code_series " . $resource->code, "fa fa-barcode");
             $resource->delete();
             return responseJson(1, __('done'));
         } catch (\Exception $th) {

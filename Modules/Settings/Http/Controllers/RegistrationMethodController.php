@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Settings\Entities\RegistrationMethod; 
 
-class RegistrationMethodsController extends Controller {
+class RegistrationMethodController extends Controller {
 
     /**
      * Display a listing of the resource.

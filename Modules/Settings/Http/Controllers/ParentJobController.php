@@ -5,9 +5,9 @@ namespace Modules\Settings\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Settings\Entities\ParentJobs;
+use Modules\Settings\Entities\ParentJob;
 
-class ParentJobsController extends Controller
+class ParentJobController extends Controller
 {
 
     /**

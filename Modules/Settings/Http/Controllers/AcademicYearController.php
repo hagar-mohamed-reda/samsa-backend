@@ -15,7 +15,7 @@ class AcademicYearController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        $query = AcademicYear::latest()->get();
+        $query = AcademicYear::orderBy('start_date')->get();
 
         return $query;
     }

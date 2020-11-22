@@ -7,7 +7,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Settings\Entities\QualificationType; 
 
-class QualilificationTypesController extends Controller
+class QualificationTypeController extends Controller
 {
 
     /**

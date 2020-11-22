@@ -17,7 +17,7 @@ class CaseConstraintController extends Controller
      */
     public function index()
     {
-        $query = CaseContraint::latest()->get(); 
+        $query = CaseConstraint::latest()->get(); 
         return $query;
     }
  
@@ -37,7 +37,7 @@ class CaseConstraintController extends Controller
             return responseJson(0, $validator->errors()->first(), "");
         }
         try {
-            $resource = CaseContraint::create($request->all()); 
+            $resource = CaseConstraint::create($request->all()); 
             watch("add case_contraint " . $resource->name, "fa fa-balance-scale");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
@@ -53,7 +53,7 @@ class CaseConstraintController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, CaseContraint $resource)
+    public function update(Request $request, CaseConstraint $resource)
     {
         $validator = validator($request->all(), [
             "name" => "required|unique:case_contraints,name,".$request->id,
@@ -76,7 +76,7 @@ class CaseConstraintController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(CaseContraint $resource)
+    public function destroy(CaseConstraint $resource)
     { 
         try { 
             watch("remove case_contraint " . $resource->name, "fa fa-balance-scale");
