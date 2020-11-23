@@ -43,15 +43,15 @@ class TranslationController extends Controller
                     if ($translation) {
                         if (!$request->not_exist) { 
                             $translation->update([ 
-                                "name_ar" => $item['name_ar'],
-                                "name_en" => $item['name_en']
+                                "name_ar" => $item['name_ar'] . " ",
+                                "name_en" => $item['name_en'] . " "
                             ]);
                         }
                     } else { 
                         $translation = Translation::create([
                             "key" => $item['key'],
-                            "name_ar" => $item['name_ar'],
-                            "name_en" => $item['name_en'],
+                            "name_ar" => $item['name_ar'] . " ",
+                            "name_en" => $item['name_en'] . " ",
                         ]);
                     }
                 }

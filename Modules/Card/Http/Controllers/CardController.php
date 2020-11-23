@@ -62,7 +62,7 @@ class CardController extends Controller
 
             $resource = CardExport::create($data);
 
-            watch(__('add card for student'), "fa fa-picture-o");
+            watch(__('add card for student ') . $student->name . " - " . $card->name, "fa fa-picture-o");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $e) {
             return responseJson(0, $e->getMessage());

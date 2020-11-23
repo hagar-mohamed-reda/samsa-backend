@@ -1,9 +1,9 @@
 <?php
 
 namespace Modules\Settings\Http\Controllers;
-
-use App\Government;
+ 
 use Illuminate\Http\Request; 
+use Modules\Settings\Entities\Government;
 
 class GovernmentController extends Controller
 {

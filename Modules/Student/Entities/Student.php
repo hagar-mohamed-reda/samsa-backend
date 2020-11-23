@@ -22,12 +22,12 @@ class Student extends Model {
      * @var type string
      */
     protected $table = 'students';
-	
+
     /**
      * folder name of the application
      *
      * @var String
-     */ 
+     */
     protected $fillable = [
         'application_id',
         'constraint_status_id',
@@ -89,11 +89,10 @@ class Student extends Model {
         'acceptance_date',
         'accepted_by',
         'is_refund',
-		'is_application',
-		'writen_by',
-		'application_code'
+        'is_application',
+        'writen_by',
+        'application_code'
     ];
-
     protected $appends = [
         'personal_photo_url', 'availabe_cards'
     ];
@@ -109,12 +108,11 @@ class Student extends Model {
 
         return $availableCards;
     }
-  
- 
+
     public function getPersonalPhotoUrlAttribute() {
         $path = $this->personal_photo;
 
-        return $path? url('/'). '' . $path : '/assets/img/avatar.png';
+        return $path ? url('/') . '' . $path : '/assets/img/avatar.png';
     }
 
     public function division() {

@@ -206,7 +206,7 @@ class AccountController extends Controller
                 ->where('name', 'like', '%'.$request->key.'%')
                 ->orWhere('code', 'like', '%'.$request->key.'%')
                 ->orWhere('national_id', 'like', '%'.$request->key.'%')
-                ->take(20)
+                ->take(10)
                 ->get(["id", "name", "code"]);
     }
 

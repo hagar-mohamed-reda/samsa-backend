@@ -30,7 +30,7 @@ class Doctor extends Model {
 	}
 	
 	public function getLevelsAttribute() { 
-        return implode(", ", $this->doctorLevels()->pluck('level_id')->toArray());
+            return $this->doctorLevels()->pluck('level_id')->toArray();
 	}
 	
     public function getCanDeleteAttribute() {

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Modules\Student\Entities\Student as StudentOrigin;
 use Modules\Card\Entities\CardType;
 use Modules\Academic\Entities\Student as StudentAcademic;
+use App\CaseConstraintConverter;
 
 use DB;
 
@@ -72,11 +73,7 @@ class Student extends StudentOrigin
 
     public function getCanCreateDiscountRequestAttribute() {
         return (DB::table('account_discount_requests')->where('student_id', $this->id)->where('paid', '!=', '1')->exists())? false : true;
-    }
-
-    public function getCodeAttribute() {
-        return $this->id;
-    }
+    } 
 
     public function getStudentBalanceAttribute() {
         $balance = $this->current_balance_total;
@@ -255,10 +252,14 @@ class Student extends StudentOrigin
     }
 
     public function changeStudentCaseConstraint() {
-        if ($this->case_constraint_id == 1 && $this->can_convert_to_student) {
-            $this->case_constraint_id = 2;
+        if ($this->case_constraint_id == 1 && $this->can_convert_to_student) { 
             $this->is_application = 0;
             $this->update();
+            // set student code
+            \Modules\Settings\Entities\StudentCodeSeries::codeStudent($this);
+            // set case constaints
+            $c = new CaseConstraintConverter($this, 2);
+            $c->change();
         }
     }
 

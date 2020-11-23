@@ -17,7 +17,7 @@ class StudentCodeSeriesController extends Controller
      */
     public function index()
     {
-        $query = StudentCodeSeries::latest()->get(); 
+        $query = StudentCodeSeries::orderBy('level_id')->get(); 
         return $query;
     }
  

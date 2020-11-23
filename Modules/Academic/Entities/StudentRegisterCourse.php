@@ -82,24 +82,11 @@ class StudentRegisterCourse extends Model {
             }
             
             // add student to group
-            $group = StudentGroup::where('student_id', $student->id)
-                    ->where('academic_year_id', $year->id)
-                    ->where('term_id', $term->id)
+            $group = StudentGroup::where('student_id', $student->id) 
                     ->first();
-            if ($group) {
-               $group->update([
-                   "doctor_id" => optional($student->doctorGroup())->doctor_id
-               ]);
-            } else { 
-                if (optional($student->doctorGroup())->doctor_id) {
-                    StudentGroup::create([
-                        "doctor_id" => optional($student->doctorGroup())->doctor_id,
-                        "student_id" => $student->id,
-                        "academic_year_id" => $year->id,
-                        "term_id" => $term->id
-                    ]);
-                }
-            }
+            if (!$group) {
+                StudentGroup::addStudentToGroup($student);
+            }  
             
             return responseJson(1, __('done'));
         } catch (\Exception $exc) {

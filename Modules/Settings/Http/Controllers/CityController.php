@@ -1,11 +1,11 @@
 <?php
 
 namespace Modules\Settings\Http\Controllers;
-
-use App\City;
+ 
 use Illuminate\Http\Request;
 use Exception; 
 use Illuminate\Http\Response;
+use Modules\Settings\Entities\City;
 
 class CityController extends Controller
 {

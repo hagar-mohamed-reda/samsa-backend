@@ -3,7 +3,7 @@
 namespace Modules\Settings\Http\Controllers;
  
 use Illuminate\Http\Request;
-use App\Country;
+use Modules\Settings\Entities\Country;
 
 class CountryController extends Controller
 { 
