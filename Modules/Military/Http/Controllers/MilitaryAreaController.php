@@ -5,10 +5,12 @@ namespace Modules\Military\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Military\Entities\MilitaryStatus; 
+use Modules\Military\Entities\MilitaryArea;
+use Modules\Military\Http\Requests\MilitaryAreaRequest;
 
-class MilitaryStatusController extends Controller {
-
+class MilitaryAreaController extends Controller
+{
+    
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +18,7 @@ class MilitaryStatusController extends Controller {
      */
     public function index()
     {
-        $query = MilitaryStatus::latest()->get(); 
+        $query = MilitaryArea::latest()->get(); 
         return $query;
     }
  
@@ -30,14 +32,14 @@ class MilitaryStatusController extends Controller {
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:military_status,name,".$request->id,
+            "name" => "required|unique:military_areas,name,".$request->id,
         ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->first(), "");
         }
         try {
-            $resource = MilitaryStatus::create($request->all()); 
-            watch("add military_status " . $resource->name, "fa fa-circle");
+            $resource = MilitaryArea::create($request->all()); 
+            watch("add military_areas " . $resource->name, "fa fa-map-marker");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -52,17 +54,17 @@ class MilitaryStatusController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, MilitaryStatus $resource)
+    public function update(Request $request, MilitaryArea $resource)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:military_status,name,".$request->id,
+            "name" => "required|unique:military_areas,name,".$request->id,
         ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->first(), "");
         }
         try {
             $resource->update($request->all()); 
-            watch("edit military_status " . $resource->name, "fa fa-circle");
+            watch("edit military_areas " . $resource->name, "fa fa-map-marker");
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage()); 
@@ -75,10 +77,10 @@ class MilitaryStatusController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(MilitaryStatus $resource)
+    public function destroy(MilitaryArea $resource)
     { 
         try { 
-            watch("remove military_status " . $resource->name, "fa fa-circle");
+            watch("remove military_areas " . $resource->name, "fa fa-map-marker");
             $resource->delete();
             return responseJson(1, __('done'));
         } catch (\Exception $th) {

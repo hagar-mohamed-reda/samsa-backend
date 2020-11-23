@@ -17,6 +17,13 @@ class Student extends Model {
     public static $FOLDER_PREFIX = "/uploads/students/";
 
     /**
+     * table name of the db;
+     *
+     * @var type string
+     */
+    protected $table = 'students';
+	
+    /**
      * folder name of the application
      *
      * @var String
@@ -81,7 +88,10 @@ class Student extends Model {
         'acceptance_code',
         'acceptance_date',
         'accepted_by',
-        'is_refund'
+        'is_refund',
+		'is_application',
+		'writen_by',
+		'application_code'
     ];
 
     protected $appends = [
@@ -148,7 +158,7 @@ class Student extends Model {
     }
 
     public function militaryArea() {
-        return $this->belongsTo('Modules\Military\Entities\MilitaryAreas', 'military_area_id');
+        return $this->belongsTo('Modules\Military\Entities\MilitaryArea', 'military_area_id');
     }
 
     public function militaryStatus() {

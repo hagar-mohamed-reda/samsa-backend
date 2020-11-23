@@ -11,7 +11,7 @@ use Modules\Adminsion\Http\Controllers\ApplicationStoreController;
 use Illuminate\Support\Facades\Auth;
 use Modules\Settings\Entities\Level;
 use Modules\Settings\Entities\Qualification;
-use Modules\Settings\Entities\QualificationTypes;
+use Modules\Settings\Entities\QualificationType;
 
 class ApplicationController extends Controller {
 
@@ -66,7 +66,7 @@ class ApplicationController extends Controller {
         
         // set the defualt devision
         $data['division_id'] = 1;
-        $data['deparment_id'] = 1;
+        $data['department_id'] = 1;
 
         // application validator
         $applicationValidator = new ApplicationValidation();
@@ -87,32 +87,7 @@ class ApplicationController extends Controller {
             if ($applicationValidator->validateOnRegisterationStatusDocument($request)['status'] == 0) {
                 return responseJson(0, $applicationValidator->validateOnRegisterationStatusDocument($request)['message']);
             }
-            //get qualification data 
-            $qualification = Qualification::find($request->qualification_id);
-
-            $qualificationType = QualificationTypes::find($request->qualification_types_id);
-
-            $thanawyaDgree = Qualification::find(1);
-            $thanawyaAmmaDgree = $thanawyaDgree->grade;
-
-            if ($qualification->is_azhar == '1') {
-
-                $totalGrade = $request->grade - $request->azhar_grade;
-
-                $grade = ($totalGrade * $thanawyaAmmaDgree) / $qualificationType->grade;
-                if ($grade >= $qualificationType->$grade) {
-                    $data['level_id'] = $qualificationType->level_id;
-                }else{
-                    $data['level_id'] = '';
-                }
-            } else {
-                if ($request->grade >= $qualificationType->grade) {
-                    $data['level_id'] = $qualificationType->level_id;
-                }else{
-                    $data['level_id'] = '';
-                }
-            }
-//            dd($data);
+            
 
             // store application data
             $application = Application::create($data);

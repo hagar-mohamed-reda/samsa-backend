@@ -18,13 +18,19 @@ Route::middleware('auth:api')->get('/military', function (Request $request) {
 });
 
 Route::group(['middleware' => 'api_auth'], function () {
-    Route::get('/', 'DashboardController@index')->name('dashboard');
-    //start military-areas
-    Route::get('military-areas', 'MilitaryAreasController@index')->name('nationalities');
-    Route::get('military-areas/{id}', 'MilitaryAreasController@show');
-    Route::post('military-areas', 'MilitaryAreasController@store');
-    Route::delete('military-areas/{id}', 'MilitaryAreasController@destroy');
-    Route::put('military-areas/{id}', 'MilitaryAreasController@update');
-    //end military-areas
+    
+    // military area 
+    Route::get('military_areas', 'MilitaryAreaController@index'); 
+    Route::post('military_areas/store', 'MilitaryAreaController@store');
+    Route::post('military_areas/update/{resource}', 'MilitaryAreaController@update');
+    Route::post('military_areas/delete/{resource}', 'MilitaryAreaController@destroy');
+ 
+    
+    // military status 
+    Route::get('military_status', 'MilitaryStatusController@index'); 
+    Route::post('military_status/store', 'MilitaryStatusController@store');
+    Route::post('military_status/update/{resource}', 'MilitaryStatusController@update');
+    Route::post('military_status/delete/{resource}', 'MilitaryStatusController@destroy');
+ 
 
 });
