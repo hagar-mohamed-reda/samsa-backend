@@ -19,5 +19,7 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::prefix('academic')->group(function() {
         
         Route::get('/register-course-print/{student}', 'AcademicController@getRegisterCoursePrintPreview');
+        Route::get('/register-course-user-print/{student}', 'AcademicController@getRegisterCourseUserPrintPreview');
+        Route::get('/register-course-student-print/{student}', 'AcademicController@getRegisterCourseStudentPrintPreview');
     });
 });

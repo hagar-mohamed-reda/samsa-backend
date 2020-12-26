@@ -19,7 +19,7 @@ class StudentRegisterCourse extends Model {
         'level_id',
         'division_id',
         'degree_map_id',
-		'user_id'
+	'user_id'
     ];
     
     public function course() {

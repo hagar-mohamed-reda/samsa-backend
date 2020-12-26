@@ -3,6 +3,7 @@
 namespace Modules\Academic\Entities;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\Academic\Entities\DegreeMap;
 
 class StudentResult extends Model
 {
@@ -42,7 +43,19 @@ class StudentResult extends Model
     public function term() {
         return $this->belongsTo("Modules\Settings\Entities\Term", "term_id");
     }
+    
+    public function getDegreeMap() {
+        $percent = ($this->final_degree / $this->course->large_degree) * 100;
+        $degreeMap = DegreeMap::where('percent_from', "<=", $percent)->where('percent_to', '>=', $percent)->first();
+        return $degreeMap;
+    }
      
-      
+   
+    public function calculateCourseGpa() { 
+        $degreeMap = $this->getDegreeMap(); 
+        $this->update([
+            "gpa" => optional($degreeMap)->gpa
+        ]);
+    }
      
 }

@@ -17,7 +17,7 @@ class CaseConstraintController extends Controller
      */
     public function index()
     {
-        $query = CaseConstraint::latest()->get(); 
+        $query = CaseConstraint::get(); 
         return $query;
     }
  
@@ -31,7 +31,7 @@ class CaseConstraintController extends Controller
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:case_contraints,name,".$request->id,
+            "name" => "required|unique:case_constraints,name,".$request->id,
         ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->first(), "");
@@ -56,7 +56,7 @@ class CaseConstraintController extends Controller
     public function update(Request $request, CaseConstraint $resource)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:case_contraints,name,".$request->id,
+            "name" => "required|unique:case_constraints,name,".$request->id,
         ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->first(), "");

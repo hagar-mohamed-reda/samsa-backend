@@ -17,7 +17,7 @@ class LevelController extends Controller
      */
     public function index()
     {
-        $query = Level::latest()->get(); 
+        $query = Level::get(); 
         return $query;
     }
  

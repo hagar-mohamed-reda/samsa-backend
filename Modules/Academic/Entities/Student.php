@@ -7,6 +7,7 @@ use Modules\Account\Entities\Student as StudentOrigin;
 use Modules\Account\Entities\AccountSetting;
 use Modules\Divisions\Entities\Level;
 use App\Term;
+use DB;
 
 class Student extends StudentOrigin
 { 
@@ -27,6 +28,17 @@ class Student extends StudentOrigin
         $warning = "الطالب حصل على معدل تراكمى اقل من " . $requiredGpa .  " لعدد " . $times . " مرات ";
         
         return $times > 0? $warning : null;
+    }
+    
+    public function getRepeatCourses() {
+        $ids = StudentRegisterCourse::query()
+                ->select('course_id', DB::raw('count(course_id) as count'))
+                ->where('student_id', $this->id) 
+                ->groupBy('course_id')
+                ->having('count', '>', 1)
+                ->pluck('course_id')
+                ->toArray();
+        return Course::whereIn('id', $ids); 
     }
     
     public function getAcademicDocumentAttribute() {
@@ -55,20 +67,22 @@ class Student extends StudentOrigin
         
         return $levels;
     }
-
     
-    public function getCurrentRegisterCoursesAttribute() {
+    public function getCurrentRegisterCourseQuery() {
         $year = AccountSetting::getCurrentAcademicYear();
         $term = AccountSetting::getCurrentTerm();
         //
-        $ids = StudentRegisterCourse::query()
+        return StudentRegisterCourse::query()
                     ->where('student_id', $this->id)
                     ->where('academic_year_id', $year->id)
                     ->where('term_id', $term->id)
-                    ->pluck('course_id')
-                    ->toArray();
-        
-        return Course::whereIn('id', $ids)->get();
+                    ->select('*', 'academic_courses.id as id', 'academic_student_register_courses.created_at as register_date')
+                    ->join('academic_courses', 'academic_courses.id', '=', 'course_id');
+    }
+
+    
+    public function getCurrentRegisterCoursesAttribute() {
+        return $this->getCurrentRegisterCourseQuery()->get();
     }
     
     public function getRegisterHoursAttribute() {

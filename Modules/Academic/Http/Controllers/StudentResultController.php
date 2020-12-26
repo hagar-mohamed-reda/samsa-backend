@@ -85,8 +85,11 @@ class StudentResultController extends Controller
                 if ($row) {
                     $row->update($item);
                 } else {
-                    StudentResult::create($item);
+                    $row = StudentResult::create($item);
                 }
+                
+                // calculate gpa and update it.
+                $row->calculateCourseGpa(); 
             } 
             watch(__("assign result for the students "), "fa fa-calendar");
             return responseJson(1, __('done'));

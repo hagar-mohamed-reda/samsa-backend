@@ -41,5 +41,23 @@ class AcademicController extends Controller
     {    
         return view('academic::register_course_print', compact('student'));
     }
+    
+    /**
+     * Display a listing of the resource.
+     * @return Response
+     */
+    public function getRegisterCourseUserPrintPreview(Student $student)
+    {    
+        return view('academic::register_course_user_print', compact('student'));
+    }
+    
+    /**
+     * Display a listing of the resource.
+     * @return Response
+     */
+    public function getRegisterCourseStudentPrintPreview(Student $student)
+    {    
+        return view('academic::register_course_student_print', compact('student'));
+    }
  
 }

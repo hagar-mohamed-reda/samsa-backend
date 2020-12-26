@@ -202,5 +202,7 @@ class Student extends Model {
     public function card_exports() {
         return $this->belongsTo('Modules\Card\Entities\CardExport', 'student_id');
     }
+    
+    
 
 }
