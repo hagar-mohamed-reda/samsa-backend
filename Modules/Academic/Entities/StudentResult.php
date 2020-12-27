@@ -56,6 +56,18 @@ class StudentResult extends Model
         $this->update([
             "gpa" => optional($degreeMap)->gpa
         ]);
+        $studentRegisterCourse = StudentRegisterCourse::where('student_id', $this->id)
+                ->where('course_id', $this->id)
+                ->latest()
+                ->first();
+        
+        if ($studentRegisterCourse) {
+            $studentRegisterCourse->update([
+                "degree_map_id" => optional($degreeMap)->id,
+                "gpa" => optional($degreeMap)->gpa,
+                "student_degree" => $this->final_degree,
+            ]);
+        }
     }
      
 }

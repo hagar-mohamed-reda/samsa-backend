@@ -93,7 +93,7 @@ class StudentResultController extends Controller
             } 
             watch(__("assign result for the students "), "fa fa-calendar");
             return responseJson(1, __('done'));
-        } catch (\Exception $exc) {
+        } catch (Exception $exc) {
             return responseJson(0, $exc->getMessage());
         }
     }

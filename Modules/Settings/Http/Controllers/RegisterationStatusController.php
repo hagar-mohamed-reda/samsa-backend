@@ -5,8 +5,7 @@ namespace Modules\Settings\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Modules\Settings\Entities\RegisterationStatus;
-use Modules\Settings\Http\Requests\Request; 
+use Modules\Settings\Entities\RegisterationStatus; 
 
 class RegisterationStatusController extends Controller {
 

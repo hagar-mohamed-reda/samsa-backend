@@ -27,7 +27,7 @@ class GpaCalculator {
      */
     private $term = null;
     
-    public function __construct(Student $student, AcademicYear $academicYear, Term $term) {
+    public function __construct(Student $student,  $academicYear, $term) {
         $this->student = $student;
         $this->term = $term;
         $this->academicYear = $academicYear;
@@ -39,7 +39,7 @@ class GpaCalculator {
                 ->where('student_id', $this->student->id)
                 ->where('academic_year_id', $this->academicYear->id)
                 ->where('term_id', $this->term->id)
-                ->select('*', 'academic_student_register_courses as id');
+                ->select('*', 'academic_student_register_courses.id as id');
     }
     
     public function getRegisterHours() {
@@ -54,7 +54,11 @@ class GpaCalculator {
             $gpSum += $item->getGP();
         }
         
-        $gpa = $gpSum / $registerHours;
+        if ($registerHours > 0)
+            $gpa = $gpSum / $registerHours;
+        else 
+            $gpa = 0;
+        
         return $gpa;
     }
 }

@@ -51,7 +51,7 @@ class StudentRegisterCourse extends Model {
     }
 
     public function getGP() {
-        return optional($this->course)->credit_hour * optional($this->course)->gpa;
+        return $this->gpa;//optional($this->course)->credit_hour * optional($this->course)->gpa;;
     }
 
     public static function updateRegisterCourses(Request $request) {

@@ -27,9 +27,6 @@ Route::group(['middleware' => 'api_auth'], function () {
    
  
     //end
-    Route::get('roles', 'RoleController@index');
-
-    Route::resource('roles', 'RoleController');
 
     Route::get('government/{country_id}', 'GovernmentController@getGovernments');
     Route::resource('profile', 'UserProfileController');
@@ -44,6 +41,21 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::post("profile/update-phone", "AuthController@updatePhone");
 
     //
+    //user start
+    Route::get('users', 'UserController@index'); 
+    Route::post('users/store', 'UserController@store');
+    Route::post('users/update/{resource}', 'UserController@update');
+    Route::post('users/delete/{resource}', 'UserController@destroy');
+
+    //
+    //roles and permissions
+    Route::get('permissions', 'RoleController@getPermissions'); 
+    Route::post('roles/permission', 'RoleController@updatePermissions');
+    //
+    Route::get('roles', 'RoleController@index'); 
+    Route::post('roles/store', 'RoleController@store');
+    Route::post('roles/update/{resource}', 'RoleController@update');
+    Route::post('roles/delete/{resource}', 'RoleController@destroy');
 
     Route::get("system-setting", "DashboardController@getSettings");
     Route::get("notifications", "DashboardController@getNotifications");

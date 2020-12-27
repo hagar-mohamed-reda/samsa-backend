@@ -65,6 +65,10 @@ Route::group(['middleware' => 'api_auth'], function () {
         // reports
         Route::get('report/get-result', 'ReportController@getResult');
         
+        // result transfer
+        Route::get('result-transfer/get', 'ResultTranferController@get');
+        Route::post('result-transfer/start', 'ResultTranferController@start');
+        
     });
 });
 

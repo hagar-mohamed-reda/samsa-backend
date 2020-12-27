@@ -140,4 +140,17 @@ Route::group(['middleware' => 'api_auth'], function () {
     Route::get('translation', 'TranslationController@index');
     Route::get('translation/get', 'TranslationController@get');
     Route::post('translation/update', 'TranslationController@update');
+    
+    
+    // permissions
+    Route::get('permissions', 'PermissionController@index'); 
+    Route::post('permissions/store', 'PermissionController@store');
+    Route::post('permissions/update/{resource}', 'PermissionController@update');
+    Route::post('permissions/delete/{resource}', 'PermissionController@destroy');
+    
+    // permissions_groups
+    Route::get('permission_groups', 'PermissionGroupController@index'); 
+    Route::post('permission_groups/store', 'PermissionGroupController@store');
+    Route::post('permission_groups/update/{resource}', 'PermissionGroupController@update');
+    Route::post('permission_groups/delete/{resource}', 'PermissionGroupController@destroy');
 });

@@ -23,3 +23,17 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::get('/register-course-student-print/{student}', 'AcademicController@getRegisterCourseStudentPrintPreview');
     });
 });
+
+
+Route::get("/test_transfer", function(){
+    $student = Modules\Academic\Entities\StudentResultTransfer::find(14);
+    $student->checkIfCanTransferToAnotherLevel();
+    echo  $student->getActualRegisterCourses()->count();
+    echo "<br>";
+    echo  $student->getActualRegisterCourses()->sum('credit_hour');
+    echo "<br>";
+    echo  $student->getStudentBalance()->getCurrentBalanceTotal();
+    echo "<br>";
+    
+    echo $student->failedTransferReason;
+});

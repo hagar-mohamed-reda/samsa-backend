@@ -2,199 +2,138 @@
 
 namespace App\Http\Controllers;
 
-use App\Permission;
 use App\Role;
+use App\RolePermission; 
+use App\Permission;
 use Illuminate\Http\Request;
-use App\RolePermission;
-use App\User;
-use App\UserPermission;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Hash;
+use Modules\Settings\Http\Requests\RoleRequest;
 
 class RoleController extends Controller
 {
+
     public function __construct()
     {
-//        $this->middleware(['permission:roles_read'])->only('index');
-//        $this->middleware(['permission:roles_create'])->only('create');
-//        $this->middleware(['permission:roles_update'])->only('edit');
-//        $this->middleware(['permission:roles_delete'])->only('destroy');
+        // $this->middleware(['permission:roles_read'])->only('index');
+        // $this->middleware(['permission:roles_create'])->only('create');
+        // $this->middleware(['permission:roles_update'])->only('edit');
+        // $this->middleware(['permission:roles_delete'])->only('destroy');
 
     }
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
-        $roles = Role::OrderBy('created_at', 'desc')->get();
-        return responseJson(1, "ok", $roles);
+        $roles = Role::latest()->get();
+        return $roles;
+    }
+
+    public function getPermissions() {
+        return Permission::all();
     }
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
-        return view('main_settings.roles.create');
+        return view('settings::roles.create');
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique,roles,name",
-            "display_name" => 'required|unique,roles,display_name'
+            'name' => 'required|unique:roles' 
         ]);
 
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first());
         }
         try {
-            $role = Role::create($request->all());
-            if ($role) {
-                foreach ($request->permissions as $permission){
-                    $permission_data = Permission::where('name', $permission)->first();
-                    if( $permission_data == null){
-                        $permissionss = [
-                            'name'=> $permission
-                        ];
-                       $permission_data =  Permission::create($permissionss);
-                    }
-                    $permission_role = [
-                        'role_id' => $role->id,
-                        'permission_id'=> $permission_data->id
-                    ];
-                    RolePermission::create($permission_role);
-                    return responseJson(1, __('data created successfully'), $city);
-                }
-
-            } else {
-                notify()->error("هناك خطأ ما يرجى المحاولةzcvvv فى وقت لاحق", "", "bottomLeft" );
-                return redirect()->route('roles.index');
-            }
+            $input = $request->all(); 
+            $role = Role::create($input); 
         } catch (\Exception $ex) {
-            return responseJson(0, "", $ex->getMessage());
+            return responseJson(0, $ex->getMessage());
         }
+        return responseJson(1, __('done'));
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $role = Role::find($id);
-       
-        if (!$role) {
-            return responseJson(0, __('data not found'), '');
-        }
-        return responseJson(1, "ok", $role);
-    }
+ 
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        $role = Role::find($id);
-        if(!$role){
-            notify()->error('هذه الاعدادات غير موجودة', "", "bottomLeft", );
-            return redirect()->route('roles.index');
-        }
-       return view('main_settings.roles.edit', compact('role'));
+        $roles = $role->getRoles();
+        return view('settings::roles.edit', compact('role', 'roles'));
+    }
 
+    public function updatePermissions(Request $request, $id) { 
+        $role = Role::find($id); 
+        // remove old permissions
+        $role->rolePermissions()->delete();
+
+        foreach($request->permissions as $item) {
+            RolePermission::create([
+                "role_id" => $id,
+                "permission_id" => $item
+            ]);
+        }
+
+        return responseJson(1, __('done'));
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return Response
      */
     public function update(Request $request, $id)
-    {
+    { 
+        $role = Role::find($id); 
         $validator = validator($request->all(), [
-            "name" => "required",
-            "display_name" => 'required|exists:governments,id'
+            'name' => 'required|unique:roles,name,' . $role->name 
         ]);
 
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first(), "");
         }
-        try {
+        try { 
+            $input = $request->all();
+ 
+            $role = $role->update($input);
 
-            $role = Role::find($id);
-            if(!$role){
-                notify()->error('هذه الاعدادات غير موجودة', "", "bottomLeft", );
-                return redirect()->route('roles.index');
-            }else{
-                $role->name = $request->name;
-
-                if($request->has('permissions') && $request->permissions != []){
-                    //get role permissions and delete it
-                    $role_permissions = RolePermission::where('role_id', $role->id)->get();
-                    $role->detachPermissions($role_permissions);
-
-                    foreach ($request->permissions as $permission){
-                        $permission_data = Permission::where('name', $permission)->first();
-                        if( $permission_data == null){
-                            $permissionss = [
-                                'name'=> $permission
-                            ];
-                           $permission_data =  Permission::create($permissionss);
-                        }
-                        $permission_role = [
-                            'role_id' => $role->id,
-                            'permission_id'=> $permission_data->id
-                        ];
-                        RolePermission::create($permission_role);
-                    }
-
-                }else{
-                    $role->detachPermissions([]);
-                }
-                $role->update();
-                return responseJson(1, __('data updated successfully'), $role);
-                
-            }
+            return responseJson(1, __('done'), $role);
 
         } catch (\Exception $ex) {
             return responseJson(0,  $ex->getMessage(), "");
+
         }
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function destroy($id)
     {
-        $role = Role::find($id);
-        $users = User::all();
-
-        foreach($users as $user){
-            if($user -> hasRole($role->name)){
-                return responseJson(1,' لا يمكن حذف هذه الصلاحية', '');
-
-            }else{
-                $role->forceDelete();
-                return responseJson(1, __('deleted successfully'), '');
-            }
-        }
+        $role = Role::find($id); 
+        if ($role->can_delete) 
+            $role->delete();
+        return responseJson(1, __('done'), '');
     }
 }
