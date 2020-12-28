@@ -31,7 +31,7 @@ class User extends Authenticatable
     }
 
     public function getPermissionsAttribute() {
-        $ids = RolePermission::where('role_id', $this->id)->pluck('permission_id')->toArray();
+        $ids = RolePermission::where('role_id', $this->role_id)->pluck('permission_id')->toArray();
 
         $permissions = Permission::whereIn('id', $ids)->pluck('id', 'name')->toArray();
         return $permissions;

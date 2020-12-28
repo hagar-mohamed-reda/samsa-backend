@@ -48,6 +48,12 @@ Route::get('theme/set', function(){
     return back();
 });
 
+
 Route::get('theme/get', function(){
     echo Theme::getTheme();
+});
+
+
+Route::get('test', function(){
+    //return \App\Permission::where('group_id', 8)->pluck('name')->toArray();
 });

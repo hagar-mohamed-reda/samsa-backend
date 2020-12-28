@@ -83,7 +83,7 @@ class RoleController extends Controller
     public function updatePermissions(Request $request, $id) { 
         $role = Role::find($id); 
         // remove old permissions
-        $role->rolePermissions()->delete();
+        $role->rolePermissions()->delete(); 
 
         foreach($request->permissions as $item) {
             RolePermission::create([

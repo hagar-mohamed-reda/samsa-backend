@@ -50,7 +50,7 @@ Route::group(['middleware' => 'api_auth'], function () {
     //
     //roles and permissions
     Route::get('permissions', 'RoleController@getPermissions'); 
-    Route::post('roles/permission', 'RoleController@updatePermissions');
+    Route::post('roles/permission/{id}', 'RoleController@updatePermissions');
     //
     Route::get('roles', 'RoleController@index'); 
     Route::post('roles/store', 'RoleController@store');
