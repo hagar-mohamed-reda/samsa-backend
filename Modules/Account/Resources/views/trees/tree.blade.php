@@ -100,10 +100,10 @@
             }
             };
             function renameTree() {
-            var ref = $('.jstree').jstree(true),
+                    var ref = $('.jstree').jstree(true),
                     sel = ref.get_selected();
                     if (!sel.length) { return false; }
-            sel = sel[0];
+                    sel = sel[0];
                     ref.edit(sel);
             };
             function deleteTree() {

@@ -30,7 +30,19 @@ class AccountSetting extends Model
         // academic year name
         $name = $currentYear."-".$nextYear;
 
-        return AcademicYear::where('name', $name)->first();
+        $resource = AcademicYear::where('name', $name)->first();
+        
+        if (!$resource) { 
+            $yearName = $currentYear . "-" . $nextYear;  
+            
+            $resource = AcademicYear::create([
+                "name" => $yearName,
+                "start_date" => $currentYear . "-01-01",
+                "end_date" => $nextYear . "-01-01" 
+            ]);
+        }
+        
+        return $resource;
     }
 
     /**

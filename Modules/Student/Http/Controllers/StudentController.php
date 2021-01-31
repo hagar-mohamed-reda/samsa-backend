@@ -45,7 +45,7 @@ class StudentController extends Controller {
         if (request()->qualification_types_id > 0)
             $query->where('qualification_types_id', request()->qualification_types_id);
 
-        $resources = $query->latest()->paginate(10);
+        $resources = $query->latest()->paginate(60);
 
         return $resources;
     }

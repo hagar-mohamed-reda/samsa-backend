@@ -35,7 +35,17 @@ class AcademicYearExpenseController extends Controller
                 "academic_year_id" => $academicYear->id,
             ]);
         }
-        return $resources;
+        
+        if ($resources->details()->count() <= 0) {
+            $details = AcademicYearExpenseDetail::where('academic_year_expense_id', 1)->get(); 
+            foreach($details as $detail) { 
+                $detail->academic_year_expense_id = $resources->id;
+                $item = json_decode(json_encode($detail), true);
+                AcademicYearExpenseDetail::create($item);
+            }
+        }
+        
+        return $resources->refresh();
     }
  
     /**

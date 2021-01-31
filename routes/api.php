@@ -59,4 +59,9 @@ Route::group(['middleware' => 'api_auth'], function () {
 
     Route::get("system-setting", "DashboardController@getSettings");
     Route::get("notifications", "DashboardController@getNotifications");
+    
+    
+    Route::post("import-student", "ImportController@importStudents");
+    Route::post("import-course", "ImportController@importCourses");
+    Route::post("import-result", "ImportController@importResult");
 });

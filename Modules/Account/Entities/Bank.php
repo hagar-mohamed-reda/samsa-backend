@@ -17,6 +17,12 @@ class Bank extends Model
         'balance',
         'notes'
     ];
+    
+    protected $appends = ['can_delete'];
+    
+    public function getCanDeleteAttribute() {
+        return true;
+    }
      
     public function transformations() {
         return $this->hasMany("Modules\Account\Entities\Transformation", "bank_id");

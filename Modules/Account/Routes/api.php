@@ -36,6 +36,30 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('stores/update/{store}', 'StoreController@update');
         Route::post('stores/delete/{store}', 'StoreController@destroy');
 
+        // stores routes
+        Route::get('banks', 'BankController@index');
+        Route::post('banks/store', 'BankController@bank');
+        Route::post('banks/update/{bank}', 'BankController@update');
+        Route::post('banks/delete/{bank}', 'BankController@destroy');
+ 
+        // trees routes
+        Route::get('trees', 'TreeController@index');
+        Route::post('trees/store', 'TreeController@tree');
+        Route::post('trees/update/{tree}', 'TreeController@update');
+        Route::post('trees/delete/{tree}', 'TreeController@destroy');
+ 
+        // checks routes
+        Route::get('checks', 'CheckController@index');
+        Route::post('checks/store', 'CheckController@check');
+        Route::post('checks/update/{check}', 'CheckController@update');
+        Route::post('checks/delete/{check}', 'CheckController@destroy');
+        
+        // dailess routes
+        Route::get('dailys', 'DailyController@index');
+        Route::post('dailys/store', 'DailyController@daily');
+        Route::post('dailys/update/{daily}', 'DailyController@update');
+        Route::post('dailys/delete/{daily}', 'DailyController@destroy');
+        
         // academic_year_expense routes
         Route::get('academic_year_expenses', 'AcademicYearExpenseController@index');
         Route::get('academic_year_expenses_details', 'AcademicYearExpenseController@details');

@@ -8,5 +8,6 @@
     "Reports": true,
     "Account": true,
     "Card": true,
-    "Academic": true
+    "Academic": true,
+    "Mobile": true
 }

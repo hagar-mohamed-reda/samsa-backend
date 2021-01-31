@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         LaraIzitoast\LaraIzitoastServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
     ],
 
     /*
@@ -227,7 +228,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         "Direction" => App\Direction::class,
-        "Theme" => App\Theme::class
+        "Theme" => App\Theme::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class, 
     ],
 
 ];

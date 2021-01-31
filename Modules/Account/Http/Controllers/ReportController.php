@@ -26,8 +26,8 @@ class ReportController extends Controller
  
     public function paymentDetails(Request $request) {
         $response = [];
-        $query = Payment::query()->join("students", "students.id", "=", "student_id")
-        ->where('academic_year_id', 1);
+        $query = Payment::query()->join("students", "students.id", "=", "student_id");
+        //->where('academic_year_id', AcountSetting);
 
         if ($request->date_from && $request->date_to) {
             $query->whereBetween('date', [$request->date_from, $request->date_to]);
@@ -71,18 +71,40 @@ class ReportController extends Controller
         }
 
         if ($request->academic_year_expenses) {
-            $ids = AcademicYearExpenseDetail::whereIn('service_id', $request->academic_year_expenses)->pluck('id')->toArray();  
+            $ids = AcademicYearExpenseDetail::whereIn('service_id', $request->academic_year_expenses)->pluck('id')->toArray(); 
+            if ($request->services)
+                foreach($request->services as $id)
+                    $ids[] = $id;
+            
             $query->where(function ($q) use ($request, $ids){
                 $q->whereIn("model_id", $ids);
-                $q->where("model_type", "academic_year_expense");
+                //$q->where("model_type", "academic_year_expense");
             });
+            /*else
+            $query->orWhere(function ($q) use ($request, $ids){
+                $q->orWhereIn("model_id", $ids);
+                //$q->where("model_type", "academic_year_expense");
+            });*/
         }
 
         if ($request->services) {  
-            $query->where(function ($q) use ($request){
-                $q->whereIn("model_id", $request->services);
-                $q->where("model_type", "service");
+            $ids = $request->services;
+            if ($request->academic_year_expenses) { 
+                $ids2 = AcademicYearExpenseDetail::whereIn('service_id', $request->academic_year_expenses)->pluck('id')->toArray(); 
+                foreach($ids2 as $id)
+                    $ids[] = $id;
+            }
+                
+            $query->where(function ($q) use ($request, $ids){
+                $q->whereIn("model_id", $ids);
+               // $q->where("model_type", "service");
             });
+            /*else
+            $query->orWhere(function ($q) use ($request){
+                $q->orWhereIn("model_id", $request->services);
+               // $q->where("model_type", "service");
+            });*/
+                
         }
 
         if ($request->payment_type == "out") {

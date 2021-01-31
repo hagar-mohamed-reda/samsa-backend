@@ -56,7 +56,7 @@ class QualificationTypeController extends Controller
     public function update(Request $request, QualificationType $resource)
     {
         $validator = validator($request->all(), [
-            "name" => "required|unique:qualification_types,name,".$request->id,
+            "name" => "required",
         ]); 
         if ($validator->fails()) {
             return responseJson(0, $validator->errors()->first(), "");
