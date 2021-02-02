@@ -50,15 +50,21 @@ Route::group(['middleware' => 'api_auth'], function () {
  
         // checks routes
         Route::get('checks', 'CheckController@index');
-        Route::post('checks/store', 'CheckController@check');
+        Route::post('checks/store', 'CheckController@store');
         Route::post('checks/update/{check}', 'CheckController@update');
         Route::post('checks/delete/{check}', 'CheckController@destroy');
         
         // dailess routes
         Route::get('dailys', 'DailyController@index');
-        Route::post('dailys/store', 'DailyController@daily');
+        Route::post('dailys/store', 'DailyController@store');
         Route::post('dailys/update/{daily}', 'DailyController@update');
         Route::post('dailys/delete/{daily}', 'DailyController@destroy');
+        
+        // Transformations routes
+        Route::get('transformations', 'TransformationController@index');
+        Route::post('transformations/store', 'TransformationController@store');
+        Route::post('transformations/update/{transformation}', 'TransformationController@update');
+        Route::post('transformations/delete/{transformation}', 'TransformationController@destroy');
         
         // academic_year_expense routes
         Route::get('academic_year_expenses', 'AcademicYearExpenseController@index');

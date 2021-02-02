@@ -21,10 +21,10 @@ class DailyController extends Controller
      */
     public function index() {
         //->where('is_academic_year_expense', '!=', '1')
-        $resources = Daily::latest()->get();
+        $resources = Daily::with(['bank', 'store', 'user'])->latest()->get();
         return $resources;
     }
- 
+     
     /**
      * Daily a newly created resource in storage.
      * @param Request $request
@@ -35,7 +35,7 @@ class DailyController extends Controller
         try { 
               
             //return dump(toClass($data)->api_token);
-            $validator = validator($request->json()->all(), [ 
+            $validator = validator($request->all(), [ 
                 "date" =>  "required",   
                 "value" =>  "required", 
             ] );
@@ -43,9 +43,20 @@ class DailyController extends Controller
             if ($validator->fails()) {
                 return responseJson(0, $validator->errors()->first());
             }
-            $data = $request->all(); 
-             
+            $data = $request->all();
+            $data['user_id'] = optional($request->user)->id;
             $resource = Daily::create($data); 
+            
+            if ($request->type == 'bank') {
+                $resource->bank()->first()->decrement('balance', $request->value);
+            }
+            
+            if ($request->type == 'store') {
+                $resource->store()->first()->decrement('balance', $request->value);
+            }
+            
+            
+            
             watch(__('add daily ') . $resource->name, "fa fa-trophy");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
@@ -63,7 +74,24 @@ class DailyController extends Controller
      */
     public function update(Request $request, Daily $daily) {
         try { 
+            //restore old value  
+            if ($daily->type == 'bank') {
+                $daily->bank()->first()->increment('balance', $daily->value);
+            } 
+            if ($daily->type == 'store') {
+                $daily->store()->first()->increment('balance', $daily->value);
+            }
+            
             $daily->update($request->all());
+            
+            if ($request->type == 'bank') {
+                $daily->bank()->first()->decrement('balance', $request->value);
+            }
+            
+            if ($request->type == 'store') {
+                $daily->store()->first()->decrement('balance', $request->value);
+            }
+            
             watch(__('edit daily ') . $daily->name, "fa fa-trophy");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());

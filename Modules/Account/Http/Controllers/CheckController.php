@@ -35,7 +35,7 @@ class CheckController extends Controller
         try { 
               
             //return dump(toClass($data)->api_token);
-            $validator = validator($request->json()->all(), [ 
+            $validator = validator($request->all(), [ 
                 "date" =>  "required",   
                 "value" =>  "required", 
             ] );
@@ -44,9 +44,19 @@ class CheckController extends Controller
                 return responseJson(0, $validator->errors()->first());
             }
             $data = $request->all(); 
+            if (isset($data['attachment']))
+                unset($data['attachment']);
              
             $resource = Check::create($data); 
-            watch(__('add check ') . $resource->name, "fa fa-trophy");
+            $resource->bank()->first()->decrement("balance", $request->value);
+
+            uploadImg($request->file('attachment'), "/uploads/check/", function($filename) use ($resource) {
+                $resource->update([
+                    "attachment" => $filename
+                ]);
+            },"/uploads/check/" .$resource->attachment);
+            
+            watch(__('add check ') . $resource->date, "fa fa-newspaper-o");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
@@ -63,8 +73,26 @@ class CheckController extends Controller
      */
     public function update(Request $request, Check $check) {
         try { 
-            $check->update($request->all());
-            watch(__('edit check ') . $check->name, "fa fa-trophy");
+            
+            $data = $request->all(); 
+            if (isset($data['attachment']))
+                unset($data['attachment']);
+            
+            // restore old balance
+            $check->bank()->first()->increment("balance", $check->value);
+            
+            $check->update($data);
+            
+            // decrease old balance
+            $check->bank()->first()->decrement("balance", $request->value);
+            
+            uploadImg($request->file('attachment'), "/uploads/check/", function($filename) use ($check) {
+                $check->update([
+                    "attachment" => $filename
+                ]);
+            },"/uploads/check/" . $check->attachment);
+            
+            watch(__('edit check ') . $check->date, "fa fa-newspaper-o");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
@@ -79,7 +107,7 @@ class CheckController extends Controller
      */
     public function destroy(Check $check) { 
         try { 
-            watch(__('remove check ') . $check->name, "fa fa-trophy"); 
+            watch(__('remove check ') . $check->name, "fa fa-newspaper-o"); 
             $check->delete();
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());

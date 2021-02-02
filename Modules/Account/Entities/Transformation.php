@@ -4,31 +4,27 @@ namespace Modules\Account\Entities;
 
 use Illuminate\Database\Eloquent\Model; 
 
-class Daily extends Model {
+class Transformation extends Model {
 
     // table of bank
-    protected $table = "account_dailies";
+    protected $table = "account_transformations";
     protected $fillable = [
-        'date', 'value', 'tree_id', 'user_id', 'notes', 'store_id', 'bank_id', 'type'
+        'date', 'value', 'user_id', 'notes', 'store_id', 'bank_id', 'type', 'attachment'
     ];
-    protected $appends = ['can_delete', 'tree'];
+    protected $appends = ['can_delete', 'attachment_url'];
 
+    public function getAttachmentUrlAttribute() {
+        return url('/uploads/check') . "/" .  $this->attachment;
+    }
+    
     public function getCanDeleteAttribute() {
         return true;
     }
 
-    public function getTreeAttribute() {
-        return Tree::where('id', $this->tree_id)->first();
-    }
-    
     public function user() {
         return $this->belongsTo(\App\User::class, "user_id");
     }
-    
-    public function tree() {
-        return $this->belongsTo(Tree::class, "tree_id");
-    }
-    
+     
     public function bank() {
         return $this->belongsTo(Bank::class, "bank_id");
     }

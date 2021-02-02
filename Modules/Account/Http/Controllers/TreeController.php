@@ -33,6 +33,7 @@ class TreeController extends Controller
     public function tree(Request $request) {
         $resource = null;
         try {   
+            $data = $request->all();
             $resource = Tree::create($data); 
             watch(__('add tree ') . $resource->text, "fa fa-trophy");
         } catch (\Exception $th) {
@@ -49,15 +50,15 @@ class TreeController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, Tree $Tree) {
-        try { 
-            $Tree->update($request->all());
-            watch(__('edit Tree ') . $Tree->name, "fa fa-trophy");
+    public function update(Request $request, Tree $tree) {
+        try {   
+            $tree->update($request->all());
+            watch(__('edit Tree ') . $tree->name, "fa fa-trophy");
         } catch (\Exception $th) {
             return responseJson(0, $th->getMessage());
         }
         
-        return responseJson(1, __('done'), $Tree->fresh());
+        return responseJson(1, __('done'), $tree->fresh());
     }
 
     /**
