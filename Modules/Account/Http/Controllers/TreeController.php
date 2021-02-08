@@ -21,7 +21,19 @@ class TreeController extends Controller
      * @return json
      */
     public function index() {
-        $resources = DB::table('account_trees')->get(['id', 'parent', 'icon', 'text']);
+        //$resources = DB::table('account_trees')->get(['id', 'parent', 'icon', 'text']);
+        $totalCol = 'select sum(value) from account_dailies where tree_id = account_trees.id ';
+        
+        if (request()->date_from && request()->date_to)
+            $totalCol .= " and date between '" . request()->date_from . "' and '" . request()->date_to. "'";
+        
+        if (request()->store_id > 0) 
+            $totalCol .= " and ( account_dailies.store_id = " . request()->store_id . ") ";
+         
+        $resources = DB::table('account_trees')->select(
+                'id', 'text',
+                DB::raw("($totalCol) as total")
+                )->get()->toArray();
         return $resources;
     }
  

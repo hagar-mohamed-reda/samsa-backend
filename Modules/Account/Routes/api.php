@@ -66,6 +66,23 @@ Route::group(['middleware' => 'api_auth'], function () {
         Route::post('transformations/update/{transformation}', 'TransformationController@update');
         Route::post('transformations/delete/{transformation}', 'TransformationController@destroy');
         
+        // custody routes
+        Route::get('custodys', 'CustodyController@index');
+        Route::post('custodys/store', 'CustodyController@store');
+        Route::post('custodys/update/{custody}', 'CustodyController@update');
+        Route::post('custodys/delete/{custody}', 'CustodyController@destroy');
+        
+        // solfa routes
+        Route::get('solfas', 'SolfaController@index');
+        Route::post('solfas/store', 'SolfaController@store');
+        Route::post('solfas/update/{solfa}', 'SolfaController@update');
+        Route::post('solfas/delete/{solfa}', 'SolfaController@destroy');
+        
+        // income routes
+        Route::get('incomes', 'IncomeController@index');
+        Route::get('balances', 'BalanceController@index');
+        Route::get('bank-balances', 'BalanceController@bankBalance');
+        
         // academic_year_expense routes
         Route::get('academic_year_expenses', 'AcademicYearExpenseController@index');
         Route::get('academic_year_expenses_details', 'AcademicYearExpenseController@details');

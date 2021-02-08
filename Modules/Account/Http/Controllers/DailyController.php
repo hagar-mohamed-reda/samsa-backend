@@ -20,8 +20,14 @@ class DailyController extends Controller
      * @return json
      */
     public function index() {
-        //->where('is_academic_year_expense', '!=', '1')
-        $resources = Daily::with(['bank', 'store', 'user'])->latest()->get();
+        $query = Daily::with(['bank', 'store', 'user'])
+                ->where('store_id', request()->store_id);
+        
+        if (request()->date_from && request()->date_to) {
+            $query->whereBetween("date", [request()->date_from, request()->date_to]);
+        }
+        
+        $resources = $query->get();
         return $resources;
     }
      

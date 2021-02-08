@@ -21,8 +21,14 @@ class TransformationController extends Controller
      */
     public function index() {
         //->where('is_academic_year_expense', '!=', '1')
-        $resources = Transformation::with(['bank', 'store', 'user'])->latest()->get();
-        return $resources;
+        $query = Transformation::with(['bank', 'store', 'user'])
+                ->where('store_id', request()->store_id);
+        
+        if (request()->date_from && request()->date_to) {
+            $query->whereBetween("date", [request()->date_from, request()->date_to]);
+        } 
+        
+        return $query->get(); 
     }
      
     /**
@@ -51,11 +57,15 @@ class TransformationController extends Controller
             $resource = Transformation::create($data); 
             
             if ($request->type == 'bank_to_store') {
+                if ($request->value > $resource->bank->balance)
+                    return responseJson(0, __('bank balance not enough'));
                 $resource->bank()->first()->decrement('balance', $request->value);
                 $resource->store()->first()->increment('balance', $request->value);
             }
             
             if ($request->type == 'store_to_bank') {
+                if ($request->value > $resource->store->balance)
+                    return responseJson(0, __('store balance not enough'));
                 $resource->store()->first()->decrement('balance', $request->value);
                 $resource->bank()->first()->increment('balance', $request->value);
             }
@@ -103,11 +113,15 @@ class TransformationController extends Controller
             
             
             if ($request->type == 'bank_to_store') {
+                if ($request->value > $transformation->bank()->first()->balance)
+                    return responseJson(0, __('bank balance not enough'));
                 $transformation->bank()->first()->decrement('balance', $request->value);
                 $transformation->store()->first()->increment('balance', $request->value);
             }
             
             if ($request->type == 'store_to_bank') {
+                if ($request->value > $transformation->store()->first()->balance)
+                    return responseJson(0, __('store balance not enough'));
                 $transformation->store()->first()->decrement('balance', $request->value);
                 $transformation->bank()->first()->increment('balance', $request->value);
             }
