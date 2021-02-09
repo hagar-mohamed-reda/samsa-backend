@@ -44,8 +44,13 @@ class SolfaController extends Controller
             if ($validator->fails()) {
                 return responseJson(0, $validator->errors()->first());
             }
+            
+            if (Solfa::getTotal($request) > $request->value) {
+                return responseJson(0, __('sum of installments must equal ') . $request->value);
+            }
+            
             $data = $request->all();
-            $data['user_id'] = $request->user->id; 
+            $data['user_id'] = $request->user->id;
              
             $resource = Solfa::create($data); 
             watch(__('add Solfa ') . $resource->name, "fa fa-solfa");
@@ -64,7 +69,22 @@ class SolfaController extends Controller
      * @return Response
      */
     public function update(Request $request, Solfa $Solfa) {
-        try { 
+        try {  
+            //return dump(toClass($data)->api_token);
+            $validator = validator($request->json()->all(), [
+                "name" =>  "required", 
+                "value" =>  "required", 
+                "store_id" =>  "required", 
+                "date" =>  "required", 
+            ]);
+            
+            if ($validator->fails()) {
+                return responseJson(0, $validator->errors()->first());
+            }
+            if (Solfa::getTotal($request) > $request->value) {
+                return responseJson(0, __('sum of installments must equal ') . $request->value);
+            }
+            
             $data = $request->all();
             $data['user_id'] = $request->user->id; 
             $Solfa->update($data);

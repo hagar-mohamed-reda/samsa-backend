@@ -20,7 +20,7 @@ class Tree extends Model
     protected $appends = ['can_delete'];
     
     public function getCanDeleteAttribute() {
-        return true;
+        return !Daily::where('tree_id', $this->id)->exists();
     }
     
     

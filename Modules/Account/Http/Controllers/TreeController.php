@@ -30,8 +30,8 @@ class TreeController extends Controller
         if (request()->store_id > 0) 
             $totalCol .= " and ( account_dailies.store_id = " . request()->store_id . ") ";
          
-        $resources = DB::table('account_trees')->select(
-                'id', 'text',
+        $resources = Tree::query()->select(
+                '*',
                 DB::raw("($totalCol) as total")
                 )->get()->toArray();
         return $resources;
