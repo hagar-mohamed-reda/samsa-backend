@@ -11,14 +11,14 @@ if (!function_exists('uploadImg')) {
             $dest = public_path('/' . $folder);
             $file->move($dest, $filename);
 
+            if ($oldPath) {
+                if (file_exists(public_path($oldPath))) {
+                    unlink(public_path($oldPath));
+                }
+            }
             $action($filename);
         }
          
-        if ($oldPath) {
-            if (file_exists(public_path($oldPath))) {
-                unlink(public_path($oldPath));
-            }
-        }
         return $filename;
     }
 }

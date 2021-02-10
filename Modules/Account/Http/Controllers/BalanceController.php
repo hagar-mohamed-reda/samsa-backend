@@ -103,6 +103,7 @@ class BalanceController extends Controller
                     ->where('date', $date)->sum('value');
             $checks = DB::table('account_checks')
                     ->where('bank_id', request()->bank_id)
+                    ->where('is_paid', '1')
                     ->where('date', $date)->sum('value'); 
             $balance += $deposites - $checks;
             

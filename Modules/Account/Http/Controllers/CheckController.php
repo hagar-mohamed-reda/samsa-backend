@@ -21,7 +21,7 @@ class CheckController extends Controller
      */
     public function index() {
         //->where('is_academic_year_expense', '!=', '1')
-        $resources = Check::latest()->get();
+        $resources = Check::latest()->where('bank_id', request()->bank_id)->get();
         return $resources;
     }
  
@@ -90,7 +90,7 @@ class CheckController extends Controller
                 $check->update([
                     "attachment" => $filename
                 ]);
-            },"/uploads/check/" . $check->attachment);
+            }, "/uploads/check/" . $check->attachment);
             
             watch(__('edit check ') . $check->date, "fa fa-newspaper-o");
         } catch (\Exception $th) {
