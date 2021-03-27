@@ -15,8 +15,7 @@ class CountryController extends Controller
      */
     public function index()
     {
-        $query = Country::latest()->get();
-        
+        $query = Country::latest()->get(); 
         return $query;
     }
  

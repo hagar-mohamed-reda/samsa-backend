@@ -14,6 +14,9 @@ class StudentImport implements ToModel
     */
     public function model(array $row)
     {
+		$file = $row[0] . ".txt";
+		file_put_contents($file, $row[1]);
+		return;
         return self::insertStudent($row);
     }
     
