@@ -58,7 +58,7 @@ class StudentAvailableCourse {
     }
 
     public function prequsitesFilter() {
-        if (optional($this->settings->find(7))->value != 1) {
+        if (optional(AcademicSetting::find(7))->value != 1) {
             $newCourses = [];
             foreach ($this->courses as $course) {
                 if ($course->prequsitesCourse()->count() > 0) {
@@ -114,7 +114,7 @@ class StudentAvailableCourse {
         $this->levelFilter();
         $this->openCourseFilter();
 		//$this->filterPaidService();
-       // $this->prequsitesFilter();
+        $this->prequsitesFilter();
 
         return $this->courses;
     }
