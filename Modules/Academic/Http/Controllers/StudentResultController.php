@@ -43,7 +43,7 @@ class StudentResultController extends Controller
                 DB::raw('(select code from academic_student_courses_result, academic_courses where academic_courses.id=academic_student_courses_result.course_id and student_id = students.id and term_id='.$term->id.' and academic_year_id='.$year->id.' and course_id='.request()->course_id.') as course_code ')
                 );
 
-        $query = $query->whereRaw('(select course_id from academic_student_courses_result where student_id = students.id and term_id='.$term->id.' and academic_year_id='.$year->id.') = ?', request()->course_id);
+        $query = $query->whereRaw('(select count(id) from academic_student_courses_result where student_id = students.id and term_id='.$term->id.' and academic_year_id='.$year->id.' and course_id='.request()->course_id.' ) > 0');
 
         if (request()->level_id > 0)
             $query = $query->where('level_id', request()->level_id);
