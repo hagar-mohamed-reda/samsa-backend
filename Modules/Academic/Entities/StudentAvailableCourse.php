@@ -113,8 +113,8 @@ class StudentAvailableCourse {
     public function getCourses() {
         $this->levelFilter();
         $this->openCourseFilter();
-		//$this->filterPaidService();
         $this->prequsitesFilter();
+		$this->filterPaidService();
 
         return $this->courses;
     }
