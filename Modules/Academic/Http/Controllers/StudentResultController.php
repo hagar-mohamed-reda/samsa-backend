@@ -79,6 +79,7 @@ class StudentResultController extends Controller
                 $item['date'] = date('Y-m-d');
                 $row = StudentResult::query()
                         ->where('student_id', $item['student_id'])
+                        ->where('course_id', $item['course_id'])
                         ->where('academic_year_id', $year->id)
                         ->where('term_id', $term->id)
                         ->first();
