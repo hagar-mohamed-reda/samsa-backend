@@ -16,7 +16,7 @@ class StudentAvailableCourse {
 
     /**
      * query of course
-     * @var type 
+     * @var type
      */
     private $query = null;
 
@@ -37,7 +37,7 @@ class StudentAvailableCourse {
      * @var Array
      */
     private $year = [];
-	
+
     public function __construct(Student $student) {
         $this->student = $student;
         $this->course = Course::with(['prequsitesCourse']);
@@ -89,12 +89,12 @@ class StudentAvailableCourse {
         }
         $this->courses = $newCourses;
     }
-	
-	public function filterPaidService() { 
+
+	public function filterPaidService() {
         $newCourses = [];
 		foreach($this->courses as $course) {
 			// check if paid
-			if ($course->service_id) { 
+			if ($course->service_id > 0) {
 				$paid = Payment::where('model_type', 'service')
 				->where('student_id', $this->student->id)
 				->where('model_id', $course->service_id)
@@ -113,8 +113,8 @@ class StudentAvailableCourse {
     public function getCourses() {
         $this->levelFilter();
         $this->openCourseFilter();
-		$this->filterPaidService();
-        $this->prequsitesFilter();
+		//$this->filterPaidService();
+       // $this->prequsitesFilter();
 
         return $this->courses;
     }
