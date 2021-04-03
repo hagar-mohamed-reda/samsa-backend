@@ -1,8 +1,8 @@
 <?php
 
 namespace Modules\Settings\Http\Controllers;
- 
-use Illuminate\Http\Request; 
+
+use Illuminate\Http\Request;
 use Modules\Settings\Entities\Government;
 
 class GovernmentController extends Controller
@@ -15,10 +15,10 @@ class GovernmentController extends Controller
     public function index()
     {
         $query = Government::latest()->get();
-        
+
         return $query;
     }
- 
+
 
     /**
      * Store a newly created resource in storage.
@@ -30,18 +30,18 @@ class GovernmentController extends Controller
     {
         $validator = validator($request->all(), [
             "name" => "required|unique:countries,name,".$request->id,
-        ]); 
+        ]);
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first(), "");
         }
         try {
-            $resource = Government::create($request->all()); 
+            $resource = Government::create($request->all());
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
-            return responseJson(0, $th->getMessage()); 
+            return responseJson(0, $th->getMessage());
         }
     }
-  
+
 
     /**
      * Update the specified resource in storage.
@@ -54,15 +54,15 @@ class GovernmentController extends Controller
     {
         $validator = validator($request->all(), [
             "name" => "required|unique:countries,name,".$request->id,
-        ]); 
+        ]);
         if ($validator->fails()) {
-            return responseJson(0, $validator->errors()->getMessages(), "");
+            return responseJson(0, $validator->errors()->first(), "");
         }
         try {
-            $resource->update($request->all()); 
+            $resource->update($request->all());
             return responseJson(1, __('done'), $resource);
         } catch (\Exception $th) {
-            return responseJson(0, $th->getMessage()); 
+            return responseJson(0, $th->getMessage());
         }
     }
 
@@ -73,12 +73,12 @@ class GovernmentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Government $resource)
-    { 
-        try { 
+    {
+        try {
                 $resource->delete();
             return responseJson(1, __('done'));
         } catch (\Exception $th) {
-            return responseJson(0, $th->getMessage()); 
+            return responseJson(0, $th->getMessage());
         }
 
     }
