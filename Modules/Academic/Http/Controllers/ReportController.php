@@ -32,7 +32,7 @@ class ReportController extends Controller
                 ->where('term_id', $term->id)
                 ->where('academic_year_id', $year->id)
                 ->select(
-                'code', 'set_number', 'name', 'division_id',
+                'code', 'set_number', 'name', 'division_id', 'final_degree',
                 DB::raw('students.id as student_id'),
                 DB::raw('students.id as id'),
                 DB::raw('students.level_id as level_id'),
@@ -42,7 +42,6 @@ class ReportController extends Controller
                 DB::raw('(select name from terms where terms.id = term_id) as term_name'),
                 DB::raw('(select name from levels where levels.id = students.level_id) as level_name'),
                 DB::raw('(select name from divisions where divisions.id = division_id) as division_name'),
-                DB::raw('(select final_degree from academic_student_courses_result where student_id = students.id and term_id='.$term->id.' and academic_year_id='.$year->id.' and course_id='.request()->course_id.') as final_degree '),
 
                 DB::raw('(select name from academic_courses where course_id = academic_courses.id) as course_name'),
                 DB::raw('(select code from academic_courses where course_id = academic_courses.id) as course_code'),
